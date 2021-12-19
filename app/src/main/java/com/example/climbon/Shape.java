@@ -18,43 +18,124 @@ public abstract class Shape {
 
     TODO:
     constructor/builder
-    shift all points show edge so shape is 0,0
      will generate once on app startup, and then store
      */
 
     class Coordinate {
-        float x;
-        float y;
+        double x;
+        double y;
+
+        Coordinate(double _x, double _y) {
+            x = _x;
+            y = _y;
+        }
     }
 
     class Edge {
         // ax + by+ c = 0
-        float max;
-        float min;
-        float a;
-        float b;
-        float c;
+        // Max and min are x unless b = 0, then y
+        double max;
+        double min;
+        double a;
+        double b;
+        double c;
+
+        Edge (Coordinate left, Coordinate right) {
+            /* Creates an edge from two points */
+            a = -(left.y - right.y);
+            b = (left.x - right.x);
+            c = -1 * (a * left.x + b * left.y);
+            if (a == 0) { // if vertical, use y for min/max
+                min = (left.y < right.y) ? left.y : right.y;
+                max = (left.y > right.y) ? left.y : right.y;
+            }
+            if (a != 0) {
+                min = (left.x < right.x) ? left.x : right.x;
+                max = (left.x > right.x) ? left.x : right.x;
+            }
+        }
     }
 
-    static float DISTANCE_BETWEEN_HOLDS = 3; // inches
-    float distance_to_edge; // inches, will use 0 for now
-    ArrayList<Edge> edges = new ArrayList();
-    ArrayList<Coordinate> hold_set = new ArrayList();
+    static double DISTANCE_BETWEEN_HOLDS = 3; // inches
+    double distance_to_edge; // inches, will use 0 for now
+    ArrayList<Coordinate> corners;
+    ArrayList<Edge> edges;
+    ArrayList<Button> hold_set;
 
+    public Shape(ArrayList<Double> _corners, double start_x, double start_y) {
+        /* Initializes a shape with holds from list of x,y pairs */
+        if (_corners.size() % 2 == 1){
+            // throw
+        }
+        for (int i=0;i<_corners.size() % 2;++i) {
+            corners.add(new Coordinate(_corners.get(2*i),_corners.get(2*i+1)));
+        }
+        shiftCorners();
+        cornersToEdges();
+        Coordinate start_point = new Coordinate(start_x, start_y);
+        genHolds(start_point);
+    }
 
-    int getNumHolds(){
+    private void cornersToEdges() {
+        /* Converts the corners list to an edges list
+
+        Edges are used to make holds.
+        To be called in the constructor.
+        */
+        if (corners.size() < 3) { // At least a triangle
+            // throw
+        }
+        for (int i=0;i<corners.size();++i) {
+            edges.add(new Edge(corners.get(i), corners.get(i+1)));
+        }
+        edges.add(new Edge(corners.get(corners.size()-1), corners.get(0)));
+    }
+
+    public int getNumHolds(){
         /* Calculates how many holds a shape will contain. */
         return hold_set.size();
+    }
+
+    public void updateHolds(Coordinate new_point) {
+        /* Reinitialize the holds with a new starting point. */
+
+    }
+
+    private void shiftCorners() {
+        /* Shifts the corners so the surrounding "rectangle" is at 0,0
+
+        Easier to work with if the surrounding "rectangle" is at 0,0.
+        For now, assumes all points are positive.
+        */
+        double min_x = 10000; //Inf??
+        double min_y = 10000;
+        for (int i=0;i<corners.size();++i) {
+            if (corners.get(i).x < min_x) {
+                min_x = corners.get(i).x;
+            }
+            if (corners.get(i).y < min_y) {
+                min_y = corners.get(i).y;
+            }
+        }
+        for (int i=0;i<corners.size();++i) {
+            corners.get(i).x -= min_x;
+            corners.get(i).y -= min_y;
+        }
     }
 
     void genShape(){
         /* Generates a boundary for the shape. */
     };
-    ArrayList<Button> genHolds(){
-        /* Generates the images buttons of holds. */
+
+    private void genHolds(Coordinate start_point){
+        /* Generates the images buttons of holds.
+
+        Stores them with the object. */
+        ArrayList<Coordinate> hold_locations = getHoldCoordinates(start_point, true, true);
+        //ArrayList<Button>
     };
 
-    void getHoldCoordinates(Coordinate point, boolean above, boolean below){
+    ArrayList<Coordinate> getHoldCoordinates(Coordinate point, boolean above, boolean below){
         /* Create array of the holds and their locations.
 
         First hold is (1) highest, (2) leftmost hold.
@@ -72,7 +153,7 @@ public abstract class Shape {
 
         Not worried about time complexity of adding to front/back.
         */
-        float x, y;
+        double x, y;
         ArrayList<Coordinate> current_row = new ArrayList();
         ArrayList<Coordinate> above_rows = new ArrayList();
         ArrayList<Coordinate> below_rows = new ArrayList();
@@ -115,6 +196,7 @@ public abstract class Shape {
         hold_set.addAll(above_rows);
         hold_set.addAll(current_row);
         hold_set.addAll(below_rows);
+        return hold_set;
     }
 
 
@@ -151,7 +233,7 @@ public abstract class Shape {
     Coordinate findIntersection(Edge edge, Edge ray){
         /* Find if a ray intersects with an edge, return the location.
 
-        Might get finicky since floats (oh well)
+        Might get finicky since doubles (oh well)
         */
         if ((edge.b == 0 && ray.b == 0) ||
                 ((edge.b != 0 && ray.b != 0) &&
