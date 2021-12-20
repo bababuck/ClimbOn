@@ -1,6 +1,7 @@
 package com.example.climbon;
 
 import android.graphics.Canvas;
+import android.util.DisplayMetrics;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -53,7 +54,7 @@ public class Shape {
 //    double distance_to_edge; // inches, will use 0 for now
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
-    ArrayList<Button> hold_set;
+    ArrayList<Coordinate> hold_set;
     private final Boundary boundary;
 
     public Shape(ArrayList<Double> _corners, Coordinate start_point) throws Exception {
@@ -70,8 +71,9 @@ public class Shape {
         boundary = new Boundary(corners);
     }
 
-    public void draw(@NonNull Canvas canvas) {
+    public void draw(@NonNull Canvas canvas, int height, int width) {
         /* Draw the shape outline. */
+        boundary.setBounds(width, height, 0, 0);
         boundary.draw(canvas);
     }
 
@@ -122,19 +124,12 @@ public class Shape {
         }
     }
 
-    void genShape(){
-        /* Generates a boundary for the shape. */
-    }
-
-    private void genHolds(Coordinate start_point) throws Exception {
-        /* Generates the images buttons of holds.
+    public void genHolds(Coordinate start_point) throws Exception {
+        /* Generates the coordinates of holds.
 
         Stores them with the object.
-        TODO:
-        -Finish this, then add interface to "draw"
         */
-        ArrayList<Coordinate> hold_locations = getHoldCoordinates(start_point, true, true);
-        //ArrayList<Button>
+        hold_set = getHoldCoordinates(start_point, true, true);
     }
 
     ArrayList<Coordinate> getHoldCoordinates(Coordinate point, boolean above, boolean below) throws Exception {
