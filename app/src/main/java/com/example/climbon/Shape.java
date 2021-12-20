@@ -18,8 +18,8 @@ public abstract class Shape {
 
     TODO:
     constructor/builder
-     will generate once on app startup, and then store
-     */
+    will generate once on app startup, and then store
+    */
 
     class Coordinate {
         double x;

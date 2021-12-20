@@ -6,7 +6,7 @@ public class Panel {
     Each panel will make up of a single face of the wall.
     Holds are defined as moving left to right then up and down.
     */
-    //shape
+    Shape
     // ArrayList of shapes
     // if shape.num_holds != len(holds_on) Throw
 
