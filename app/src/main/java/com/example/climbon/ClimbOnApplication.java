@@ -8,5 +8,16 @@ public class ClimbOnApplication extends Application {
     TODO:
     Refator with Unviversal Data?
     */
+    private static ClimbOnApplication singleton;
+
+    public ClimbOnApplication getInstance(){
+        return singleton;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        singleton = this;
+    }
     public UniversalData data = new UniversalData();
 }

@@ -1,6 +1,7 @@
 package com.example.climbon;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ public class UniversalData {
     */
     Map<String, WeakReference<Object>> data = new HashMap<String, WeakReference<Object>>();
     Wall wall = new Wall();
+    ArrayList<Panel> panels;
+    int current_panel; // Store which panel we are currently looking at for PanelViewer
 
     void save(String id, Object object) {
         data.put(id, new WeakReference<Object>(object));
