@@ -1,6 +1,9 @@
 package com.example.climbon;
 
+import android.graphics.Canvas;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
@@ -51,6 +54,7 @@ public abstract class Shape {
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
     ArrayList<Button> hold_set;
+    private Boundary boundary;
 
     public Shape(ArrayList<Double> _corners, double start_x, double start_y) {
         /* Initializes a shape with holds from list of x,y pairs */
@@ -64,6 +68,12 @@ public abstract class Shape {
         cornersToEdges();
         Coordinate start_point = new Coordinate(start_x, start_y);
         genHolds(start_point);
+        boundary = new Boundary(corners);
+    }
+
+    public void draw(@NonNull Canvas canvas) {
+        /* Draw the shape outline. */
+        boundary.draw(canvas);
     }
 
     private void cornersToEdges() {
