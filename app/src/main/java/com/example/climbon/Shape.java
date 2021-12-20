@@ -21,16 +21,6 @@ public abstract class Shape {
     will generate once on app startup, and then store
     */
 
-    class Coordinate {
-        double x;
-        double y;
-
-        Coordinate(double _x, double _y) {
-            x = _x;
-            y = _y;
-        }
-    }
-
     class Edge {
         // ax + by+ c = 0
         // Max and min are x unless b = 0, then y
@@ -241,7 +231,7 @@ public abstract class Shape {
             // Check corner case of two parallel lines
             return null;
         } else {
-            Coordinate intersection = new Coordinate();
+            Coordinate intersection = new Coordinate(0,0); //Don't cares
             intersection.x = (ray.c/ray.b - edge.c/edge.b)/(edge.a/edge.b - ray.a/ray.b); // checked if denominator == 0
             intersection.y = -(ray.c + intersection.x * ray.a)/ray.b;
             return intersection;
