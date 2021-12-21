@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimbOn">
         <activity
-            android:name=".PanelViewer"
+            android:name=".PanelView"
             android:exported="false" />
         <activity
             android:name=".MainMenu"
