@@ -1,10 +1,10 @@
 package com.example.climbon;
 
 public class Coordinate {
-    double x;
-    double y;
+    float x;
+    float y;
 
-    Coordinate(double _x, double _y) {
+    Coordinate(float _x, float _y) {
         x = _x;
         y = _y;
     }

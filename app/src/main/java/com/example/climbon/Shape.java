@@ -28,11 +28,11 @@ public class Shape {
     class Edge {
         // ax + by+ c = 0
         // Max and min are x unless b = 0, then y
-        double max;
-        double min;
-        double a;
-        double b;
-        double c;
+        float max;
+        float min;
+        float a;
+        float b;
+        float c;
 
         Edge (Coordinate left, Coordinate right) {
             /* Creates an edge from two points */
@@ -50,14 +50,14 @@ public class Shape {
         }
     }
 
-    static double DISTANCE_BETWEEN_HOLDS = 3; // inches
-//    double distance_to_edge; // inches, will use 0 for now
+    static float DISTANCE_BETWEEN_HOLDS = 3; // inches
+//    float distance_to_edge; // inches, will use 0 for now
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
     ArrayList<Coordinate> hold_set;
     private final Boundary boundary;
 
-    public Shape(ArrayList<Double> _corners, Coordinate start_point) throws Exception {
+    public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */
         if (_corners.size() % 2 == 1){
             throw new Exception("Can't give half coordinate.");
@@ -97,6 +97,24 @@ public class Shape {
         return hold_set.size();
     }
 
+    public float get_height() {
+        /* Calculate the height of the shape.
+
+        Assume everything is non-negative.
+        */
+        float min = Float.POSITIVE_INFINITY;
+        float max = 0;
+        for (int i=0;i<corners.size();++i) {
+            if (corners.get(i).y < min) {
+                min = corners.get(i).y;
+            }
+            if (corners.get(i).y > max) {
+                max = corners.get(i).y;
+            }
+        }
+        return max - min;
+    }
+
     public void updateHolds(Coordinate new_point) throws Exception {
         /* Reinitialize the holds with a new starting point. */
         genHolds(new_point);
@@ -108,8 +126,8 @@ public class Shape {
         Easier to work with if the surrounding "rectangle" is at 0,0.
         For now, assumes all points are positive.
         */
-        double min_x = Double.POSITIVE_INFINITY;
-        double min_y = Double.POSITIVE_INFINITY;
+        float min_x = Float.POSITIVE_INFINITY;
+        float min_y = Float.POSITIVE_INFINITY;
         for (int i=0;i<corners.size();++i) {
             if (corners.get(i).x < min_x) {
                 min_x = corners.get(i).x;
@@ -204,7 +222,7 @@ public class Shape {
 
         If passes through an even number of edges, then is outside the figure.
         */
-        Edge ray = new Edge(point, new Coordinate(point.x, Double.POSITIVE_INFINITY));
+        Edge ray = new Edge(point, new Coordinate(point.x, Float.POSITIVE_INFINITY));
         int count = 0;
         for (int i=0;i<edges.size();++i){
             if (intersects(edges.get(i),ray)){
@@ -233,7 +251,7 @@ public class Shape {
     Coordinate findIntersection(Edge edge, Edge ray){
         /* Find if a ray intersects with an edge, return the location.
 
-        Might get finicky since doubles (oh well)
+        Might get finicky since floats (oh well)
         */
         if ((edge.b == 0 && ray.b == 0) ||
                 ((edge.b != 0 && ray.b != 0) &&
