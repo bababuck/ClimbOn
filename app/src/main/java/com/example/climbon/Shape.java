@@ -115,6 +115,24 @@ public class Shape {
         return max - min;
     }
 
+    public float get_width() {
+        /* Calculate the height of the shape.
+
+        Assume everything is non-negative.
+        */
+        float min = Float.POSITIVE_INFINITY;
+        float max = 0;
+        for (int i=0;i<corners.size();++i) {
+            if (corners.get(i).x < min) {
+                min = corners.get(i).x;
+            }
+            if (corners.get(i).x > max) {
+                max = corners.get(i).x;
+            }
+        }
+        return max - min;
+    }
+
     public void updateHolds(Coordinate new_point) throws Exception {
         /* Reinitialize the holds with a new starting point. */
         genHolds(new_point);
