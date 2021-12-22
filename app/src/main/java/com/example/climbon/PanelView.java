@@ -1,10 +1,10 @@
 package com.example.climbon;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.widget.AbsoluteLayout;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class PanelView extends AppCompatActivity {
         UniversalData saved_data = ((ClimbOnApplication) this.getApplication()).data;
         current_panel = saved_data.panels.get(saved_data.current_panel);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_panel_viewer);
+        setContentView(R.layout.activity_panel_view);
 
     }
 
@@ -37,8 +37,33 @@ public class PanelView extends AppCompatActivity {
         Android sets (0,0) as top left, coordinate system is from bottom right
         Have to resolve this issue.
         */
-        int width, height;
+        ArrayList<Coordinate> buttons = current_panel.shape.hold_set;
+        AbsoluteLayout layout = (AbsoluteLayout)findViewById(R.id.PanelView);
+        for (int i=0;i< buttons.size();++i) {
+            Button button = new Button(this);
+            button.setId(i);
+            button.setBackgroundColor(Color.rgb(100, 0, 0));
+            int x = convertXCoordinateToLocation(buttons.get(i).x);
+            int y = convertYCoordinateToLocation(buttons.get(i).y);
+            AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(1,1,x,y);
+            layout.addView(button, params);
+    //        button = ((Button) findViewById(i));
+//            btn1.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View view) {
+//                    Toast.makeText(view.getContext(),
+//                            "Button clicked index = " + id_, Toast.LENGTH_SHORT)
+//                            .show();
+//                }
+//            });
+        }
+        Button button = (Button)findViewById(R.id.my_button);
+        AbsoluteLayout.LayoutParams absParams =
+                (AbsoluteLayout.LayoutParams)button.getLayoutParams();
 
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int width = displaymetrics.widthPixels;
+        int height = displaymetrics.heightPixels;
     }
 
     private int convertYCoordinateToLocation(float y_coordinate) {
