@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 
@@ -28,10 +29,10 @@ public class PanelView extends AppCompatActivity {
         current_panel = saved_data.panels.get(saved_data.current_panel);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_panel_view);
-
+        createButtons();
     }
 
-    private ArrayList<Button> createButtons() {
+    private void createButtons() {
         /* Creates buttons from the list of coordinates.
 
         Android sets (0,0) as top left, coordinate system is from bottom right
@@ -43,27 +44,16 @@ public class PanelView extends AppCompatActivity {
             Button button = new Button(this);
             button.setId(i);
             button.setBackgroundColor(Color.rgb(100, 0, 0));
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    button.setBackgroundColor(Color.rgb(100, 0, 0));
+                }
+            });
             int x = convertXCoordinateToLocation(buttons.get(i).x);
             int y = convertYCoordinateToLocation(buttons.get(i).y);
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(1,1,x,y);
             layout.addView(button, params);
-    //        button = ((Button) findViewById(i));
-//            btn1.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View view) {
-//                    Toast.makeText(view.getContext(),
-//                            "Button clicked index = " + id_, Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//            });
         }
-        Button button = (Button)findViewById(R.id.my_button);
-        AbsoluteLayout.LayoutParams absParams =
-                (AbsoluteLayout.LayoutParams)button.getLayoutParams();
-
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
-        int height = displaymetrics.heightPixels;
     }
 
     private int convertYCoordinateToLocation(float y_coordinate) {
@@ -76,8 +66,8 @@ public class PanelView extends AppCompatActivity {
         float shape_height_arb;
 
         shape_height_arb = current_panel.shape.get_height();
-        top_buffer = (int) convertDpToPixel(TOP_BUFFER, context);
-        bottom_buffer = (int) convertDpToPixel(BOTTOM_BUFFER, context);
+        top_buffer = (int) convertDpToPixel(TOP_BUFFER, this);
+        bottom_buffer = (int) convertDpToPixel(BOTTOM_BUFFER, this);
         shape_height_px = screen_height - (top_buffer + bottom_buffer);
         offset = (int) (y_coordinate * (float) shape_height_px / shape_height_arb);
         return top_buffer + offset;
@@ -93,13 +83,13 @@ public class PanelView extends AppCompatActivity {
         float shape_width_arb;
 
         shape_width_arb = current_panel.shape.get_width();
-        edge_buffer = (int) convertDpToPixel(EDGE_BUFFER, context);
+        edge_buffer = (int) convertDpToPixel(EDGE_BUFFER, this);
         shape_width_px = screen_width - 2 * edge_buffer;
         offset = (int) (x_coordinate * (float) shape_width_px / shape_width_arb);
         return edge_buffer + offset;
     }
 
-    public static float convertDpToPixel(float dp, Context context){
-        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    public static float convertDpToPixel(float dp, PanelView context){
+        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / context.getResources().getDisplayMetrics().DENSITY_DEFAULT);
     }
 }
