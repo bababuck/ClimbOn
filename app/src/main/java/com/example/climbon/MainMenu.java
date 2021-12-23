@@ -13,11 +13,12 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        Button browse_routes = (Button) findViewById(R.id.browse_routes);
-        browse_routes.setOnClickListener(new View.OnClickListener() {
+        Button panel_view = (Button) findViewById(R.id.panel_view);
+        panel_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BrowseRoutes.class);
+                Intent intent = new Intent(view.getContext(), PanelView.class);
+
                 view.getContext().startActivity(intent);}
         });
     }
