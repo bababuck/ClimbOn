@@ -164,6 +164,8 @@ public class Shape {
         /* Generates the coordinates of holds.
 
         Stores them with the object.
+        TODO:
+         Use method of checking every hold in rectangle
         */
         hold_set = getHoldCoordinates(start_point, true, true);
     }
