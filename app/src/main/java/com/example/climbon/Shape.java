@@ -55,7 +55,7 @@ public class Shape {
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
     ArrayList<Coordinate> hold_set;
-    private final Boundary boundary;
+    //private final Boundary boundary;
 
     public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */
@@ -70,14 +70,14 @@ public class Shape {
         shiftCorners();
         cornersToEdges();
         genHolds(start_point);
-        boundary = new Boundary(corners);
+        //boundary = new Boundary(corners);
     }
 
-    public void draw(@NonNull Canvas canvas, int height, int width) {
-        /* Draw the shape outline. */
-        boundary.setBounds(width, height, 0, 0);
-        boundary.draw(canvas);
-    }
+//    public void draw(@NonNull Canvas canvas, int height, int width) {
+//        /* Draw the shape outline. */
+//        boundary.setBounds(width, height, 0, 0);
+//        boundary.draw(canvas);
+//    }
 
     private void cornersToEdges() throws Exception {
         /* Converts the corners list to an edges list
@@ -185,12 +185,14 @@ public class Shape {
         hold_set = new ArrayList<>();
 
         // Calculate the first valid hold above 0, 0
-        float current_x = start_point.x % DISTANCE_BETWEEN_HOLDS;
-        float current_y = start_point.y % DISTANCE_BETWEEN_HOLDS;
-        if (current_x < 0) current_x *= -1;
-        if (current_y < 0) current_y *= -1;
+        float start_x = start_point.x % DISTANCE_BETWEEN_HOLDS;
+        float start_y = start_point.y % DISTANCE_BETWEEN_HOLDS;
+        if (start_x < 0) start_x *= -1;
+        if (start_y < 0) start_y *= -1;
 
+        float current_y = start_y;
         while (current_y < max_y) {
+            float current_x = start_x;
             while (current_x < max_x) {
                 Coordinate current_point = new Coordinate(current_x, current_y);
                 if (isInside(current_point)) {
