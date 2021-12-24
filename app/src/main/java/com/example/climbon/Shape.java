@@ -166,78 +166,41 @@ public class Shape {
         /* Generates the coordinates of holds.
 
         Stores them with the object.
-        TODO:
-         Use method of checking every hold in rectangle
-        */
-        hold_set = getHoldCoordinates(start_point, true, true);
-    }
+        To support convex and irregular shapes, we check every hold location in boundary.
+        Since shape is shifted, min_x and min_y are 0, and max_x and max_y are width and height.
+        start_point does not have to be inside the shape.
 
-    ArrayList<Coordinate> getHoldCoordinates(Coordinate point, boolean above, boolean below) throws Exception {
-        /* Create array of the holds and their locations.
-
-        First hold is (1) highest, (2) leftmost hold.
+                First hold is (1) highest, (2) leftmost hold.
         Assumes we are given a random, VALID hold.
         Also assumes convex shape.
 
-        |-----------|
-        | 1 2 3 4 5 |
+        |---|   |---|
+        |11 |---| 12|
         | 6 7 8 9 10|
-        |11 |-------|
-        |---|
-
-        There is a chance this could fail for narrow diagonal boards,
-        but if is an issue can address later.
-
-        Not worried about time complexity of adding to front/back.
+        | 1 2 3 4 5 |
+        |-----------|
         */
-        if (!isInside(point)) {
-            throw new Exception("Given point is outside shape.");
-        }
-        ArrayList<Coordinate> current_row = new ArrayList<>();
-        ArrayList<Coordinate> above_rows = new ArrayList<>();
-        ArrayList<Coordinate> below_rows = new ArrayList<>();
-        ArrayList<Coordinate> hold_locations = new ArrayList<>();
-        current_row.add(point);
-        {
-            Coordinate current_point = new Coordinate(point.x - DISTANCE_BETWEEN_HOLDS, point.y);
-            while (isInside(current_point)) {
-                Coordinate above_point = new Coordinate(point.x, point.y + DISTANCE_BETWEEN_HOLDS);
-                if (above && isInside(above_point)) {
-                    above_rows = getHoldCoordinates(above_point, true, false);
-                    above = false;
-                }
-                Coordinate below_point = new Coordinate(point.x, point.y - DISTANCE_BETWEEN_HOLDS);
-                if (below && isInside(below_point)) {
-                    below_rows = getHoldCoordinates(above_point, false, true);
-                    below = false;
-                }
-                current_row.add(0, current_point);
-                current_point = new Coordinate(current_point.x - DISTANCE_BETWEEN_HOLDS, current_point.y);
-            }
-        }
-        {
-            Coordinate current_point = new Coordinate(point.x + DISTANCE_BETWEEN_HOLDS, point.y);
-            while (isInside(current_point)) {
-                Coordinate above_point = new Coordinate(point.x, point.y + DISTANCE_BETWEEN_HOLDS);
-                if (above && isInside(above_point)) {
-                    above_rows = getHoldCoordinates(above_point, true, false);
-                    above = false;
-                }
-                Coordinate below_point = new Coordinate(point.x, point.y - DISTANCE_BETWEEN_HOLDS);
-                if (below && isInside(above_point)) {
-                    below_rows = getHoldCoordinates(below_point, false, true);
-                    below = false;
-                }
-                current_row.add(current_point);
-                current_point = new Coordinate(current_point.x + DISTANCE_BETWEEN_HOLDS, current_point.y);
-            }
-        }
-        hold_locations.addAll(above_rows);
-        hold_locations.addAll(current_row);
-        hold_locations.addAll(below_rows);
-        return hold_locations;
-    }
+        float max_y = get_height();
+        float max_x = get_width();
+        hold_set = new ArrayList<>();
 
+        // Calculate the first valid hold above 0, 0
+        float current_x = start_point.x % DISTANCE_BETWEEN_HOLDS;
+        float current_y = start_point.y % DISTANCE_BETWEEN_HOLDS;
+        if (current_x < 0) current_x *= -1;
+        if (current_y < 0) current_y *= -1;
+
+        while (current_y < max_y) {
+            while (current_x < max_x) {
+                Coordinate current_point = new Coordinate(current_x, current_y);
+                if (isInside(current_point)) {
+                    hold_set.add(current_point);
+                }
+                current_x += DISTANCE_BETWEEN_HOLDS;
+            }
+            current_y += DISTANCE_BETWEEN_HOLDS;
+        }
+    }
 
     boolean isInside(Coordinate point) throws Exception {
         /* Finds if a point is inside a shape using the ray method.
