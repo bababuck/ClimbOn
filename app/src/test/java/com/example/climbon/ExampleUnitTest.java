@@ -19,7 +19,7 @@ public class ExampleUnitTest {
         Shape simple_shape;
         try{
             simple_shape = new Shape(corners, new Coordinate((float) 0.5, (float) 0.5));
-            assertEquals(9, simple_shape.getNumHolds());
+            assertEquals(16, simple_shape.getNumHolds());
         } catch (Exception e) {
             e.printStackTrace();
         }
