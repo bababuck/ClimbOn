@@ -59,6 +59,8 @@ public class Shape {
 
     public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */
+        corners = new ArrayList<>();
+        edges = new ArrayList<>();
         if (_corners.size() % 2 == 1){
             throw new Exception("Can't give half coordinate.");
         }
@@ -86,7 +88,7 @@ public class Shape {
         if (corners.size() < 3) {
             throw new Exception("Shape must have at least 3 sides.");
         }
-        for (int i=0;i<corners.size();++i) {
+        for (int i=0;i<corners.size()-1;++i) {
             edges.add(new Edge(corners.get(i), corners.get(i+1)));
         }
         edges.add(new Edge(corners.get(corners.size()-1), corners.get(0)));
