@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class ExampleUnitTest {
     @Test
     public void genSimpleShape() {
-        ArrayList<Float> corners = new ArrayList<Float>(Arrays.<Float>asList((float) 0,(float) 0,(float) 10,(float) 0,(float) 10,(float) 10, (float) 10, (float) 0));
+        ArrayList<Float> corners = new ArrayList<Float>(Arrays.<Float>asList((float) 0,(float) 0,(float) 10,(float) 0,(float) 10,(float) 10, (float) 0, (float) 10));
         Shape simple_shape;
         try{
             simple_shape = new Shape(corners, new Coordinate((float) 0.5, (float) 0.5));
@@ -25,6 +25,16 @@ public class ExampleUnitTest {
         }
     }
 
- //   @Test
+    @Test
+    public void genIrregularShape() {
+        ArrayList<Float> corners = new ArrayList<Float>(Arrays.<Float>asList((float) 0,(float) 0,(float) 10,(float) 0,(float) 10,(float) 8, (float) 8,(float) 10,(float) 0, (float) 10));
+        Shape simple_shape;
+        try{
+            simple_shape = new Shape(corners, new Coordinate((float) 0.5, (float) 0.5));
+            assertEquals(15, simple_shape.getNumHolds());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

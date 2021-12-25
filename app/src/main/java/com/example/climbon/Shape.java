@@ -35,15 +35,18 @@ public class Shape {
         float c;
 
         Edge (Coordinate left, Coordinate right) {
-            /* Creates an edge from two points */
+            /* Creates an edge from two points
+
+            ax + by + c = 0
+            */
             a = -(left.y - right.y);
             b = (left.x - right.x);
             c = -1 * (a * left.x + b * left.y);
-            if (a == 0) { // if vertical, use y for min/max
+            if (b == 0) { // if vertical, use y for min/max
                 min = Math.min(left.y, right.y);
                 max = Math.max(left.y, right.y);
             }
-            if (a != 0) {
+            if (b != 0) {
                 min = Math.min(left.x, right.x);
                 max = Math.max(left.x, right.x);
             }
@@ -209,14 +212,14 @@ public class Shape {
 
         If passes through an even number of edges, then is outside the figure.
         */
-        Edge ray = new Edge(point, new Coordinate(point.x, Float.POSITIVE_INFINITY));
+        Edge ray = new Edge(point, new Coordinate(point.x, 1000.0f));
         int count = 0;
         for (int i=0;i<edges.size();++i){
             if (intersects(edges.get(i),ray)){
                 ++count;
             }
         }
-        return (count % 2) == 0;
+        return (count % 2) == 1;
     }
 
     boolean intersects(Edge edge, Edge ray) throws Exception {
@@ -231,24 +234,25 @@ public class Shape {
         if (intersection == null){ // Parallel, no intersection
             return false;
         } else { // Not parallel, so edge isn't vertical (since ray is)
-            return (edge.min <= intersection.x) && (intersection.x <= edge.max);
+            return (edge.min <= intersection.x) && (intersection.x <= edge.max) &&
+                    (ray.min <= intersection.y) && (intersection.y <= ray.max);
         }
     }
 
-    Coordinate findIntersection(Edge edge, Edge ray){
+    private Coordinate findIntersection(Edge edge, Edge ray){
         /* Find if a ray intersects with an edge, return the location.
 
         Might get finicky since floats (oh well)
+        Assumes that ray.b == 0.
         */
-        if ((edge.b == 0 && ray.b == 0) ||
-                ((edge.b != 0 && ray.b != 0) &&
-                (edge.a/edge.b == ray.a/ray.b))){
+        if (edge.b == 0f || edge.b == -0f) {
             // Check corner case of two parallel lines
             return null;
         } else {
+            // Since ray is vertical, will intersect edge where x = ray.c
             Coordinate intersection = new Coordinate(0,0); //Don't cares
-            intersection.x = (ray.c/ray.b - edge.c/edge.b)/(edge.a/edge.b - ray.a/ray.b); // checked if denominator == 0
-            intersection.y = -(ray.c + intersection.x * ray.a)/ray.b;
+            intersection.y = -(-ray.c/ray.a * edge.a + edge.c)/edge.b;
+            intersection.x = -ray.c/ray.a;
             return intersection;
         }
     }
