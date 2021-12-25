@@ -46,16 +46,35 @@ public class PanelView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_panel_view);
 
-        edge_buffer = (int) convertDpToPixel(EDGE_BUFFER);
-        top_buffer = (int) convertDpToPixel(TOP_BUFFER);
-        bottom_buffer = (int) convertDpToPixel(BOTTOM_BUFFER);
+        calculateBuffers();
+        initializeDimensions();
+        createButtons();
+    }
 
+    private void calculateBuffers() {
+        /* Convert the buffers from DP to pixels.
+
+        All things calculated here will be same for life of application.
+
+        Could possible store the buffers/dims with the application since will be
+        the same regardless of panel size, but not a huge speedup so maybe not.
+        */
         DisplayMetrics display_metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
         screen_height = display_metrics.heightPixels;
-        Log.e("Help", "Coord:"+String.valueOf(screen_height));
         screen_width = display_metrics.widthPixels;
 
+        edge_buffer = (int) convertDpToPixel(EDGE_BUFFER);
+        top_buffer = (int) convertDpToPixel(TOP_BUFFER);
+        bottom_buffer = (int) convertDpToPixel(BOTTOM_BUFFER);
+    }
+
+    private void initializeDimensions() {
+        /* Calculates the rations/dimensions to be used for all buttons.
+
+        These values depend on the screen size and panels, so will just
+        calculate every time.
+        */
         float shape_width_arb;
         int shape_height_px, shape_width_px;
         float height_ratio, width_ratio;
@@ -69,9 +88,6 @@ public class PanelView extends AppCompatActivity {
         ratio = Math.min(width_ratio, height_ratio);
         extra_room_x = shape_width_px - (int) (shape_width_arb * ratio);
         extra_room_y = shape_height_px - (int) (shape_height_arb * ratio);
-
-        createButtons();
-
     }
 
     private void createButtons() {
@@ -92,13 +108,11 @@ public class PanelView extends AppCompatActivity {
                 }
             });
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
-            Log.e("Help", "Coord:"+String.valueOf(buttons.get(i).y));
+            //Log.e("Help", "Coord:"+String.valueOf(buttons.get(i).y));
             int y = convertCoordinateToLocation(false, buttons.get(i).y);
-            Log.e("Help", "Loc:"+String.valueOf(y));
             int button_size = 50;
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(button_size,button_size,x-button_size/2,y-button_size/2);
             layout.addView(button, params);
-            System.out.println(x);
         }
     }
 
