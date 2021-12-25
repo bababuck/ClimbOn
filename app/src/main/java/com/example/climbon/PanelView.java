@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
@@ -19,18 +20,23 @@ public class PanelView extends AppCompatActivity {
     */
     // Buffers (in dp)
     int TOP_BUFFER = 100; // Need room for title, back button
-    int EDGE_BUFFER = 5;
-    int BOTTOM_BUFFER = 5;
+    int EDGE_BUFFER = 40;
+    int BOTTOM_BUFFER = 200;
+    int edge_buffer, bottom_buffer, top_buffer;
     Shape current_shape;
     int screen_height;
     int screen_width;
+    int extra_room_x, extra_room_y;
+    float ratio; // ratio of arb shape dimension to px
+    float shape_height_arb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* */
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
         saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<Float>(Arrays.<Float>asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
+        ArrayList<Float> corners = new ArrayList<Float>(Arrays.<Float>asList(0f,0f,4f,0f,4f,10f,0f,10f));
         try {
             saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
         } catch (Exception e) {
@@ -39,7 +45,33 @@ public class PanelView extends AppCompatActivity {
         current_shape = saved_data.shapes.get(saved_data.current_shape);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_panel_view);
+
+        edge_buffer = (int) convertDpToPixel(EDGE_BUFFER);
+        top_buffer = (int) convertDpToPixel(TOP_BUFFER);
+        bottom_buffer = (int) convertDpToPixel(BOTTOM_BUFFER);
+
+        DisplayMetrics display_metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
+        screen_height = display_metrics.heightPixels;
+        Log.e("Help", "Coord:"+String.valueOf(screen_height));
+        screen_width = display_metrics.widthPixels;
+
+        float shape_width_arb;
+        int shape_height_px, shape_width_px;
+        float height_ratio, width_ratio;
+
+        shape_height_arb = current_shape.get_height();
+        shape_height_px = screen_height - (top_buffer + bottom_buffer);
+        height_ratio = ((float) shape_height_px) / shape_height_arb;
+        shape_width_arb = current_shape.get_width();
+        shape_width_px = screen_width - 2 * edge_buffer;
+        width_ratio = ((float) shape_width_px) / shape_width_arb;
+        ratio = Math.min(width_ratio, height_ratio);
+        extra_room_x = shape_width_px - (int) (shape_width_arb * ratio);
+        extra_room_y = shape_height_px - (int) (shape_height_arb * ratio);
+
         createButtons();
+
     }
 
     private void createButtons() {
@@ -53,55 +85,44 @@ public class PanelView extends AppCompatActivity {
         for (int i=0;i< buttons.size();++i) {
             Button button = new Button(this);
             button.setId(i);
-            button.setBackgroundColor(Color.rgb(10*i, 0, 0));
+            button.setBackgroundColor(Color.rgb(30*i, 0, 0));
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     button.setBackgroundColor(Color.rgb(0, 100, 0));
                 }
             });
-            int x = convertXCoordinateToLocation(buttons.get(i).x);
-            int y = convertYCoordinateToLocation(buttons.get(i).y);
-            AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(50,50,500+x*15,y);
+            int x = convertCoordinateToLocation(true, buttons.get(i).x);
+            Log.e("Help", "Coord:"+String.valueOf(buttons.get(i).y));
+            int y = convertCoordinateToLocation(false, buttons.get(i).y);
+            Log.e("Help", "Loc:"+String.valueOf(y));
+            int button_size = 50;
+            AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(button_size,button_size,x-button_size/2,y-button_size/2);
             layout.addView(button, params);
             System.out.println(x);
         }
     }
 
-    private int convertYCoordinateToLocation(float y_coordinate) {
-        /* Calculates the exact y-pixel location of a hold on the screen.
+    private int convertCoordinateToLocation(boolean is_x, float coordinate) {
+        /* Calculates the exact pixel location of a hold on the screen.
 
         Should be robust against screen sizes but who knows-
         and also who cares since probably only will run on my phone.
-        */
-        int shape_height_px, top_buffer, bottom_buffer, offset;
-        float shape_height_arb;
 
-        shape_height_arb = current_shape.get_height();
-        top_buffer = (int) convertDpToPixel(TOP_BUFFER, this);
-        bottom_buffer = (int) convertDpToPixel(BOTTOM_BUFFER, this);
-        shape_height_px = screen_height - (top_buffer + bottom_buffer);
-        offset = (int) (y_coordinate * (float) shape_height_px / shape_height_arb);
-        return top_buffer + offset;
+        Inputs:
+        - is_x: True is an x-coordinate, false if y-coordinate
+        - coordinate: a x or y coordinate in the 'Shape' plane
+        */
+        int offset;
+        if (is_x){
+            offset = (int) (coordinate * ratio) + extra_room_x / 2 + edge_buffer;
+        } else {
+            offset = (int) ((shape_height_arb - coordinate) * ratio) + extra_room_y / 2 + top_buffer;
+        }
+        return offset;
     }
 
-    private int convertXCoordinateToLocation(float x_coordinate) {
-        /* Calculates the exact x-pixel location of a hold on the screen.
-
-        Should be robust against screen sizes but who knows-
-        and also who cares since probably only will run on my phone.
-        */
-        int edge_buffer, offset, shape_width_px;
-        float shape_width_arb;
-
-        shape_width_arb = current_shape.get_width();
-        edge_buffer = (int) convertDpToPixel(EDGE_BUFFER, this);
-        shape_width_px = screen_width - 2 * edge_buffer;
-        offset = (int) (x_coordinate * (float) shape_width_px / shape_width_arb);
-        return edge_buffer + offset;
-    }
-
-    public static float convertDpToPixel(float dp, PanelView context){
-        context.getResources().getDisplayMetrics();
-        return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    public float convertDpToPixel(float dp){
+        this.getResources().getDisplayMetrics();
+        return dp * ((float) this.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 }
