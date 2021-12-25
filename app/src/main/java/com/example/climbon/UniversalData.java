@@ -13,17 +13,16 @@ public class UniversalData {
 
     Also need to store the wall so don't regenerate every time.
     */
-    Map<String, WeakReference<Object>> data = new HashMap<String, WeakReference<Object>>();
     Wall wall = new Wall();
-    ArrayList<Panel> panels;
-    int current_panel; // Store which panel we are currently looking at for PanelViewer
+    ArrayList<Shape> shapes = new ArrayList<>();
+    int current_shape; // Store which panel we are currently looking at for PanelViewer
 
-    void save(String id, Object object) {
-        data.put(id, new WeakReference<Object>(object));
-    }
-
-    Object retrieve(String id) {
-        WeakReference<Object> objectWeakReference = data.get(id);
-        return objectWeakReference.get();
-    }
+//    void save(String id, Object object) {
+//        data.put(id, new WeakReference<Object>(object));
+//    }
+//
+//    Object retrieve(String id) {
+//        WeakReference<Object> objectWeakReference = data.get(id);
+//        return objectWeakReference.get();
+//    }
 }
