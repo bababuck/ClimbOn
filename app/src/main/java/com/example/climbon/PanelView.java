@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,8 @@ public class PanelView extends AppCompatActivity {
     /* View a panel with the holds as clickable items.
 
     Clicking on buttons will turn those holds on/off.
+    TODO: Adjust button size based on zoom.
+    TODO: Adjust centering of buttons over coordinate.
     */
     // Buffers (in dp)
     int TOP_BUFFER = 100; // Need room for title, back button
@@ -51,8 +55,8 @@ public class PanelView extends AppCompatActivity {
 
         calculateBuffers();
         initializeDimensions();
-        createButtons();
         drawShape();
+        createButtons();
     }
 
     private void drawShape() {
@@ -83,7 +87,7 @@ public class PanelView extends AppCompatActivity {
     private void initializeSaveData() {
         /* Fake function since no universal data yet since testing. */
         saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
+        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,20f,0f,20f,16f,16f,20f,0f,20f));
         try {
             saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
         } catch (Exception e) {
@@ -138,12 +142,14 @@ public class PanelView extends AppCompatActivity {
         ArrayList<Coordinate> buttons = current_shape.hold_set;
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         for (int i=0;i< buttons.size();++i) {
-            Button button = new Button(this);
+            ImageButton button = new ImageButton(this);
             button.setId(i);
-            button.setBackgroundColor(Color.rgb(255, 0, 0));
+            button.setImageResource(R.drawable.pocket_off);
+            button.setBackgroundColor(Color.TRANSPARENT);
+            button.setScaleType(ImageView.ScaleType.CENTER_CROP);
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    button.setBackgroundColor(Color.rgb(0, 255, 0));
+                    button.setImageResource(R.drawable.pocket_on);
                 }
             });
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
