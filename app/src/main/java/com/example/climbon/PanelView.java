@@ -33,6 +33,7 @@ public class PanelView extends AppCompatActivity {
     int shape_height_px, shape_width_px;
     float ratio; // ratio of arb shape dimension to px
     float shape_height_arb;
+    UniversalData saved_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +42,30 @@ public class PanelView extends AppCompatActivity {
         setContentView(R.layout.activity_panel_view);
 
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
-        UniversalData saved_data = app.data;
-        saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
-        try {
-            saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        saved_data = app.data;
+
+        initializeSaveData(); // Needed for testing
+
+        // Load the current shape from the save data.
         current_shape = saved_data.shapes.get(saved_data.current_shape);
 
         calculateBuffers();
         initializeDimensions();
         createButtons();
+        drawShape();
+    }
 
+    private void drawShape() {
+        /* Draws the shape of the panel to the screen in the proper location.
+
+        Uses a custom view that will draw the path.
+        For the boundary, need to convert the corner coordinates to screen locations.
+
+        I chose to go the route of making the view the size of the full screen, and then
+        converting the individual coordinates. Maybe more efficient slightly to go the route
+        of making the view the size of the shape and offsetting within but would require
+        making new utility function :(
+        */
         ArrayList<Coordinate> corners_adj = new ArrayList<>();
         for (int i=0;i<current_shape.corners.size();++i){
             corners_adj.add(new Coordinate(convertCoordinateToLocation(true, current_shape.corners.get(i).x), convertCoordinateToLocation(false,current_shape.corners.get(i).y)));
@@ -67,6 +78,17 @@ public class PanelView extends AppCompatActivity {
         BoundaryView bnd_vw = new BoundaryView(this, boundary);
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         layout.addView(bnd_vw, params);
+    }
+
+    private void initializeSaveData() {
+        /* Fake function since no universal data yet since testing. */
+        saved_data.current_shape = 0;
+        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
+        try {
+            saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void calculateBuffers() {

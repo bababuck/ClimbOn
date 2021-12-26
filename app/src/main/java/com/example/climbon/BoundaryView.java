@@ -29,6 +29,12 @@ public class BoundaryView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        /* Draws the path to canvas in Blue.
+
+        Might change to just draw the edges since then I could
+        represent stacked panels as one. Better yet, I should
+        draw the edges in black over top the blue.
+        */
         super.onDraw(canvas);
         Paint myPaint = new Paint();
         myPaint.setColor(Color.rgb(0, 0, 255));
