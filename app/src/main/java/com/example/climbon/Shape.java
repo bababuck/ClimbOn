@@ -58,7 +58,7 @@ public class Shape {
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
     ArrayList<Coordinate> hold_set;
-    private final Boundary boundary;
+    public final Boundary boundary;
 
     public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */

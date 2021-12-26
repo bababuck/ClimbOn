@@ -37,30 +37,34 @@ public class PanelView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* */
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_panel_view);
+
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
         saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,4f,0f,4f,10f,0f,10f));
+        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
         try {
             saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
         } catch (Exception e) {
             e.printStackTrace();
         }
         current_shape = saved_data.shapes.get(saved_data.current_shape);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_panel_view);
 
         calculateBuffers();
         initializeDimensions();
-        //createButtons();
 
-        BoundaryView bnd_vw = new BoundaryView(this);
+        createButtons();
+
+        AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(2000,2000, 0,0);
+        BoundaryView bnd_vw = new BoundaryView(this, current_shape.boundary.path);
         AbsoluteLayout layout = findViewById(R.id.PanelView);
-        AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(shape_width_px,shape_height_px,300,300);
         layout.addView(bnd_vw, params);
-        Bitmap bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        current_shape.draw(canvas, 500, 500);
+
+//        Bitmap bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        current_shape.draw(canvas, 500, 500);
+//        bnd_vw.draw(canvas);
         //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
         //setContentView(bnd_vw);
 

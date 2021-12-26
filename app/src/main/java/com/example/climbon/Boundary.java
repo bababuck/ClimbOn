@@ -18,7 +18,7 @@ public class Boundary extends Drawable {
     Will be initialized to fill the screen.
     Just an outline of the shape should be printed.
     */
-    private Path path = new Path();
+   public Path path = new Path();
     private Paint paint = new Paint();
 
     public Boundary(ArrayList<Coordinate> corners) {
