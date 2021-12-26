@@ -2,7 +2,10 @@ package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,6 +30,7 @@ public class PanelView extends AppCompatActivity {
     int screen_height;
     int screen_width;
     int extra_room_x, extra_room_y;
+    int shape_height_px, shape_width_px;
     float ratio; // ratio of arb shape dimension to px
     float shape_height_arb;
 
@@ -36,7 +40,7 @@ public class PanelView extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
         saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<Float>(Arrays.<Float>asList(0f,0f,4f,0f,4f,10f,0f,10f));
+        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,4f,0f,4f,10f,0f,10f));
         try {
             saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
         } catch (Exception e) {
@@ -48,7 +52,18 @@ public class PanelView extends AppCompatActivity {
 
         calculateBuffers();
         initializeDimensions();
-        createButtons();
+        //createButtons();
+
+        BoundaryView bnd_vw = new BoundaryView(this);
+        AbsoluteLayout layout = findViewById(R.id.PanelView);
+        AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(shape_width_px,shape_height_px,300,300);
+        layout.addView(bnd_vw, params);
+        Bitmap bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        current_shape.draw(canvas, 500, 500);
+        //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
+        //setContentView(bnd_vw);
+
     }
 
     private void calculateBuffers() {
@@ -76,7 +91,6 @@ public class PanelView extends AppCompatActivity {
         calculate every time.
         */
         float shape_width_arb;
-        int shape_height_px, shape_width_px;
         float height_ratio, width_ratio;
 
         shape_height_arb = current_shape.get_height();
@@ -108,7 +122,7 @@ public class PanelView extends AppCompatActivity {
                 }
             });
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
-            //Log.e("Help", "Coord:"+String.valueOf(buttons.get(i).y));
+            //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
             int y = convertCoordinateToLocation(false, buttons.get(i).y);
             int button_size = 50;
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(button_size,button_size,x-button_size/2,y-button_size/2);

@@ -27,12 +27,13 @@ public class Boundary extends Drawable {
         TODO:
         - make color a operand
         */
-        path.moveTo((float) corners.get(corners.size()-1).x,
-                    (float) corners.get(corners.size()-1).y);
+        path.moveTo( corners.get(corners.size()-1).x,
+                     corners.get(corners.size()-1).y);
         for (int i=0;i<corners.size();++i) {
-            path.lineTo((float) corners.get(i).x,
-                        (float) corners.get(i).y);
+            path.lineTo( corners.get(i).x * 100,
+                         corners.get(i).y *100);
         }
+        paint.setStrokeWidth(20);
         paint.setColor(Color.BLACK);
     }
 

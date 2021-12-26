@@ -58,7 +58,7 @@ public class Shape {
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
     ArrayList<Coordinate> hold_set;
-    //private final Boundary boundary;
+    private final Boundary boundary;
 
     public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */
@@ -73,14 +73,14 @@ public class Shape {
         shiftCorners();
         cornersToEdges();
         genHolds(start_point);
-        //boundary = new Boundary(corners);
+        boundary = new Boundary(corners);
     }
 
-//    public void draw(@NonNull Canvas canvas, int height, int width) {
-//        /* Draw the shape outline. */
-//        boundary.setBounds(width, height, 0, 0);
-//        boundary.draw(canvas);
-//    }
+    public void draw(@NonNull Canvas canvas, int height, int width) {
+        /* Draw the shape outline. */
+        boundary.setBounds(0, 0, width, height);
+        boundary.draw(canvas);
+    }
 
     private void cornersToEdges() throws Exception {
         /* Converts the corners list to an edges list
