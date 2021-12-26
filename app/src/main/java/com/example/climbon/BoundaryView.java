@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 public class BoundaryView extends View {
 
-    Path path;
+    Boundary boundary;
     public BoundaryView(Context context) {
         super(context);
         setWillNotDraw(false);
@@ -22,9 +22,9 @@ public class BoundaryView extends View {
         super(context, attributeSet);
     }
 
-    public BoundaryView(Context context, Path path){
+    public BoundaryView(Context context, Boundary boundary){
         super(context);
-        this.path = path;
+        this.boundary = boundary;
     }
 
     @Override
@@ -33,6 +33,6 @@ public class BoundaryView extends View {
         Paint myPaint = new Paint();
         myPaint.setColor(Color.rgb(0, 0, 255));
         myPaint.setStrokeWidth(10);
-        canvas.drawPath(path, myPaint);
+        canvas.drawPath(boundary.path, myPaint);
     }
 }

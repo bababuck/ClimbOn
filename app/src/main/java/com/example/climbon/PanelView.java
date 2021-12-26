@@ -53,21 +53,20 @@ public class PanelView extends AppCompatActivity {
 
         calculateBuffers();
         initializeDimensions();
-
         createButtons();
 
-        AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(2000,2000, 0,0);
-        BoundaryView bnd_vw = new BoundaryView(this, current_shape.boundary.path);
+        ArrayList<Coordinate> corners_adj = new ArrayList<>();
+        for (int i=0;i<current_shape.corners.size();++i){
+            corners_adj.add(new Coordinate(convertCoordinateToLocation(true, current_shape.corners.get(i).x), convertCoordinateToLocation(false,current_shape.corners.get(i).y)));
+        }
+        Boundary boundary = new Boundary(corners_adj);
+        AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(screen_width,
+                screen_height,
+                0,
+                0);
+        BoundaryView bnd_vw = new BoundaryView(this, boundary);
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         layout.addView(bnd_vw, params);
-
-//        Bitmap bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
-//        Canvas canvas = new Canvas(bitmap);
-//        current_shape.draw(canvas, 500, 500);
-//        bnd_vw.draw(canvas);
-        //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
-        //setContentView(bnd_vw);
-
     }
 
     private void calculateBuffers() {
@@ -119,10 +118,10 @@ public class PanelView extends AppCompatActivity {
         for (int i=0;i< buttons.size();++i) {
             Button button = new Button(this);
             button.setId(i);
-            button.setBackgroundColor(Color.rgb(30*i, 0, 0));
+            button.setBackgroundColor(Color.rgb(255, 0, 0));
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    button.setBackgroundColor(Color.rgb(0, 100, 0));
+                    button.setBackgroundColor(Color.rgb(0, 255, 0));
                 }
             });
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
