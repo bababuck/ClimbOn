@@ -31,6 +31,7 @@ public class PanelView extends AppCompatActivity {
     int BOTTOM_BUFFER = 200;
     int edge_buffer, bottom_buffer, top_buffer;
     Shape current_shape;
+    ArrayList<Integer> current_hold_types;
     int screen_height;
     int screen_width;
     int extra_room_x, extra_room_y;
@@ -52,6 +53,7 @@ public class PanelView extends AppCompatActivity {
 
         // Load the current shape from the save data.
         current_shape = saved_data.shapes.get(saved_data.current_shape);
+        current_hold_types = saved_data.hold_types.get(saved_data.current_shape);
 
         calculateBuffers();
         initializeDimensions();
@@ -87,9 +89,10 @@ public class PanelView extends AppCompatActivity {
     private void initializeSaveData() {
         /* Fake function since no universal data yet since testing. */
         saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,20f,0f,20f,16f,16f,20f,0f,20f));
+        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
         try {
             saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
+            saved_data.hold_types.add(new ArrayList<>(Arrays.asList(1,2,3,5,7,0,1,0,3,2,4,1,4,2,6)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,7 +144,7 @@ public class PanelView extends AppCompatActivity {
         ArrayList<Coordinate> buttons = current_shape.hold_set;
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         for (int i=0;i< buttons.size();++i) {
-            PanelViewHold button = new PanelViewHold(this,  2,true);
+            PanelViewHold button = new PanelViewHold(this, current_hold_types.get(i),true);
             button.setId(i);
             // Set here, since we will reuse PanelViewHold later
             button.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +158,7 @@ public class PanelView extends AppCompatActivity {
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
             //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
             int y = convertCoordinateToLocation(false, buttons.get(i).y);
-            int button_size = 50;
+            int button_size = (int) (ratio * Shape.DISTANCE_BETWEEN_HOLDS);
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(button_size,button_size,x-button_size/2,y-button_size/2);
             layout.addView(button, params);
         }

@@ -15,6 +15,7 @@ public class UniversalData {
     */
     Wall wall = new Wall();
     ArrayList<Shape> shapes = new ArrayList<>();
+    ArrayList<ArrayList<Integer>> hold_types = new ArrayList<>();
     int current_shape; // Store which panel we are currently looking at for PanelViewer
 
 //    void save(String id, Object object) {
