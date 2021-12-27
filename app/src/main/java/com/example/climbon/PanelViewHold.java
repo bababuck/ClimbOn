@@ -27,16 +27,10 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
         this.setBackgroundColor(Color.TRANSPARENT);
         this.setScaleType(ImageView.ScaleType.CENTER_CROP);
         PanelViewHold button = this;
-        this.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                button.on = !button.on;
-                button.setHoldImage();
-            }
-        });
         setHoldImage();
     }
 
-    private void setHoldImage() {
+    public void setHoldImage() {
         /* Sets the image to be used for the hold.
 
         Different image for on/vs off
