@@ -20,9 +20,9 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
     public HOLD_TYPE hold_type;
     public boolean on;
 
-    public PanelViewHold(@NonNull Context context, HOLD_TYPE hold_type, boolean on) {
+    public PanelViewHold(@NonNull Context context, int hold_type, boolean on) {
         super(context);
-        this.hold_type = hold_type;
+        this.hold_type = HOLD_TYPE.values()[hold_type];
         this.on = on;
         this.setBackgroundColor(Color.TRANSPARENT);
         this.setScaleType(ImageView.ScaleType.CENTER_CROP);

@@ -141,7 +141,7 @@ public class PanelView extends AppCompatActivity {
         ArrayList<Coordinate> buttons = current_shape.hold_set;
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         for (int i=0;i< buttons.size();++i) {
-            ImageButton button = new PanelViewHold(this,  PanelViewHold.HOLD_TYPE.MINI_JUG,true);
+            ImageButton button = new PanelViewHold(this,  2,true);
             button.setId(i);
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
             //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
