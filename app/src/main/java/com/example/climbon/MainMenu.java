@@ -21,5 +21,14 @@ public class MainMenu extends AppCompatActivity {
 
                 view.getContext().startActivity(intent);}
         });
+
+        Button route_view = (Button) findViewById(R.id.create_route);
+        route_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), RouteView.class);
+
+                view.getContext().startActivity(intent);}
+        });
     }
 }
