@@ -36,7 +36,7 @@ public class PanelView extends AppCompatActivity {
     int extra_room_x, extra_room_y;
     int shape_height_px, shape_width_px;
     float ratio; // ratio of arb shape dimension to px
-    float shape_height_arb;
+    float shape_height_arb, shape_width_arb;
     UniversalData saved_data;
 
     @Override
@@ -119,7 +119,6 @@ public class PanelView extends AppCompatActivity {
         These values depend on the screen size and panels, so will just
         calculate every time.
         */
-        float shape_width_arb;
         float height_ratio, width_ratio;
 
         shape_height_arb = current_shape.get_height();
@@ -142,16 +141,8 @@ public class PanelView extends AppCompatActivity {
         ArrayList<Coordinate> buttons = current_shape.hold_set;
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         for (int i=0;i< buttons.size();++i) {
-            ImageButton button = new ImageButton(this);
+            ImageButton button = new PanelViewHold(this,  PanelViewHold.HOLD_TYPE.MINI_JUG,true);
             button.setId(i);
-            button.setImageResource(R.drawable.pocket_off);
-            button.setBackgroundColor(Color.TRANSPARENT);
-            button.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    button.setImageResource(R.drawable.pocket_on);
-                }
-            });
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
             //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
             int y = convertCoordinateToLocation(false, buttons.get(i).y);
