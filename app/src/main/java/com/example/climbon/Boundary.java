@@ -18,8 +18,8 @@ public class Boundary extends Drawable {
     Will be initialized to fill the screen.
     Just an outline of the shape should be printed.
     */
-   public Path path = new Path();
-    private Paint paint = new Paint();
+    public Path path;
+    protected Paint paint;
 
     public Boundary(ArrayList<Coordinate> corners) {
         /* Initialize the boundary from a set of coordinates.
@@ -27,6 +27,8 @@ public class Boundary extends Drawable {
         TODO:
         - make color a operand
         */
+        path = new Path();
+        paint = new Paint();
         path.moveTo( corners.get(corners.size()-1).x,
                      corners.get(corners.size()-1).y);
         for (int i=0;i<corners.size();++i) {

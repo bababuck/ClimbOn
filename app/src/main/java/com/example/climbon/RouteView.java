@@ -15,9 +15,29 @@ public class RouteView extends AppCompatActivity {
     panel view screen and allow for editing of route.
     */
 
+    UniversalData saved_data;
+    // set image drawable
+    // extend boundary class to class that also draws select holds.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_view);
+
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        saved_data = app.data;
+
+        initializeSaveData(); // Needed for testing
+
+        for (shape in saved_data.shape){
+
+        }
+        // Load the current shape from the save data.
+        current_shape = saved_data.shapes.get(saved_data.current_shape);
+        current_hold_types = saved_data.hold_types.get(saved_data.current_shape);
+
+        calculateBuffers();
+        initializeDimensions();
+        drawShape();
+        createButtons();
     }
 }

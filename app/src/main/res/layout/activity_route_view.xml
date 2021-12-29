@@ -5,5 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RouteView">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            android:id="@+id/linear_layout"
+        </LinearLayout>
 
+    </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
