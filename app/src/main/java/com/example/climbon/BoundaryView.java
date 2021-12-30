@@ -36,9 +36,6 @@ public class BoundaryView extends View {
         draw the edges in black over top the blue.
         */
         super.onDraw(canvas);
-        Paint myPaint = new Paint();
-        myPaint.setColor(Color.rgb(0, 0, 255));
-        myPaint.setStrokeWidth(10);
-        canvas.drawPath(boundary.path, myPaint);
+        boundary.draw(canvas);
     }
 }
