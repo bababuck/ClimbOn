@@ -2,7 +2,6 @@ package com.example.climbon;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,6 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
         this.on = on;
         this.setBackgroundColor(Color.TRANSPARENT);
         this.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        PanelViewHold button = this;
         setHoldImage();
     }
 
@@ -76,6 +74,7 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
                     return R.drawable.no_hold;
             }
         }
+        return 0; // Compiler being stoopid and getting mad at me for no return... idc about multiple returns
     }
 
     public void setHoldImage() {
@@ -84,7 +83,7 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
         Different image for on/vs off
 
         Is there a better way to do this?
-        Like set the path for seperate folers for on/off
+        Like set the path for separate folders for on/off
         then:
         if (on) {path = R.drawable.on}
         ...
