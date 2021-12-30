@@ -30,6 +30,54 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
         setHoldImage();
     }
 
+
+    public static int getImageId(int hold_type) {
+        return getImageId(HOLD_TYPE.values()[hold_type], true);
+    }
+
+    public static int getImageId(HOLD_TYPE hold_type, boolean on){
+        /* Helper function that returns the drawable ID for a hold/on status. */
+        if (on) {
+            switch (hold_type) {
+                case POCKET:
+                    return R.drawable.pocket_on;
+                case JUG:
+                    return R.drawable.jug_on;
+                case MINI_JUG:
+                    return R.drawable.mini_jug_on;
+                case CRIMP:
+                    return R.drawable.crimp_on;
+                case FOOTHOLD:
+                    return R.drawable.foothold_on;
+                case SLOPER:
+                    return R.drawable.sloper_on;
+                case PINCH:
+                    return R.drawable.pinch_on;
+                case NO_HOLD:
+                    return R.drawable.no_hold;
+            }
+        } else { // off
+            switch (hold_type) {
+                case POCKET:
+                    return R.drawable.pocket_off;
+                case JUG:
+                    return R.drawable.jug_off;
+                case MINI_JUG:
+                    return R.drawable.mini_jug_off;
+                case CRIMP:
+                    return R.drawable.crimp_off;
+                case FOOTHOLD:
+                    return R.drawable.foothold_off;
+                case SLOPER:
+                    return R.drawable.sloper_off;
+                case PINCH:
+                    return R.drawable.pinch_off;
+                case NO_HOLD:
+                    return R.drawable.no_hold;
+            }
+        }
+    }
+
     public void setHoldImage() {
         /* Sets the image to be used for the hold.
 
@@ -42,60 +90,6 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
         ...
         this.setImageResource(path.pocket)
         */
-        if (on) {
-            switch (hold_type) {
-                case POCKET:
-                    this.setImageResource(R.drawable.pocket_on);
-                    break;
-                case JUG:
-                    this.setImageResource(R.drawable.jug_on);
-                    break;
-                case MINI_JUG:
-                    this.setImageResource(R.drawable.mini_jug_on);
-                    break;
-                case CRIMP:
-                    this.setImageResource(R.drawable.crimp_on);
-                    break;
-                case FOOTHOLD:
-                    this.setImageResource(R.drawable.foothold_on);
-                    break;
-                case SLOPER:
-                    this.setImageResource(R.drawable.sloper_on);
-                    break;
-                case PINCH:
-                    this.setImageResource(R.drawable.pinch_on);
-                    break;
-                case NO_HOLD:
-                    this.setImageResource(R.drawable.no_hold);
-                    break;
-            }
-        } else { // off
-            switch (hold_type) {
-                case POCKET:
-                    this.setImageResource(R.drawable.pocket_off);
-                    break;
-                case JUG:
-                    this.setImageResource(R.drawable.jug_off);
-                    break;
-                case MINI_JUG:
-                    this.setImageResource(R.drawable.mini_jug_off);
-                    break;
-                case CRIMP:
-                    this.setImageResource(R.drawable.crimp_off);
-                    break;
-                case FOOTHOLD:
-                    this.setImageResource(R.drawable.foothold_off);
-                    break;
-                case SLOPER:
-                    this.setImageResource(R.drawable.sloper_off);
-                    break;
-                case PINCH:
-                    this.setImageResource(R.drawable.pinch_off);
-                    break;
-                case NO_HOLD:
-                    this.setImageResource(R.drawable.no_hold);
-                    break;
-            }
-        }
+        this.setImageResource(getImageId(hold_type, on));
     }
 }
