@@ -77,7 +77,7 @@ public class RouteView extends AppCompatActivity {
         }
         Boundary boundary = new Boundary(new_corners); // need to scaled somewhere
         ArrayList<Boolean> hold_status = new ArrayList<>(Arrays.asList(true,false,true,false,true,false,false,false,false,false,false,true,false,true,false));
-        RouteViewPanel panel = new RouteViewPanel(this, boundary, current_shape.hold_set, current_hold_types, hold_status);
+        RouteViewPanel panel = new RouteViewPanel(this, boundary, current_shape.hold_set, current_hold_types, hold_status, translater);
         LinearLayout layout = findViewById(R.id.RouteViewLL);
         Log.e("Help", "Coor:"+String.valueOf(dp_to_px));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(1000, 1500);

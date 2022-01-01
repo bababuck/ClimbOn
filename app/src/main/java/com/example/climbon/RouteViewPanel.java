@@ -30,15 +30,15 @@ public class RouteViewPanel extends Drawable {
     ArrayList<Rect> bounds = new ArrayList<>();
     int HOLD_SIZE = 50;
 
-    public RouteViewPanel(Context context, Boundary boundary, ArrayList<Coordinate> coords, ArrayList<Integer> holds, ArrayList<Boolean> hold_status){
+    public RouteViewPanel(Context context, Boundary boundary, ArrayList<Coordinate> coords, ArrayList<Integer> holds, ArrayList<Boolean> hold_status, Translater translater){
         super();
         this.boundary = boundary;
         for (int i=0;i<holds.size();++i){
             if (hold_status.get(i)){
                 this.holds.add(context.getResources().getDrawable(PanelViewHold.getImageId(holds.get(i))));
-                int left = (int) coords.get(i).x * 100;
-                int top = (int) coords.get(i).y * 100;
-                bounds.add(new Rect(left,top,left + 50,top + 50));
+                int left = translater.translateX((int) coords.get(i).x);
+                int top = translater.translateY((int) coords.get(i).y);
+                bounds.add(new Rect(left-50,top-50,left + 50,top + 50));
             }
         }
     }
