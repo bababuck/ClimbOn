@@ -35,8 +35,8 @@ public class Boundary extends Drawable {
             path.lineTo( corners.get(i).x,
                          corners.get(i).y);
         }
-        paint.setStrokeWidth(20);
-        paint.setColor(Color.rgb(0, 0, 255));
+        paint.setStrokeWidth(100);
+        paint.setColor(Color.rgb(255, 0, 0));
         paint.setStrokeWidth(10);
     }
 

@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -64,12 +68,26 @@ public class RouteView extends AppCompatActivity {
         // Load the current shape from the save data.
         Shape current_shape = saved_data.shapes.get(saved_data.current_shape);
         ArrayList<Integer> current_hold_types = saved_data.hold_types.get(saved_data.current_shape);
-        Boundary boundary = new Boundary(current_shape.corners);
+        ArrayList<Coordinate> new_corners = new ArrayList<>();
+        this.getResources().getDisplayMetrics();
+        float dp_to_px = ((float) this.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        Translater translater = new Translater(100, 0, 10, 1500-50, 1000-75, (int) current_shape.get_height(), (int) current_shape.get_width());
+        for (int j=0;j<current_shape.corners.size();++j) {
+            new_corners.add(new Coordinate(translater.translateX((int) current_shape.corners.get(j).x), translater.translateY((int)current_shape.corners.get(j).y)));
+        }
+        Boundary boundary = new Boundary(new_corners); // need to scaled somewhere
         ArrayList<Boolean> hold_status = new ArrayList<>(Arrays.asList(true,false,true,false,true,false,false,false,false,false,false,true,false,true,false));
-        RouteViewPanel button = new RouteViewPanel(this, boundary, current_shape.hold_set, current_hold_types, hold_status);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) current_shape.get_width(), (int) current_shape.get_height());
-        BoundaryView bnd_vw = new BoundaryView(this, boundary);
+        RouteViewPanel panel = new RouteViewPanel(this, boundary, current_shape.hold_set, current_hold_types, hold_status);
         LinearLayout layout = findViewById(R.id.RouteViewLL);
-        layout.addView(bnd_vw, params);
+        Log.e("Help", "Coor:"+String.valueOf(dp_to_px));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(1000, 1500);
+        ImageButton button = new ImageButton(this);
+        button.setImageDrawable(panel);
+
+        layout.addView(button, params);
+        button = new ImageButton(this);
+        button.setImageDrawable(panel);
+
+        layout.addView(button, params);
     }
-}
+}//1000,1000);//
