@@ -2,21 +2,13 @@ package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsoluteLayout;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PanelView extends AppCompatActivity {
     /* View a panel with the holds as clickable items.
@@ -49,11 +41,9 @@ public class PanelView extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
 
-        initializeSaveData(); // Needed for testing
-
         // Load the current shape from the save data.
-        current_shape = saved_data.shapes.get(saved_data.current_shape);
-        current_hold_types = saved_data.hold_types.get(saved_data.current_shape);
+        current_shape = saved_data.wall.panel_set.get(saved_data.current_shape);
+        current_hold_types = current_shape.hold_types;
 
         calculateBuffers();
         initializeDimensions();
@@ -84,18 +74,6 @@ public class PanelView extends AppCompatActivity {
         BoundaryView bnd_vw = new BoundaryView(this, boundary);
         AbsoluteLayout layout = findViewById(R.id.PanelView);
         layout.addView(bnd_vw, params);
-    }
-
-    private void initializeSaveData() {
-        /* Fake function since no universal data yet since testing. */
-        saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
-        try {
-            saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
-            saved_data.hold_types.add(new ArrayList<>(Arrays.asList(1,2,3,5,7,0,1,0,3,2,4,1,4,2,6)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void calculateBuffers() {
@@ -156,7 +134,7 @@ public class PanelView extends AppCompatActivity {
                 }
             });
             int x = convertCoordinateToLocation(true, buttons.get(i).x);
-            //Log.e("Help", "Coor:"+String.valueOf(buttons.get(i).y));
+            //Log.e("Help", "Coordinate:"+String.valueOf(buttons.get(i).y));
             int y = convertCoordinateToLocation(false, buttons.get(i).y);
             int button_size = (int) (ratio * Shape.DISTANCE_BETWEEN_HOLDS);
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(button_size,button_size,x-button_size/2,y-button_size/2);
