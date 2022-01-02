@@ -5,14 +5,12 @@ import java.util.ArrayList;
 public class Wall {
     /* Consists of a set on panels.
 
-    Assumes all panels lie in either YZ or XZ planes.
-    Each "section" is 2 panels in height.
     Can be indefinitely long.
+
+    Not sure if class needed since really just holds one thing for now
     */
 
-    ArrayList<Panel> panel_set = new ArrayList();
+    public ArrayList<Shape> panel_set = new ArrayList();
 
-    public void generateWallView() {
 
-    }
 }
