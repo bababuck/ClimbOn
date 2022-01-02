@@ -35,22 +35,10 @@ public class RouteView extends AppCompatActivity {
 
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
-        initializeSaveData(); // Needed for testing
+
         // calculateBuffers();
         // initializeDimensions();
         createButtons();
-    }
-
-    private void initializeSaveData() {
-        /* Fake function since no universal data yet since testing. */
-        saved_data.current_shape = 0;
-        ArrayList<Float> corners = new ArrayList<>(Arrays.asList(0f,0f,10f,0f,10f,8f,8f,10f,0f,10f));
-        try {
-            saved_data.shapes.add(new Shape(corners, new Coordinate(0.5f,0.5f)));
-            saved_data.hold_types.add(new ArrayList<>(Arrays.asList(1,2,3,5,7,0,1,0,3,2,4,1,4,2,6)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void createButtons(){
@@ -58,7 +46,7 @@ public class RouteView extends AppCompatActivity {
 
         Each button will be an image of a panel.
         */
-        int number_of_shapes = saved_data.shapes.size();
+        int number_of_shapes = saved_data.wall.panel_set.size();
         for (int i=0;i<number_of_shapes;++i){
             createButton(i);
         }
@@ -66,8 +54,8 @@ public class RouteView extends AppCompatActivity {
 
     private void createButton(int i) {
         // Load the current shape from the save data.
-        Shape current_shape = saved_data.shapes.get(saved_data.current_shape);
-        ArrayList<Integer> current_hold_types = saved_data.hold_types.get(saved_data.current_shape);
+        Shape current_shape = saved_data.wall.panel_set.get(i);
+        ArrayList<Integer> current_hold_types = current_shape.hold_types;
         ArrayList<Coordinate> new_corners = new ArrayList<>();
         this.getResources().getDisplayMetrics();
         float dp_to_px = ((float) this.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
@@ -83,11 +71,6 @@ public class RouteView extends AppCompatActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(1000, 1500);
         ImageButton button = new ImageButton(this);
         button.setImageDrawable(panel);
-
-        layout.addView(button, params);
-        button = new ImageButton(this);
-        button.setImageDrawable(panel);
-
         layout.addView(button, params);
     }
-}//1000,1000);//
+}
