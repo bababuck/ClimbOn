@@ -21,11 +21,28 @@ public class Translater {
         float height_ratio, width_ratio;
         this.shape_height = shape_height;
         usable_height = screen_height - (top_buffer + bottom_buffer);
-        height_ratio = ((float) usable_height) / shape_height;
-
         usable_width = screen_width - 2 * edge_buffer;
+
+        height_ratio = ((float) usable_height) / shape_height;
         width_ratio = ((float) usable_width) / shape_width;
         ratio = Math.min(width_ratio, height_ratio);
+
+        left_offset = edge_buffer + (usable_width - (int) (shape_width * ratio))/2;
+        top_offset = top_buffer + (usable_height - (int) (shape_height * ratio))/2;
+    }
+
+    public Translater(int top_buffer, int edge_buffer, int bottom_buffer, int screen_height, int screen_width, float shape_height, float shape_width, float ratio){
+        /* Initializes the class, using a given ratio.
+
+         */
+        int usable_height, usable_width;
+        float height_ratio, width_ratio;
+        this.shape_height = shape_height;
+        usable_height = screen_height - (top_buffer + bottom_buffer);
+        usable_width = screen_width - 2 * edge_buffer;
+
+        this.ratio = ratio;
+
         left_offset = edge_buffer + (usable_width - (int) (shape_width * ratio))/2;
         top_offset = top_buffer + (usable_height - (int) (shape_height * ratio))/2;
     }
