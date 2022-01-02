@@ -20,16 +20,15 @@ public class PanelView extends AppCompatActivity {
     TODO: Adjust centering of buttons over coordinate.
     */
     // Buffers (Arbitrary distances shape must stay away from edges of screen
-    private static int TOP_BUFFER = 10; // Need room for title, back button
-    private static int EDGE_BUFFER = 10;
-    private static int BOTTOM_BUFFER = 300; // Big for now since buttons at bottom block screen in Emulator
+    private final static int TOP_BUFFER = 10; // Need room for title, back button
+    private final static int EDGE_BUFFER = 10;
+    private final static int BOTTOM_BUFFER = 300; // Big for now since buttons at bottom block screen in Emulator
 
     private Translater translater;
     private int screen_height;
     private int screen_width;
     private Shape current_shape;
     private ArrayList<Integer> current_hold_types;
-    private  UniversalData saved_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,7 @@ public class PanelView extends AppCompatActivity {
 
     private void initializeData() {
         /* Load the current shape from the save data. */
+        UniversalData saved_data;
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
         current_shape = saved_data.wall.panel_set.get(saved_data.current_shape);
