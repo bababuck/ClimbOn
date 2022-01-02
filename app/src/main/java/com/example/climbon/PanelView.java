@@ -17,6 +17,7 @@ public class PanelView extends AppCompatActivity {
     TODO: Adjust button size based on zoom.
     TODO: Adjust centering of buttons over coordinate.
     */
+    Translater translater;
     // Buffers (in dp)
     int TOP_BUFFER = 100; // Need room for title, back button
     int EDGE_BUFFER = 40;
@@ -45,6 +46,19 @@ public class PanelView extends AppCompatActivity {
         current_shape = saved_data.wall.panel_set.get(saved_data.current_shape);
         current_hold_types = current_shape.hold_types;
 
+        DisplayMetrics display_metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(display_metrics);
+        screen_height = display_metrics.heightPixels;
+        screen_width = display_metrics.widthPixels;
+        int shape_width = (int) current_shape.get_width();
+        int shape_height = (int) current_shape.get_height();
+        translater = new Translater(TOP_BUFFER,
+                                    EDGE_BUFFER,
+                                    BOTTOM_BUFFER,
+                                    screen_height,
+                                    screen_width,
+                                    shape_height,
+                                    shape_width);
         calculateBuffers();
         initializeDimensions();
         drawShape();
