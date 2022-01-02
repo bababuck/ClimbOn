@@ -10,10 +10,10 @@ public class Translater {
     Linear transformations only.
     y = (ratio) * x + offset
      */
-    int top_offset, left_offset, shape_height;
-    float ratio;
+    int top_offset, left_offset;
+    float ratio, shape_height;
 
-    public Translater(int top_buffer, int edge_buffer, int bottom_buffer, int screen_height, int screen_width, int shape_height, int shape_width){
+    public Translater(int top_buffer, int edge_buffer, int bottom_buffer, int screen_height, int screen_width, float shape_height, float shape_width){
         /* Initializes the class, setting up offsets and ratios.
 
         */
@@ -30,11 +30,15 @@ public class Translater {
         top_offset = top_buffer + (usable_height - (int) (shape_height * ratio))/2;
     }
 
-    public int translateX(int x) {
+    public int translateX(float x) {
         return left_offset + (int) (ratio * x);
     }
 
-    public int translateY(int y) {
+    public int translateY(float y) {
         return top_offset + (int) (ratio * (shape_height - y));
+    }
+
+    public float getRatio(){
+        return ratio;
     }
 }
