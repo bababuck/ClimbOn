@@ -58,6 +58,7 @@ public class Shape {
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
     ArrayList<Coordinate> hold_set;
+    public ArrayList<Integer> hold_types = new ArrayList<>();
 
     public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */
@@ -72,6 +73,10 @@ public class Shape {
         shiftCorners();
         cornersToEdges();
         genHolds(start_point);
+    }
+
+    public void setHoldTypes(ArrayList<Integer> hold_types) {
+        this.hold_types= hold_types;
     }
 
     private void cornersToEdges() throws Exception {
