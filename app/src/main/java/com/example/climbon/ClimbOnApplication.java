@@ -27,14 +27,16 @@ public class ClimbOnApplication extends Application {
 
     private void initializeSaveData() {
         /* Fake function since no data to download yet. */
-        data.current_shape = 0;
+        data.current_shape = 1;
         ArrayList<ArrayList<Float>> corners = new ArrayList<>();
         ArrayList<Float> corner1 = new ArrayList<>(Arrays.asList(0f, 0f, 10f, 0f, 10f, 8f, 8f, 10f, 0f, 10f, 0.5f, 0.5f));
         ArrayList<Float> corner2 = new ArrayList<>(Arrays.asList(0f, 0f, 4f, 0f, 5f, 16f, 3f, 18f, 0f, 12f, 0.5f, 0.5f ));
+        ArrayList<Float> corner3 = new ArrayList<>(Arrays.asList(0f, 0f, 10f, 0f, 10f, 8f, 8f, 10f, 0f, 10f, 0.5f, 0.5f));
         corners.add(corner1);
         corners.add(corner2);
+        corners.add(corner3);
 
-        ArrayList<Integer> hold_types = new ArrayList<>(Arrays.asList(1, 2, 3, 5, 7, 0, 1, 0, 3, 2, 4, 1, 4, 2, 6,3,5,2,5,2,4,1,5,0,0,0,1,4,5));
+        ArrayList<Integer> hold_types = new ArrayList<>(Arrays.asList(1, 2, 3, 5, 7, 0, 1, 0, 3, 2, 4, 1, 4, 2, 6,3,5,2,5,2,4,1,5,0,0,0,4,2,4,3,2,4,7,5,1,0,3,2,6,6,6,3,5,1,4,5));
 
         createShapes(corners, hold_types);
     }
