@@ -34,6 +34,7 @@ public class Translater {
     public Translater(int top_buffer, int edge_buffer, int bottom_buffer, int screen_height, int screen_width, float shape_height, float shape_width, float ratio){
         /* Initializes the class, using a given ratio.
 
+        Theres gotta be a better way than this -> maybe use builder if i get around to it.
          */
         int usable_height, usable_width;
         float height_ratio, width_ratio;
