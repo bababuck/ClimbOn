@@ -2,12 +2,10 @@ package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.AbsoluteLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -26,6 +24,12 @@ public class RouteView extends AppCompatActivity {
     */
 
     UniversalData saved_data;
+    float ratio;
+    int number_of_shapes;
+    int top_buffer, bottom_buffer;
+    int screen_height= 1500;
+    int total_width = 1500;
+    int screen_width;
     // set image drawable
     // extend boundary class to class that also draws select holds.
     @Override
@@ -36,9 +40,14 @@ public class RouteView extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
 
-        // calculateBuffers();
-        // initializeDimensions();
+        initializeDimensions();
         createButtons();
+    }
+
+    private void initializeDimensions() {
+        /* Initialize certain final variables. */
+        number_of_shapes = saved_data.wall.panel_set.size();
+        screen_width = total_width / number_of_shapes;
     }
 
     private void createButtons(){
@@ -46,7 +55,7 @@ public class RouteView extends AppCompatActivity {
 
         Each button will be an image of a panel.
         */
-        int number_of_shapes = saved_data.wall.panel_set.size();
+        getMinRatio();
         for (int i=0;i<number_of_shapes;++i){
             createButton(i);
         }
@@ -54,23 +63,50 @@ public class RouteView extends AppCompatActivity {
 
     private void createButton(int i) {
         // Load the current shape from the save data.
-        Shape current_shape = saved_data.wall.panel_set.get(i);
-        ArrayList<Integer> current_hold_types = current_shape.hold_types;
-        ArrayList<Coordinate> new_corners = new ArrayList<>();
-        this.getResources().getDisplayMetrics();
-        float dp_to_px = ((float) this.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        Translater translater = new Translater(100, 0, 10, 1500-50, 1000-75, (int) current_shape.get_height(), (int) current_shape.get_width());
-        for (int j=0;j<current_shape.corners.size();++j) {
-            new_corners.add(new Coordinate(translater.translateX((int) current_shape.corners.get(j).x), translater.translateY((int)current_shape.corners.get(j).y)));
-        }
-        Boundary boundary = new Boundary(new_corners); // need to scaled somewhere
+        Shape current_shape;
+        current_shape = saved_data.wall.panel_set.get(i);
+
+        // Setup the translater
+        Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width(), ratio);
+
+        // Generate the drawable to set to the button
         ArrayList<Boolean> hold_status = new ArrayList<>(Arrays.asList(true,false,true,false,true,false,false,false,false,false,false,true,false,true,false));
-        RouteViewPanel panel = new RouteViewPanel(this, boundary, current_shape.hold_set, current_hold_types, hold_status, translater);
+        RouteViewPanel panel = new RouteViewPanel(this, current_shape, hold_status, translater);
+
         LinearLayout layout = findViewById(R.id.RouteViewLL);
-        Log.e("Help", "Coor:"+String.valueOf(dp_to_px));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(1000, 1500);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screen_width, screen_height);
         ImageButton button = new ImageButton(this);
+        //button.setBackgroundColor(Color.BLACK);//TRANSPARENT
         button.setImageDrawable(panel);
+        button.setCropToPadding(false);
         layout.addView(button, params);
+    }
+
+    private void getMinRatio() {
+        /* Finds the smallest scaling ratio out of all the shapes.
+
+        Not the most efficient since the constructor performs some
+        extra operations in addition to calcualting the ratio, but
+        just simple arithmetic stuff, not performance critical.
+
+        Don't want to add more almost duplicate functions than needed.
+        */
+        float min_ratio = Float.POSITIVE_INFINITY;
+
+        for (int i=0;i<number_of_shapes;++i){
+            min_ratio = Math.min(getRatio(i), min_ratio);
+        }
+        ratio = min_ratio;
+//        Log.e("Help", "Coordinate:"+String.valueOf(ratio));
+    }
+
+    private float getRatio(int i) {
+        /* Gets ratio of a shape used for translation.
+
+        See notes in getMinRatio();
+        */
+        Shape current_shape = saved_data.wall.panel_set.get(i);
+        Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width());
+        return translater.getRatio();
     }
 }
