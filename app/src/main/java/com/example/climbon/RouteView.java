@@ -76,7 +76,7 @@ public class RouteView extends AppCompatActivity {
         LinearLayout layout = findViewById(R.id.RouteViewLL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screen_width, screen_height);
         ImageButton button = new ImageButton(this);
-        //button.setBackgroundColor(Color.BLACK);//TRANSPARENT
+        button.setBackgroundColor(Color.BLACK);//TRANSPARENT
         button.setImageDrawable(panel);
         button.setCropToPadding(false);
         layout.addView(button, params);

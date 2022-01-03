@@ -63,7 +63,7 @@ public class RouteViewPanel extends Drawable {
 
         No idea why the translate is needed this is stoopid.
         */
-        float translate_x = 33f;
+        float translate_x = 0f; //33
         canvas.translate(-translate_x,0f);
         boundary.draw(canvas);
 
