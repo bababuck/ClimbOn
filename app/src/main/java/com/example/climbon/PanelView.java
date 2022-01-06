@@ -117,14 +117,7 @@ public class PanelView extends AppCompatActivity {
             PanelViewHold button = new PanelViewHold(this, current_hold_types.get(i),true);
             button.setId(i);
             // Set here, since we will reuse PanelViewHold later
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (button.hold_type != PanelViewHold.HOLD_TYPE.NO_HOLD) {
-                        button.on = !button.on;
-                        button.setHoldImage();
-                    }
-                }
-            });
+            setOnCLickListener(button);
             int x = translater.translateX(buttons.get(i).x);
             int y = translater.translateY(buttons.get(i).y);
             int button_size = (int) (translater.getRatio() * Shape.DISTANCE_BETWEEN_HOLDS);
@@ -132,4 +125,21 @@ public class PanelView extends AppCompatActivity {
             layout.addView(button, params);
         }
     }
+
+    private void setOnCLickListener(PanelViewHold button) {
+        /* Sets the OnClickListener for a button
+
+        By pulling out, we can override this function in other classes.
+        */
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (button.hold_type != PanelViewHold.HOLD_TYPE.NO_HOLD) {
+                    button.on = !button.on;
+                    button.setHoldImage();
+                }
+            }
+        });
+    }
+
+
 }
