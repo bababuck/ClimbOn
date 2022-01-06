@@ -2,10 +2,12 @@ package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -79,6 +81,14 @@ public class RouteView extends AppCompatActivity {
         button.setBackgroundColor(Color.BLACK);//TRANSPARENT
         button.setImageDrawable(panel);
         button.setCropToPadding(false);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saved_data.current_shape = i;
+                Intent intent = new Intent(view.getContext(), PanelView.class);
+
+                view.getContext().startActivity(intent);}
+        });
         layout.addView(button, params);
     }
 
