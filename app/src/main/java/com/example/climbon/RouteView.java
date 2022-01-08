@@ -85,7 +85,7 @@ public class RouteView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saved_data.current_shape = i;
-                Intent intent = new Intent(view.getContext(), PanelView.class);
+                Intent intent = new Intent(view.getContext(), SetHoldsActivity.class);
 
                 view.getContext().startActivity(intent);}
         });

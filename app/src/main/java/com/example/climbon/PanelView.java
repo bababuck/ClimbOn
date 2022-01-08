@@ -29,6 +29,7 @@ public class PanelView extends AppCompatActivity {
     private int screen_width;
     private Shape current_shape;
     private ArrayList<Integer> current_hold_types;
+    protected ArrayList<PanelViewHold> all_holds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,7 @@ public class PanelView extends AppCompatActivity {
             int button_size = (int) (translater.getRatio() * Shape.DISTANCE_BETWEEN_HOLDS);
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(button_size,button_size,x-button_size/2,y-button_size/2);
             layout.addView(button, params);
+            all_holds.add(button);
         }
     }
 

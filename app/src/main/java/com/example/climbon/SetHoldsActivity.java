@@ -89,6 +89,7 @@ public class SetHoldsActivity extends PanelView {
                 hideBottomButtons();
                 currently_clicked.on = true;
                 currently_clicked.setHoldImage();
+                enableHolds();
             }
         });
         bottom_buttons.addView(current_button,button_params);
@@ -107,6 +108,7 @@ public class SetHoldsActivity extends PanelView {
                 showBottomButtons();
                 button.setHoldImage();
                 currently_clicked = button;
+                disableHolds();
             }
         });
     }
@@ -122,12 +124,22 @@ public class SetHoldsActivity extends PanelView {
                 currently_clicked.hold_type = HOLD_TYPE.values()[i];
                 currently_clicked.on = true;
                 currently_clicked.setHoldImage();
+                enableHolds();
             }
         });
     }
 
-    // produce all holds side by side on the bottom, along wiht x button, on click chagne hold type of prev selected
-    // oN oirigonal click change red so know what one selected
+    public void disableHolds() {
+        for (int i = 0; i < all_holds.size(); ++i){
+            all_holds.get(i).setEnabled(false);
+        }
+    }
+
+    public void enableHolds() {
+        for (int i = 0; i < all_holds.size(); ++i){
+            all_holds.get(i).setEnabled(true);
+        }
+    }
 
 
     // add save button, on sae click give warning about messing up routes and are you sure options
