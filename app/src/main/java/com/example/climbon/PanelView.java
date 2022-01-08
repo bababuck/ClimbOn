@@ -22,7 +22,7 @@ public class PanelView extends AppCompatActivity {
     // Buffers (Arbitrary distances shape must stay away from edges of screen
     private final static int TOP_BUFFER = 10; // Need room for title, back button
     private final static int EDGE_BUFFER = 10;
-    private final static int BOTTOM_BUFFER = 300; // Big for now since buttons at bottom block screen in Emulator
+    protected final static int BOTTOM_BUFFER = 300; // Big for now since buttons at bottom block screen in Emulator
 
     private Translater translater;
     private int screen_height;
@@ -37,13 +37,17 @@ public class PanelView extends AppCompatActivity {
         For now this is the only functionality in the class.
         */
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_panel_view);
+        setXML();
 
         initializeData();
         getScreenInformation();
         initializeTranslater();
         drawShape();
         createButtons();
+    }
+
+    protected void setXML() {
+        setContentView(R.layout.activity_panel_view);
     }
 
     private void getScreenInformation() {
@@ -126,20 +130,18 @@ public class PanelView extends AppCompatActivity {
         }
     }
 
-    private void setOnCLickListener(PanelViewHold button) {
+    protected void setOnCLickListener(PanelViewHold button) {
         /* Sets the OnClickListener for a button
 
         By pulling out, we can override this function in other classes.
         */
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (button.hold_type != PanelViewHold.HOLD_TYPE.NO_HOLD) {
+                if (button.hold_type != HOLD_TYPE.NO_HOLD) {
                     button.on = !button.on;
                     button.setHoldImage();
                 }
             }
         });
     }
-
-
 }
