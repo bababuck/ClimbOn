@@ -14,8 +14,6 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
     Holds will change colors (and update the hold_on array)
     - can't turn on holds that are 'missing'
     */
-    public enum HOLD_TYPE {POCKET, JUG, MINI_JUG, CRIMP, FOOTHOLD, SLOPER, PINCH, NO_HOLD}
-
     public HOLD_TYPE hold_type;
     public boolean on;
 
