@@ -11,6 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimbOn">
         <activity
+            android:name=".SetHoldsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_set_holds"
+            android:theme="@style/Theme.ClimbOn.NoActionBar" />
+        <activity
             android:name=".RouteView"
             android:exported="false" />
         <activity
