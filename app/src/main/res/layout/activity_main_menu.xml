@@ -40,6 +40,15 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Create Wall"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:id="@+id/create_wall"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Panel View Demo"
         android:textColor="#000000"
         android:textSize="24sp"
