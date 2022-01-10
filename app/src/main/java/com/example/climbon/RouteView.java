@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,6 +21,8 @@ public class RouteView extends AppCompatActivity {
 
     If a panel is clicked on, it will take the viewer to the
     panel view screen and allow for editing of route.
+
+    TODO: 3D model
     */
 
     UniversalData saved_data;
@@ -32,10 +32,10 @@ public class RouteView extends AppCompatActivity {
     int screen_height= 1500;
     int total_width = 1500;
     int screen_width;
-    // set image drawable
-    // extend boundary class to class that also draws select holds.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /* Download data and then create the needed panels. */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_view);
 
@@ -64,6 +64,7 @@ public class RouteView extends AppCompatActivity {
     }
 
     private void createButton(int i) {
+        /* Create a single button (panel). */
         // Load the current shape from the save data.
         Shape current_shape;
         current_shape = saved_data.wall.panel_set.get(i);
@@ -96,7 +97,7 @@ public class RouteView extends AppCompatActivity {
         /* Finds the smallest scaling ratio out of all the shapes.
 
         Not the most efficient since the constructor performs some
-        extra operations in addition to calcualting the ratio, but
+        extra operations in addition to calculating the ratio, but
         just simple arithmetic stuff, not performance critical.
 
         Don't want to add more almost duplicate functions than needed.
@@ -107,7 +108,6 @@ public class RouteView extends AppCompatActivity {
             min_ratio = Math.min(getRatio(i), min_ratio);
         }
         ratio = min_ratio;
-//        Log.e("Help", "Coordinate:"+String.valueOf(ratio));
     }
 
     private float getRatio(int i) {

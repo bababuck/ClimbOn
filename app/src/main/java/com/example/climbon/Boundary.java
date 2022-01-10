@@ -16,16 +16,20 @@ public class Boundary extends Drawable {
     /* Creates a shape to be drawn in PanelView.
 
     Will be initialized to fill the screen.
-    Just an outline of the shape should be printed.
+
+    Draws only straight lines from corner to corner.
+
+    TODO: Add functionality for curved lines
+    - Path has an interface for arcs
+    - Currently can be done roughly by lots of corners lol
     */
     public Path path;
     protected Paint paint;
+    public int panel_color = Color.RED;
 
     public Boundary(ArrayList<Coordinate> corners) {
         /* Initialize the boundary from a set of coordinates.
 
-        TODO:
-        - make color a operand
         */
         path = new Path();
         paint = new Paint();
@@ -35,16 +39,24 @@ public class Boundary extends Drawable {
             path.lineTo( corners.get(i).x,
                          corners.get(i).y);
         }
-        paint.setStrokeWidth(100);
-        paint.setColor(Color.rgb(255, 0, 0));
+        paint.setColor(panel_color);
         paint.setStrokeWidth(10);
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
+        /* Draw the path to the canvas.
+
+        This produces the filled in shape.
+        TBH, not entirely sure why its filled in, maybe will adjust to not be?
+        */
         canvas.drawPath(path, paint);
     }
 
+    /* Trivial overrides of abstract methods.
+
+    All of them just interact with the paint color
+    */
     @Override
     public void setAlpha(int i) {
         paint.setAlpha(i);
@@ -52,7 +64,6 @@ public class Boundary extends Drawable {
 
     @Override
     public void setColorFilter(@Nullable ColorFilter colorFilter) {
-        // No idea??
         paint.setColorFilter(colorFilter);
     }
 

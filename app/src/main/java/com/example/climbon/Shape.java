@@ -20,9 +20,8 @@ public class Shape {
     Picture a shape as being inscribed in a rectangle,
     bottom let is (0,0)
 
-    TODO:
-    constructor/builder
-    will generate once on app startup, and then store
+    TODO: constructor/builder
+    TODO: will generate once on app startup, and then store
     */
 
     class Edge {

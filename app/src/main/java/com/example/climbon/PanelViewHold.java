@@ -28,6 +28,11 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
 
 
     public static int getImageId(int hold_type) {
+        /* Wrapper function for times when on/off won't be supplied.
+
+        TODO: Pull out these functions to own class or something?
+        - Maybe make parent class without on/off??
+        */
         return getImageId(HOLD_TYPE.values()[hold_type], true);
     }
 

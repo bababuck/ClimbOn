@@ -6,22 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ClimbOnApplication extends Application {
-    /* Holds gloabl data for storage.
+    /* Holds global data for storage.
 
-    TODO:
-    Refator with Unviversal Data?
+    TODO: Add null checks when gathering data since can be deleted
+    - Try/catch statements
     */
-    private static ClimbOnApplication singleton;
     public UniversalData data = new UniversalData();
-
-    public ClimbOnApplication getInstance() {
-        return singleton;
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        singleton = this;
         initializeSaveData();
     }
 
@@ -42,10 +36,14 @@ public class ClimbOnApplication extends Application {
     }
 
     private void createShapes(ArrayList<ArrayList<Float>> panels, ArrayList<Integer> holds) {
-        /*
+        /* Going to be used when downloading data.
+
         The data download will be in the format of:
          - an array list of array list of floats for the panel shapes
-         - an array list of integers for the
+         - an array list of integers for the hold types
+
+         TODO: Actually save/download from device
+         TODO: Remove try catch?
          */
         int holds_counter = 0; // track current index into holds
         for (int i=0;i<panels.size();++i) {

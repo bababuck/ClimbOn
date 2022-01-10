@@ -9,9 +9,9 @@ public class Translater {
 
     Linear transformations only.
     y = (ratio) * x + offset
-     */
-    int top_offset, left_offset;
-    float ratio, shape_height;
+    */
+    private final int top_offset, left_offset;
+    private final float ratio, shape_height;
 
     public Translater(int top_buffer, int edge_buffer, int bottom_buffer, int screen_height, int screen_width, float shape_height, float shape_width){
         /* Initializes the class, setting up offsets and ratios.
@@ -37,7 +37,6 @@ public class Translater {
         Theres gotta be a better way than this -> maybe use builder if i get around to it.
          */
         int usable_height, usable_width;
-        float height_ratio, width_ratio;
         this.shape_height = shape_height;
         usable_height = screen_height - (top_buffer + bottom_buffer);
         usable_width = screen_width - 2 * edge_buffer;
@@ -49,10 +48,12 @@ public class Translater {
     }
 
     public int translateX(float x) {
+        /* Translate an X coordinate according to scheme. */
         return left_offset + (int) (ratio * x);
     }
 
     public int translateY(float y) {
+        /* Translate an X coordinate according to scheme. */
         return top_offset + (int) (ratio * (shape_height - y));
     }
 

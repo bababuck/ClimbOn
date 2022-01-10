@@ -1,10 +1,5 @@
 package com.example.climbon;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class UniversalData {
     /* Stores data to be stored across activities.
 

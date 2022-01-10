@@ -8,12 +8,30 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainMenu extends AppCompatActivity {
+    /* A simple menu displayed on startup.
+
+    Allows for user to select mode.
+    TODO: Create cooler starting screen
+    TODO: Choose from available walls on startup or new one
+    */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /* Startup activities for the main menu.
+
+        Sets up the pathing of the buttons in the activity.
+        All buttons in XML for now, may switch to programmatically.
+        */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        Button panel_view = (Button) findViewById(R.id.panel_view);
+        routeButtons();
+
+    }
+
+    private void routeButtons() {
+        /* Defines the activity on each buttons clicking. */
+        Button panel_view = findViewById(R.id.panel_view);
         panel_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -22,7 +40,7 @@ public class MainMenu extends AppCompatActivity {
                 view.getContext().startActivity(intent);}
         });
 
-        Button create_wall = (Button) findViewById(R.id.create_wall);
+        Button create_wall = findViewById(R.id.create_wall);
         create_wall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,7 +49,7 @@ public class MainMenu extends AppCompatActivity {
                 view.getContext().startActivity(intent);}
         });
 
-        Button route_view = (Button) findViewById(R.id.create_route);
+        Button route_view = findViewById(R.id.create_route);
         route_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

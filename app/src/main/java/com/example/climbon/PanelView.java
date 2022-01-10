@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-// import android.util.Log;
-// Log.e("Help", "Coordinate:"+String.valueOf(buttons.get(i).y));
 
 import android.view.View;
 import android.widget.AbsoluteLayout;
@@ -25,8 +23,8 @@ public class PanelView extends AppCompatActivity {
     protected final static int BOTTOM_BUFFER = 300; // Big for now since buttons at bottom block screen in Emulator
 
     private Translater translater;
-    private int screen_height;
-    private int screen_width;
+    protected int screen_height;
+    protected int screen_width;
     private Shape current_shape;
     private ArrayList<Integer> current_hold_types;
     protected ArrayList<PanelViewHold> all_holds = new ArrayList<>();
@@ -36,6 +34,8 @@ public class PanelView extends AppCompatActivity {
         /* Performs actions to set up the screen.
 
         For now this is the only functionality in the class.
+        Yes absolute layout is deprecated, I think I worked around it.
+        TODO: Switch away from absolute layout.
         */
         super.onCreate(savedInstanceState);
         setXML();
@@ -48,6 +48,7 @@ public class PanelView extends AppCompatActivity {
     }
 
     protected void setXML() {
+        /* Selected xml file to use. */
         setContentView(R.layout.activity_panel_view);
     }
 

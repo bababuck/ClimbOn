@@ -10,7 +10,7 @@ public class Wall {
     Not sure if class needed since really just holds one thing for now
     */
 
-    public ArrayList<Shape> panel_set = new ArrayList();
+    public ArrayList<Shape> panel_set = new ArrayList<>();
 
 
 }
