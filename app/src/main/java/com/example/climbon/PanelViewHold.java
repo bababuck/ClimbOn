@@ -14,12 +14,12 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
     Holds will change colors (and update the hold_on array)
     - can't turn on holds that are 'missing'
     */
-    public HOLD_TYPE hold_type;
+    public HoldType hold_type;
     public boolean on;
 
     public PanelViewHold(@NonNull Context context, int hold_type, boolean on) {
         super(context);
-        this.hold_type = HOLD_TYPE.values()[hold_type];
+        this.hold_type = HoldType.values()[hold_type];
         this.on = on;
         this.setBackgroundColor(Color.TRANSPARENT);
         this.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -33,10 +33,10 @@ public class PanelViewHold extends androidx.appcompat.widget.AppCompatImageButto
         TODO: Pull out these functions to own class or something?
         - Maybe make parent class without on/off??
         */
-        return getImageId(HOLD_TYPE.values()[hold_type], true);
+        return getImageId(HoldType.values()[hold_type], true);
     }
 
-    public static int getImageId(HOLD_TYPE hold_type, boolean on){
+    public static int getImageId(HoldType hold_type, boolean on){
         /* Helper function that returns the drawable ID for a hold/on status. */
         if (on) {
             switch (hold_type) {

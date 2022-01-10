@@ -51,7 +51,7 @@ public class SetHoldsActivity extends PanelView {
         createLinLayout();
 
         // Add a button for every holds type
-        int num_hold_types = HOLD_TYPE.values().length;
+        int num_hold_types = HoldType.values().length;
         for (int j=0;j<num_hold_types;++j) {
             addButton(j);
         }
@@ -128,7 +128,7 @@ public class SetHoldsActivity extends PanelView {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 hideBottomButtons();
-                currently_clicked.hold_type = HOLD_TYPE.values()[i];
+                currently_clicked.hold_type = HoldType.values()[i];
                 currently_clicked.on = true;
                 currently_clicked.setHoldImage();
                 enableHolds();

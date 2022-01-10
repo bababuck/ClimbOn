@@ -140,7 +140,7 @@ public class PanelView extends AppCompatActivity {
         */
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (button.hold_type != HOLD_TYPE.NO_HOLD) {
+                if (button.hold_type != HoldType.NO_HOLD) {
                     button.on = !button.on;
                     button.setHoldImage();
                 }
