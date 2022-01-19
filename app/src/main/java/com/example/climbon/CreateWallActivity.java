@@ -3,13 +3,16 @@ package com.example.climbon;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -57,8 +60,35 @@ public class CreateWallActivity extends AppCompatActivity {
         LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
         current_button.setBackgroundColor(Color.GREEN);
         current_button.setText("Done");
+        current_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                generatePreview();
+            }
+        });
         current_button.setTextColor(Color.BLACK);
         bottom_buttons.addView(current_button, button_params);
+    }
+
+    private void generatePreview() {
+        /* Take the corner inputs and generate a preview. */
+        if (num_buttons >= 3) {
+            ArrayList<Coordinate> coordinates = new ArrayList<>();
+            for (int i=0;i<num_buttons;++i) {
+                Log.e("oof", corner_inputs.get(2*i).getText().toString());
+                Coordinate coordinate = new Coordinate(Float.parseFloat(corner_inputs.get(2*i).getText().toString()), Float.parseFloat(corner_inputs.get(2*i+1).getText().toString()));
+                coordinates.add(coordinate);
+            }
+            createCornerInput();
+            Boundary boundary = new Boundary(coordinates);
+            LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(100, 100, 1);
+            scroll.addView(new View (this){
+                @Override
+                protected void onDraw(Canvas canvas) {
+                    super.onDraw(canvas);
+                    boundary.draw(canvas);
+                }
+            }, button_params);
+        }
     }
 
     private void genAddButton(LinearLayout bottom_buttons) {
