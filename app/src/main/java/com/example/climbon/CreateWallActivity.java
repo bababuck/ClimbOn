@@ -3,10 +3,12 @@ package com.example.climbon;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -53,13 +55,35 @@ public class CreateWallActivity extends AppCompatActivity {
         // Add lin layout to the scroll layout
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         scroll.addView(bottom_buttons, params);
+
+        genConfirm();
+    }
+
+    private void genConfirm() {
+        LinearLayout bottom_buttons = new LinearLayout(this);
+        bottom_buttons.setOrientation(LinearLayout.HORIZONTAL);
+
+        Button current_button = new Button(this);
+        LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
+        current_button.setBackgroundColor(Color.GREEN);
+        current_button.setText("Confirm Panel");
+        current_button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                // Next
+            }
+        });
+        current_button.setTextColor(Color.BLACK);
+        bottom_buttons.addView(current_button, button_params);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        scroll.addView(bottom_buttons, params);
     }
 
     private void genGenPreview(LinearLayout bottom_buttons) {
         Button current_button = new Button(this);
         LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
         current_button.setBackgroundColor(Color.GREEN);
-        current_button.setText("Done");
+        current_button.setText("Generate Preview");
         current_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 generatePreview();
@@ -72,22 +96,20 @@ public class CreateWallActivity extends AppCompatActivity {
     private void generatePreview() {
         /* Take the corner inputs and generate a preview. */
         if (num_buttons >= 3) {
-            ArrayList<Coordinate> coordinates = new ArrayList<>();
-            for (int i=0;i<num_buttons;++i) {
-                Log.e("oof", corner_inputs.get(2*i).getText().toString());
-                Coordinate coordinate = new Coordinate(Float.parseFloat(corner_inputs.get(2*i).getText().toString()), Float.parseFloat(corner_inputs.get(2*i+1).getText().toString()));
-                coordinates.add(coordinate);
+            ArrayList<Float> coordinates = new ArrayList<>();
+            for (EditText input : corner_inputs) {
+                coordinates.add(Float.parseFloat(input.getText().toString()));
             }
-            createCornerInput();
-            Boundary boundary = new Boundary(coordinates);
-            LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(100, 100, 1);
-            scroll.addView(new View (this){
-                @Override
-                protected void onDraw(Canvas canvas) {
-                    super.onDraw(canvas);
-                    boundary.draw(canvas);
-                }
-            }, button_params);
+
+            DisplayMetrics displaymetrics = new DisplayMetrics();
+            this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            int width = displaymetrics.widthPixels;
+            int height = 1500;
+
+            PreviewShapeDrawable shape = new PreviewShapeDrawable(this, coordinates, new Coordinate(1,1), width, height);
+
+            LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(width, 1500, 1);
+            scroll.addView(shape, button_params);
         }
     }
 

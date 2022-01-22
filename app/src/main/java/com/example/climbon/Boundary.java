@@ -3,9 +3,12 @@ package com.example.climbon;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +44,31 @@ public class Boundary extends Drawable {
         }
         paint.setColor(panel_color);
         paint.setStrokeWidth(10);
+    }
+
+    public Boundary(ArrayList<Coordinate> corners, Translater translater) {
+        /* Initialize the boundary from a set of coordinates.
+
+         */
+        path = new Path();
+        paint = new Paint();
+        path.moveTo( translater.translateX(corners.get(corners.size()-1).x),
+                translater.translateY(corners.get(corners.size()-1).y));
+        for (int i=0;i<corners.size();++i) {
+            Log.e("fuck", String.valueOf(translater.translateX(corners.get(i).x)));
+            path.lineTo( translater.translateX(corners.get(i).x),
+                    translater.translateY(corners.get(i).y));
+        }
+        paint.setColor(panel_color);
+        paint.setStrokeWidth(10);
+    }
+
+    public void scale (float ratio) {
+        Matrix scaleMatrix = new Matrix();
+        RectF rectF = new RectF();
+        path.computeBounds(rectF, true);
+        scaleMatrix.setScale(ratio, ratio,rectF.centerX(),rectF.centerY());
+        path.transform(scaleMatrix);
     }
 
     @Override
