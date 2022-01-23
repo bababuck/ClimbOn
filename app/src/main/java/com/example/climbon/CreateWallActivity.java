@@ -134,6 +134,11 @@ public class CreateWallActivity extends AppCompatActivity {
     }
 
     private void genGenPreview(LinearLayout bottom_buttons) {
+        /* Create button to generate/update preview.
+
+        Preview will allow for viewing of panel and make adjustments.
+        Particularly useful for adjusting the hold location grid.
+        */
         Button current_button = new Button(this);
         LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
         current_button.setBackgroundColor(Color.GREEN);
@@ -148,33 +153,51 @@ public class CreateWallActivity extends AppCompatActivity {
     }
 
     private void generatePreview() {
-        /* Take the corner inputs and generate a preview. */
+        /* Take the corner inputs and generate a preview.
+
+        TODO: Print message if less than 3 holds
+        TODO: Check to make sure inputs are valid
+        TODO: Change shape constructor to take list of Coordinates
+        TODO: Only use a much vertical space as required (no vertical white space on wide shapes)
+        */
+
+        // If previous preview exists, remove it
         if (generated) {
             scroll.removeViewAt(num_buttons + 2);
         }
+
+        // Need at least 3 corners for a valid panel.
         if (num_buttons >= 3) {
             generated = true;
+
             ArrayList<Float> coordinates = new ArrayList<>();
             for (int i=0; i < num_buttons * 2; ++i) {
                 EditText input = corner_inputs.get(i);
                 coordinates.add(Float.parseFloat(input.getText().toString()));
             }
 
+            // Get height/width of use-able area
             DisplayMetrics displaymetrics = new DisplayMetrics();
             this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-            int width = displaymetrics.widthPixels;
-            int height = 1500;
+            int screen_width = displaymetrics.widthPixels;
+            int box_height = 1500;
 
-            Coordinate start = new Coordinate(Float.parseFloat(start_inputs.get(0).getText().toString()),Float.parseFloat(start_inputs.get(1).getText().toString()));
+            Coordinate start_hold = new Coordinate(Float.parseFloat(start_inputs.get(0).getText().toString()),
+                                              Float.parseFloat(start_inputs.get(1).getText().toString()));
 
-            PreviewShapeDrawable shape = new PreviewShapeDrawable(this, coordinates, start, width, height);
+            PreviewShapeDrawable shape = new PreviewShapeDrawable(this,
+                                                                  coordinates,
+                                                                  start_hold,
+                                                                  screen_width,
+                                                                  box_height);
 
-            LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(width, 1500, 1);
+            LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(screen_width, box_height, 1);
             scroll.addView(shape, num_buttons + 2, button_params);
         }
     }
 
     private void genAddButton(LinearLayout bottom_buttons) {
+        /* Create button that allows for adding more corners. */
         Button current_button = new Button(this);
         LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
         current_button.setBackgroundColor(Color.RED);
@@ -189,7 +212,7 @@ public class CreateWallActivity extends AppCompatActivity {
     }
 
     private void genRemoveButton(LinearLayout bottom_buttons) {
-
+        /* Create button that allows for removing corners. */
         Button current_button = new Button(this);
         LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
         current_button.setBackgroundColor(Color.BLUE);
@@ -207,6 +230,7 @@ public class CreateWallActivity extends AppCompatActivity {
         /* Remove an input from the scroll view.
 
         Removes the bottom input.
+        TODO: Remove a blank input, otherwise bottom?
         */
         if (num_buttons > 0) {
             corner_inputs.remove(corner_inputs.size()-1);
@@ -227,19 +251,14 @@ public class CreateWallActivity extends AppCompatActivity {
         // Params for adding EditTexts to the linear layout rows
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        // Input gathering for x-coordinate
-        EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setHint("Corner Location: X");
-        current_row.addView(input, params);
-        corner_inputs.add(input);
-
-        // Input gathering for y-coordinate
-        input = new EditText(this);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        current_row.addView(input, params);
-        input.setHint("Corner Location: Y");
-        corner_inputs.add(input);
+        // Input box creation
+        for (String dimension : new ArrayList<String>(){{add("X"); add("Y");}}){
+            EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            input.setHint(String.format("Hold Location: %s", dimension));
+            current_row.addView(input, params);
+            corner_inputs.add(input);
+        }
 
         // Add row to the scroll at proper locations
         scroll.addView(current_row, num_buttons);
