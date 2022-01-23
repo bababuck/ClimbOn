@@ -23,11 +23,16 @@ import java.util.ArrayList;
 public class CreateWallActivity extends AppCompatActivity {
     /* Create a new wall panel by panel.
 
-
+    TODO: Update pathing to/from this acitvity
+    TODO:Edit Panel option (start with numbers filled)
+    TODO: Add more descriptive text
+    TODO: Clean up code
     */
     ArrayList<LinearLayout> corner_rows = new ArrayList<>();
     ArrayList<EditText> corner_inputs = new ArrayList<>();
+    ArrayList<EditText> start_inputs = new ArrayList<>();
     int num_buttons = 0;
+    boolean generated = false;
     LinearLayout scroll;
 
     @Override
@@ -39,8 +44,38 @@ public class CreateWallActivity extends AppCompatActivity {
         // Add Input field
         createCornerInput();
 
+        createStartHoldInput();
+
         // Create Add Another and Done buttons
         createBottomButtons();
+    }
+
+    private void createStartHoldInput() {
+        /* Add new corner input row to the scroll view. */
+
+        // Linear Layout that represents the current row
+        LinearLayout current_row = new LinearLayout(this);
+        current_row.setOrientation(LinearLayout.HORIZONTAL);
+
+        // Params for adding EditTexts to the linear layout rows
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        // Input gathering for x-coordinate
+        EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setHint("Hold Location: X");
+        current_row.addView(input, params);
+        start_inputs.add(input);
+
+        // Input gathering for y-coordinate
+        input = new EditText(this);
+        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        current_row.addView(input, params);
+        input.setHint("Hold Location: Y");
+        start_inputs.add(input);
+
+        // Add row to the scroll at proper locations
+        scroll.addView(current_row, num_buttons);
     }
 
     private void createBottomButtons() {
@@ -95,9 +130,14 @@ public class CreateWallActivity extends AppCompatActivity {
 
     private void generatePreview() {
         /* Take the corner inputs and generate a preview. */
+        if (generated) {
+            scroll.removeViewAt(num_buttons + 2);
+        }
         if (num_buttons >= 3) {
+            generated = true;
             ArrayList<Float> coordinates = new ArrayList<>();
-            for (EditText input : corner_inputs) {
+            for (int i=0; i < num_buttons * 2; ++i) {
+                EditText input = corner_inputs.get(i);
                 coordinates.add(Float.parseFloat(input.getText().toString()));
             }
 
@@ -106,10 +146,12 @@ public class CreateWallActivity extends AppCompatActivity {
             int width = displaymetrics.widthPixels;
             int height = 1500;
 
-            PreviewShapeDrawable shape = new PreviewShapeDrawable(this, coordinates, new Coordinate(1,1), width, height);
+            Coordinate start = new Coordinate(Float.parseFloat(start_inputs.get(0).getText().toString()),Float.parseFloat(start_inputs.get(1).getText().toString()));
+
+            PreviewShapeDrawable shape = new PreviewShapeDrawable(this, coordinates, start, width, height);
 
             LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(width, 1500, 1);
-            scroll.addView(shape, button_params);
+            scroll.addView(shape, num_buttons + 2, button_params);
         }
     }
 
@@ -187,10 +229,4 @@ public class CreateWallActivity extends AppCompatActivity {
         scroll.addView(current_row, num_buttons);
         ++num_buttons;
     }
-
-    /*
-    TODO:
-    Update preview and preview at bottom, then confirm
-
-     */
 }

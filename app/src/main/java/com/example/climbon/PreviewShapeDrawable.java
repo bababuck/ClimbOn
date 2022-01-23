@@ -21,7 +21,7 @@ public class PreviewShapeDrawable extends View {
         } catch (Exception e){
 
         }
-        translater = new Translater(0, 50, 0, height, width, shape.get_height(), shape.get_width());
+        translater = new Translater(50, 50, 50, height, width, shape.get_height(), shape.get_width());
         boundary = new Boundary(shape.corners, translater);
     }
 
