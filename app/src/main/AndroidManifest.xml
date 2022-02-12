@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimbOn">
         <activity
+            android:name=".ChooseWallActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateWallActivity"
             android:exported="false" />
         <activity

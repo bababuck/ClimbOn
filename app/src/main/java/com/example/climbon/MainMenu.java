@@ -21,6 +21,8 @@ public class MainMenu extends AppCompatActivity {
 
         Sets up the pathing of the buttons in the activity.
         All buttons in XML for now, may switch to programmatically.
+
+        Will download the data and save it to the app.
         */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);

@@ -2,8 +2,11 @@ package com.example.climbon;
 
 import android.app.Application;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class ClimbOnApplication extends Application {
     /* Holds global data for storage.
@@ -13,10 +16,130 @@ public class ClimbOnApplication extends Application {
     */
     public UniversalData data = new UniversalData();
 
+    class RouteData {
+        int v_rating;
+        ArrayList<Boolean> holds;
+        int type;
+        public RouteData(int v_rating, ArrayList<Boolean> holds, int type) {
+            this.holds = holds;
+            this.v_rating = v_rating;
+            this.type = type;
+        }
+    }
+
+    class WallData {
+        ArrayList<ArrayList<Float>> corners;
+        ArrayList<Integer> hold_types;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         initializeSaveData();
+    }
+
+    private void loadWallNames() {
+        /* Load all the wall names from the save data. */
+        File cacheDir = this.getFilesDir();
+
+        File[] files = cacheDir.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; ++i) {
+                File file = files[i];
+
+                String file_name = file.getName();
+                data.wall_names.add(file_name);
+            }
+        }
+    }
+
+    private void LoadWall(String wall_name) {
+        /* Load all the information about the current wall.
+
+        For now will load all the information about every route.
+        Will be 4 files:
+        - panel corner information: corners.txt
+        - hold type information: holds.txt
+        - route name/rating information: route_info.txt
+        - route hold status information: routes.txt
+        */
+        File cacheDir = this.getFilesDir();
+        String dir_path = cacheDir.getName();
+
+        loadCornersHolds(dir_path + wall_name);
+        loadRoutes(dir_path + wall_name);
+
+//        cacheDir.mkdir();
+//
+//        current_shape = saved_data.wall.panel_set.get(saved_data.current_shape);
+//        current_hold_types = current_shape.hold_types;
+    }
+
+    private void loadRoutes(String wall_name) {
+        /* Load the routes from a wall */
+        HashMap<String, RouteData> all_data = new HashMap();
+        try {
+            File info_file = new File(wall_name + "/" + data.ROUTE_INFO_FILE);
+            File route_file = new File(wall_name + "/" + data.ROUTES_FILE);
+            Scanner info_inputStream = new Scanner(info_file);
+            Scanner route_inputStream = new Scanner(route_file);
+            while(info_inputStream.hasNext() && route_inputStream.hasNext()){
+                String info_line= info_inputStream.next();
+                String route_line= route_inputStream.next();
+
+                String[] info_values = info_line.split(",");
+                String name= info_values[0];
+                int rating = Integer.parseInt(info_values[1]);
+                int type = Integer.parseInt(info_values[2]);
+
+                String[] route_values = route_line.split(",");
+                ArrayList<Boolean> current_route_holds = new ArrayList<>();
+                for (int i=0; i< route_values.length; ++i) {
+                    current_route_holds.add(Boolean.parseBoolean(route_values[i]));
+                }
+                RouteData current_route = new RouteData(rating, current_route_holds, type);
+                all_data.put(name, current_route);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCornersHolds(String wall_name) {
+        /* Load the corners from a wall. */
+        ArrayList<ArrayList<Float>> corners = new ArrayList<>();
+        try {
+            File file = new File(wall_name + "/" + data.PANEL_FILE);
+            Scanner inputStream = new Scanner(file);
+            while(inputStream.hasNext()){
+                String line= inputStream.next();
+                String[] values = line.split(",");
+                ArrayList<Float> current_panel = new ArrayList<>();
+                for (int i=0; i< values.length; ++i) {
+                    current_panel.add(Float.parseFloat(values[i]));
+                }
+                corners.add(current_panel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Integer> hold_types = new ArrayList<>();
+        try {
+            File file = new File(wall_name + "/" + data.HOLD_TYPES_FILE);
+            Scanner inputStream = new Scanner(file);
+            while(inputStream.hasNext()){ // Should only go once
+                String line= inputStream.next();
+                String[] values = line.split(",");
+                for (int i=0; i< values.length; ++i) {
+                    hold_types.add(Integer.parseInt(values[i]));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        createShapes(corners, hold_types);
     }
 
     private void initializeSaveData() {
