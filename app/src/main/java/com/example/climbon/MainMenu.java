@@ -33,31 +33,43 @@ public class MainMenu extends AppCompatActivity {
 
     private void routeButtons() {
         /* Defines the activity on each buttons clicking. */
-        Button panel_view = findViewById(R.id.panel_view);
-        panel_view.setOnClickListener(new View.OnClickListener() {
+        Button browse_routes = findViewById(R.id.browse_routes);
+        browse_routes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), PanelView.class);
+                // Intent intent = new Intent(view.getContext(), BrowseRoutesActivity.class);
 
-                view.getContext().startActivity(intent);}
+                // view.getContext().startActivity(intent);
+            }
         });
 
-        Button create_wall = findViewById(R.id.create_wall);
-        create_wall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
-
-                view.getContext().startActivity(intent);}
-        });
-
-        Button route_view = findViewById(R.id.create_route);
-        route_view.setOnClickListener(new View.OnClickListener() {
+        Button create_route = findViewById(R.id.create_route);
+        create_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), RouteView.class);
 
                 view.getContext().startActivity(intent);}
+        });
+
+        Button edit_wall = findViewById(R.id.edit_wall);
+        edit_wall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
+                // TODO: wall view, on choose panel go to create wall
+
+                view.getContext().startActivity(intent);}
+        });
+
+        Button edit_holds = findViewById(R.id.edit_holds);
+        edit_holds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Intent intent = new Intent(view.getContext(), EditHoldsActivity.class);
+
+                // view.getContext().startActivity(intent);
+            }
         });
     }
 }
