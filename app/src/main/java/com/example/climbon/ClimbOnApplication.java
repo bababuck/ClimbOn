@@ -35,7 +35,8 @@ public class ClimbOnApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initializeSaveData();
+        loadWallNames();
+        // initializeSaveData();
     }
 
     private void loadWallNames() {
