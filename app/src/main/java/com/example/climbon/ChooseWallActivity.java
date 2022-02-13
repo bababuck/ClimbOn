@@ -57,7 +57,7 @@ public class ChooseWallActivity extends AppCompatActivity {
         current_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 saved_data.current_wall = input.getText().toString();
-                Intent intent = new Intent(view.getContext(), MainMenu.class);
+                Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
                 view.getContext().startActivity(intent);
             }
         });
