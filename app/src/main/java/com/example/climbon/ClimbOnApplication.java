@@ -20,10 +20,12 @@ public class ClimbOnApplication extends Application {
         int v_rating;
         ArrayList<Boolean> holds;
         int type;
-        public RouteData(int v_rating, ArrayList<Boolean> holds, int type) {
+        String name;
+        public RouteData(int v_rating, ArrayList<Boolean> holds, int type, String name) {
             this.holds = holds;
             this.v_rating = v_rating;
             this.type = type;
+            this.name = name;
         }
     }
 
@@ -98,7 +100,7 @@ public class ClimbOnApplication extends Application {
                 for (int i=0; i< route_values.length; ++i) {
                     current_route_holds.add(Boolean.parseBoolean(route_values[i]));
                 }
-                RouteData current_route = new RouteData(rating, current_route_holds, type);
+                RouteData current_route = new RouteData(rating, current_route_holds, type, name);
                 all_data.put(name, current_route);
             }
         } catch (Exception e) {
