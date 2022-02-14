@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RouteView extends AppCompatActivity {
+public abstract class RouteView extends AppCompatActivity {
     /* Allows the user to view the entire wall at once.
 
     Will allow the user to scroll sideways through the panels.
@@ -82,16 +82,12 @@ public class RouteView extends AppCompatActivity {
         button.setBackgroundColor(Color.BLACK);//TRANSPARENT
         button.setImageDrawable(panel);
         button.setCropToPadding(false);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saved_data.current_shape = i;
-                Intent intent = new Intent(view.getContext(), SetHoldsActivity.class);
-
-                view.getContext().startActivity(intent);}
-        });
+        setNavigation(button, i);
         layout.addView(button, params);
     }
+
+    /* Where to route to when the button is clicked. */
+    abstract void setNavigation(ImageButton button, int i);
 
     private void getMinRatio() {
         /* Finds the smallest scaling ratio out of all the shapes.
