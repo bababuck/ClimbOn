@@ -67,7 +67,7 @@ public class ClimbOnApplication extends Application {
 
     private void loadRoutes(String wall_name) {
         /* Load the routes from a wall */
-        HashMap<String, RouteData> all_data = new HashMap();
+        data.route_data = new ArrayList<>();
         try {
             File info_file = new File(wall_name + "/" + data.ROUTE_INFO_FILE);
             File route_file = new File(wall_name + "/" + data.ROUTES_FILE);
@@ -88,7 +88,7 @@ public class ClimbOnApplication extends Application {
                     current_route_holds.add(Boolean.parseBoolean(route_values[i]));
                 }
                 RouteData current_route = new RouteData(rating, current_route_holds, type, name);
-                all_data.put(name, current_route);
+                data.route_data.add(current_route);
             }
         } catch (Exception e) {
             e.printStackTrace();
