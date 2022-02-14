@@ -14,6 +14,7 @@ public class UniversalData {
     int current_shape; // Store which panel we are currently looking at for PanelViewer
     String current_wall = "";
     ArrayList<String> wall_names = new ArrayList<>();
+    ArrayList<RouteData> route_data = new ArrayList<>();
 
     String PANEL_FILE = "corners.txt";
     String HOLD_TYPES_FILE = "holds.txt";
