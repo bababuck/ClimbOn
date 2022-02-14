@@ -56,8 +56,7 @@ public class MainMenu extends AppCompatActivity {
         edit_wall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
-                // TODO: wall view, on choose panel go to create wall
+                Intent intent = new Intent(view.getContext(), EditWall.class);
 
                 view.getContext().startActivity(intent);}
         });
