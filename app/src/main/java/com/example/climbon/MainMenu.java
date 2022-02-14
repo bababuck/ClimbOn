@@ -66,9 +66,9 @@ public class MainMenu extends AppCompatActivity {
         edit_holds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Intent intent = new Intent(view.getContext(), EditHoldsActivity.class);
+                 Intent intent = new Intent(view.getContext(), SetHoldsOuter.class);
 
-                // view.getContext().startActivity(intent);
+                 view.getContext().startActivity(intent);
             }
         });
     }
