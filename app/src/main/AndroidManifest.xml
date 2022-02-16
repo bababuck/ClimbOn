@@ -11,6 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimbOn">
         <activity
+            android:name=".CollectRouteInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SetRouteActivity"
+            android:exported="false" />
+        <activity
             android:name=".BrowseRoutesActivity"
             android:exported="false" />
         <activity
