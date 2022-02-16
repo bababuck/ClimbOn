@@ -28,6 +28,7 @@ public class PanelView extends AppCompatActivity {
     private Shape current_shape;
     private ArrayList<Integer> current_hold_types;
     protected ArrayList<PanelViewHold> all_holds = new ArrayList<>();
+    private UniversalData saved_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,6 @@ public class PanelView extends AppCompatActivity {
 
     private void initializeData() {
         /* Load the current shape from the save data. */
-        UniversalData saved_data;
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
         current_shape = saved_data.wall.panel_set.get(saved_data.current_shape);
@@ -119,8 +119,10 @@ public class PanelView extends AppCompatActivity {
         */
         ArrayList<Coordinate> buttons = current_shape.hold_set;
         AbsoluteLayout layout = findViewById(R.id.PanelView);
+        Integer starting_hold = saved_data.wall.findCumulativeHoldNumbers().get(saved_data.current_shape);
         for (int i=0;i< buttons.size();++i) {
-            PanelViewHold button = new PanelViewHold(this, current_hold_types.get(i),true);
+            PanelViewHold button = new PanelViewHold(this, current_hold_types.get(i),saved_data.current_route.holds.get(starting_hold));
+            ++starting_hold;
             button.setId(i);
             // Set here, since we will reuse PanelViewHold later
             setOnCLickListener(button);

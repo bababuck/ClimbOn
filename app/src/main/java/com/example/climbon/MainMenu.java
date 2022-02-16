@@ -33,6 +33,10 @@ public class MainMenu extends AppCompatActivity {
 
     private void routeButtons() {
         /* Defines the activity on each buttons clicking. */
+        UniversalData saved_data;
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        saved_data = app.data;
+
         Button browse_routes = findViewById(R.id.browse_routes);
         browse_routes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,9 +51,11 @@ public class MainMenu extends AppCompatActivity {
         create_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), RouteView.class);
 
-                view.getContext().startActivity(intent);}
+                Intent intent = new Intent(view.getContext(), CollectRouteInfoActivity.class);
+
+                view.getContext().startActivity(intent);
+            }
         });
 
         Button edit_wall = findViewById(R.id.edit_wall);

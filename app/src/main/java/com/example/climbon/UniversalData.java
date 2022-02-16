@@ -13,6 +13,7 @@ public class UniversalData {
     Wall wall = new Wall();
     int current_shape; // Store which panel we are currently looking at for PanelViewer
     String current_wall = "";
+    RouteData current_route;
     ArrayList<String> wall_names = new ArrayList<>();
     ArrayList<RouteData> route_data = new ArrayList<>();
 
