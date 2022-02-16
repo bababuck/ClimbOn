@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainMenu"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/v_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:ems="15"
+        android:text="V-Rating"/>
+
+    <EditText
+        android:id="@+id/routeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:inputType="text"
+        android:text="Route Name" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/radio">
+        <RadioButton
+            android:id="@+id/jugs"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:buttonTint="#1A99C4"
+            android:layout_marginLeft="16dp"
+            android:text="Jugs"
+            android:layout_weight="1" />
+        <RadioButton
+            android:id="@+id/slopers"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:buttonTint="#1A99C4"
+            android:text="Slopers" />
+        <RadioButton
+            android:id="@+id/crimps"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:buttonTint="#1A99C4"
+            android:text="Crimps" />
+        <RadioButton
+            android:id="@+id/pinches"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:buttonTint="#1A99C4"
+            android:layout_marginLeft="16dp"
+            android:text="Pinches"
+            android:layout_weight="1" />
+        <RadioButton
+            android:id="@+id/footStuff"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:buttonTint="#1A99C4"
+            android:layout_marginLeft="16dp"
+            android:text="Foot Stuff"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:id="@+id/mixed"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:buttonTint="#1A99C4"
+            android:text="Mixed" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Abort"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:id="@+id/abort"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Create Route"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:id="@+id/create_route"
+            />
+    </LinearLayout>
+</LinearLayout>
