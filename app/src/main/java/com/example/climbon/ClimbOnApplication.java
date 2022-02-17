@@ -80,7 +80,7 @@ public class ClimbOnApplication extends Application {
                 String[] info_values = info_line.split(",");
                 String name= info_values[0];
                 int rating = Integer.parseInt(info_values[1]);
-                int type = Integer.parseInt(info_values[2]);
+                String type = info_values[2];
 
                 String[] route_values = route_line.split(",");
                 ArrayList<Boolean> current_route_holds = new ArrayList<>();

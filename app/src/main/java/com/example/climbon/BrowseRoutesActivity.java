@@ -27,7 +27,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
 
             Button current_button = new Button(this);
             current_button.setBackgroundColor(Color.GREEN);
-            current_button.setText("Confirm Panel");
+            current_button.setText(name);
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     saved_data.current_route = route;
