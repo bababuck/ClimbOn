@@ -41,9 +41,9 @@ public class MainMenu extends AppCompatActivity {
         browse_routes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Intent intent = new Intent(view.getContext(), BrowseRoutesActivity.class);
+                 Intent intent = new Intent(view.getContext(), BrowseRoutesActivity.class);
 
-                // view.getContext().startActivity(intent);
+                 view.getContext().startActivity(intent);
             }
         });
 
@@ -64,7 +64,8 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), EditWall.class);
 
-                view.getContext().startActivity(intent);}
+                view.getContext().startActivity(intent);
+            }
         });
 
         Button edit_holds = findViewById(R.id.edit_holds);
