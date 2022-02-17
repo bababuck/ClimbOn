@@ -2,6 +2,7 @@ package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -53,6 +54,7 @@ public class CreateWallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_wall);
         scroll = findViewById(R.id.ScrollLL);
+
         createCornerInput();
         createStartHoldInput();
         createBottomButtons();
@@ -114,23 +116,58 @@ public class CreateWallActivity extends AppCompatActivity {
         TODO: Wipe routes if number of holds changed?
         TODO: Is LL needed?
         */
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        UniversalData saved_data = app.data;
+
         LinearLayout button_layout = new LinearLayout(this);
         button_layout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(0, 100, 1);
 
-        Button current_button = new Button(this);
-        current_button.setBackgroundColor(Color.GREEN);
-        current_button.setText("Confirm Panel");
-        current_button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
+        {
+            Button current_button = new Button(this);
+            current_button.setBackgroundColor(Color.GREEN);
+            current_button.setText("Confirm and Add Another");
+            current_button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    doConfirmStuff();
+                    saved_data.current_shape ++;
 
-            }
-        });
-        current_button.setTextColor(Color.BLACK);
-        button_layout.addView(current_button, button_params);
+                    Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            });
+            current_button.setTextColor(Color.BLACK);
+            button_layout.addView(current_button, button_params);
+        }
+        {
+            Button current_button = new Button(this);
+            current_button.setBackgroundColor(Color.GREEN);
+            current_button.setText("Confirm and Exit");
+            current_button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    doConfirmStuff();
+
+                    // Return to Main Menu
+                }
+            });
+            current_button.setTextColor(Color.BLACK);
+            button_layout.addView(current_button, button_params);
+        }
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         scroll.addView(button_layout, params);
+    }
+
+    private void doConfirmStuff() {
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        UniversalData saved_data = app.data;
+
+        try {
+            Shape shape = new Shape(getCorners(), getStartHoldLoc());
+            saved_data.wall.panel_set.add(saved_data.current_shape, shape);
+        } catch (Exception E) {
+            assert true;
+        }
     }
 
     private void genGenPreview(LinearLayout bottom_buttons) {
@@ -170,11 +207,7 @@ public class CreateWallActivity extends AppCompatActivity {
         if (num_buttons >= 3) {
             generated = true;
 
-            ArrayList<Float> coordinates = new ArrayList<>();
-            for (int i=0; i < num_buttons * 2; ++i) {
-                EditText input = corner_inputs.get(i);
-                coordinates.add(Float.parseFloat(input.getText().toString()));
-            }
+            ArrayList<Float> coordinates = getCorners();
 
             // Get height/width of use-able area
             DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -182,8 +215,7 @@ public class CreateWallActivity extends AppCompatActivity {
             int screen_width = displaymetrics.widthPixels;
             int box_height = 1500;
 
-            Coordinate start_hold = new Coordinate(Float.parseFloat(start_inputs.get(0).getText().toString()),
-                                              Float.parseFloat(start_inputs.get(1).getText().toString()));
+            Coordinate start_hold = getStartHoldLoc();
 
             PreviewShapeDrawable shape = new PreviewShapeDrawable(this,
                                                                   coordinates,
@@ -194,6 +226,22 @@ public class CreateWallActivity extends AppCompatActivity {
             LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(screen_width, box_height, 1);
             scroll.addView(shape, num_buttons + 2, button_params);
         }
+    }
+
+    private ArrayList<Float> getCorners() {
+        /* Get the corners from the inputs. */
+        ArrayList<Float> coordinates = new ArrayList<>();
+        for (int i=0; i < num_buttons * 2; ++i) {
+            EditText input = corner_inputs.get(i);
+            coordinates.add(Float.parseFloat(input.getText().toString()));
+        }
+        return coordinates;
+    }
+
+    private Coordinate getStartHoldLoc() {
+        /* Find the start hold location. */
+        return new Coordinate(Float.parseFloat(start_inputs.get(0).getText().toString()),
+                Float.parseFloat(start_inputs.get(1).getText().toString()));
     }
 
     private void genAddButton(LinearLayout bottom_buttons) {
