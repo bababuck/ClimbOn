@@ -1,6 +1,7 @@
 package com.example.climbon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Wall {
     /* Consists of a set on panels.
@@ -36,6 +37,15 @@ public class Wall {
             running_count += shape.getNumHolds();
         }
         return running_count;
+    }
+
+    public List<String> printString() {
+        /* Create a list for printing out. */
+        List<String> outlist = new ArrayList<>();
+        for (Shape current_panel : panel_set) {
+            outlist.add(current_panel.toString());
+        }
+        return outlist;
     }
 
 }

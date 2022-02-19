@@ -9,4 +9,10 @@ public class Coordinate {
         this.x = x;
         this.y = y;
     }
+
+    public String toString() {
+        /* Make to string for writing to file. */
+        return Float.toString(x) + "," + Float.toString(y);
+    }
+
 }

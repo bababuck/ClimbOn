@@ -252,4 +252,14 @@ public class Shape {
             return intersection;
         }
     }
+
+    public String toString() {
+        String outstring = "";
+        for (Coordinate corner : corners) {
+            outstring += corner.toString();
+            outstring += ",";
+        }
+        outstring += hold_set.get(0).toString();
+        return outstring;
+    }
 }

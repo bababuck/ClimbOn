@@ -43,6 +43,31 @@ public class ClimbOnApplication extends Application {
         }
     }
 
+    public void saveWallPanels() {
+        /* Save the current wall panel data into memory. */
+        try {
+            String wall_name = data.current_wall;
+            File file = new File(wall_name + "/" + data.PANEL_FILE);
+
+            List<String> lines = Arrays.asList("The first line", "The second line");
+            Path file = Paths.get("the-file-name.txt");
+            Files.write(file, lines, StandardCharsets.UTF_8);
+
+            Scanner inputStream = new Scanner(file);
+            while(inputStream.hasNext()){
+                String line= inputStream.next();
+                String[] values = line.split(",");
+                ArrayList<Float> current_panel = new ArrayList<>();
+                for (int i=0; i< values.length; ++i) {
+                    current_panel.add(Float.parseFloat(values[i]));
+                }
+                corners.add(current_panel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void LoadWall(String wall_name) {
         /* Load all the information about the current wall.
 
