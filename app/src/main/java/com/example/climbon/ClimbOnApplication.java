@@ -2,10 +2,17 @@ package com.example.climbon;
 
 import android.app.Application;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class ClimbOnApplication extends Application {
@@ -47,24 +54,14 @@ public class ClimbOnApplication extends Application {
         /* Save the current wall panel data into memory. */
         try {
             String wall_name = data.current_wall;
-            File file = new File(wall_name + "/" + data.PANEL_FILE);
 
-            List<String> lines = Arrays.asList("The first line", "The second line");
-            Path file = Paths.get("the-file-name.txt");
-            Files.write(file, lines, StandardCharsets.UTF_8);
-
-            Scanner inputStream = new Scanner(file);
-            while(inputStream.hasNext()){
-                String line= inputStream.next();
-                String[] values = line.split(",");
-                ArrayList<Float> current_panel = new ArrayList<>();
-                for (int i=0; i< values.length; ++i) {
-                    current_panel.add(Float.parseFloat(values[i]));
-                }
-                corners.add(current_panel);
+            FileWriter fw = new FileWriter(wall_name + "/" + data.PANEL_FILE, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (String line : data.wall.printString()) {
+                bw.write(line);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            //exception handling left as an exercise for the reader
         }
     }
 
