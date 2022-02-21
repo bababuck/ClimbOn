@@ -2,7 +2,7 @@ package com.example.climbon;
 import java.util.ArrayList;
 
 class RouteData {
-    int v_rating;
+    Integer v_rating;
     ArrayList<Boolean> holds;
     String type;
     String name;
@@ -11,6 +11,14 @@ class RouteData {
         this.v_rating = v_rating;
         this.type = type;
         this.name = name;
+    }
+
+    public String toStringInfo() {
+        return name + v_rating.toString() + type;
+    }
+
+    public String toString() {
+        return holds.toString();
     }
 }
 

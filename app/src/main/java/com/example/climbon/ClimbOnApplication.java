@@ -65,6 +65,43 @@ public class ClimbOnApplication extends Application {
         }
     }
 
+    public void updateAllRoutes() {
+        /* Save all routes, will need to be done after file deletion. */
+        try {
+            String wall_name = data.current_wall;
+
+            FileWriter fw_routes = new FileWriter(wall_name + "/" + data.ROUTES_FILE, false);
+            FileWriter fw_info = new FileWriter(wall_name + "/" + data.ROUTE_INFO_FILE, false);
+            BufferedWriter bw_routes = new BufferedWriter(fw_routes);
+            BufferedWriter bw_info = new BufferedWriter(fw_info);
+            for (String line : data.routes.printRoutes()) {
+                bw_routes.write(line);
+            }
+            for (String line : data.routes.printRouteInfo()) {
+                bw_info.write(line);
+            }
+        } catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+    }
+
+    public void saveAddRoutes() {
+        /* Save final route to end of file. */
+        try {
+            String wall_name = data.current_wall;
+
+            FileWriter fw_routes = new FileWriter(wall_name + "/" + data.ROUTES_FILE, true);
+            FileWriter fw_info = new FileWriter(wall_name + "/" + data.ROUTE_INFO_FILE, true);
+            BufferedWriter bw_routes = new BufferedWriter(fw_routes);
+            BufferedWriter bw_info = new BufferedWriter(fw_info);
+            int size = data.routes.routes.size();
+            bw_routes.write(data.routes.routes.get(size).toString());
+            bw_info.write(data.routes.routes.get(size).toStringInfo());
+        } catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+    }
+
     private void LoadWall(String wall_name) {
         /* Load all the information about the current wall.
 
@@ -89,7 +126,7 @@ public class ClimbOnApplication extends Application {
 
     private void loadRoutes(String wall_name) {
         /* Load the routes from a wall */
-        data.route_data = new ArrayList<>();
+        data.routes = new AllRoute();
         try {
             File info_file = new File(wall_name + "/" + data.ROUTE_INFO_FILE);
             File route_file = new File(wall_name + "/" + data.ROUTES_FILE);
@@ -110,7 +147,7 @@ public class ClimbOnApplication extends Application {
                     current_route_holds.add(Boolean.parseBoolean(route_values[i]));
                 }
                 RouteData current_route = new RouteData(rating, current_route_holds, type, name);
-                data.route_data.add(current_route);
+                data.routes.routes.add(current_route);
             }
         } catch (Exception e) {
             e.printStackTrace();
