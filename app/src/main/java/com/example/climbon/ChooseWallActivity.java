@@ -56,6 +56,7 @@ public class ChooseWallActivity extends AppCompatActivity {
         current_button.setText("New Wall");
         current_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                // TODO: Make sure name is not reused
                 saved_data.current_wall = input.getText().toString();
                 Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
                 view.getContext().startActivity(intent);
