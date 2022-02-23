@@ -31,7 +31,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     saved_data.current_route = route;
-                    Intent intent = new Intent(view.getContext(), RouteView.class);
+                    Intent intent = new Intent(view.getContext(), RouteViewInert.class);
 
                     view.getContext().startActivity(intent);
                 }
@@ -39,8 +39,33 @@ public class BrowseRoutesActivity extends AppCompatActivity {
             current_button.setTextColor(Color.BLACK);
             scroll.addView(current_button, button_params);
         }
+
+        setupBottomButtons();
     }
 
+    private void setupBottomButtons() {
+        /* Create the bottom buttons.
 
+        These include:
+        - Add/Remove/Preview buttons
+        - Confirm (exit) button
+        */
 
+        Button back = findViewById(R.id.BackButton);
+        Button new_route = findViewById(R.id.NewRoute);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), MainMenu.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        new_route.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), SetHoldsOuter.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+    }
 }
