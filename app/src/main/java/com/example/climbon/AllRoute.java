@@ -6,18 +6,18 @@ public class AllRoute {
     ArrayList<RouteData> routes = new ArrayList<>();
 
     public ArrayList<String> printRouteInfo() {
-        ArrayList<String> outstrings = new ArrayList<>();
+        ArrayList<String> out_strings = new ArrayList<>();
         for (RouteData route : routes) {
-            outstrings.add(route.toStringInfo());
+            out_strings.add(route.toStringInfo());
         }
-        return outstrings;
+        return out_strings;
     }
 
     public ArrayList<String> printRoutes() {
-        ArrayList<String> outstrings = new ArrayList<>();
+        ArrayList<String> out_strings = new ArrayList<>();
         for (RouteData route : routes) {
-            outstrings.add(route.toString());
+            out_strings.add(route.toString());
         }
-        return outstrings;
+        return out_strings;
     }
 }
