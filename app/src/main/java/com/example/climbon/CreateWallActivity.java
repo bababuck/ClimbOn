@@ -130,7 +130,7 @@ public class CreateWallActivity extends AppCompatActivity {
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     doConfirmStuff();
-                    saved_data.current_shape ++;
+                    saved_data.current_shape++;
 
                     Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
                     view.getContext().startActivity(intent);
@@ -147,7 +147,8 @@ public class CreateWallActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     doConfirmStuff();
 
-                    // Return to Main Menu
+                    Intent intent = new Intent(view.getContext(), MainMenu.class);
+                    view.getContext().startActivity(intent);
                 }
             });
             current_button.setTextColor(Color.BLACK);
@@ -159,6 +160,10 @@ public class CreateWallActivity extends AppCompatActivity {
     }
 
     private void doConfirmStuff() {
+        /* Save the wall panel into the cache as a Shape and into memory in save format.
+
+        For now will save even if still adding another panel.
+        */
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
 
@@ -168,6 +173,8 @@ public class CreateWallActivity extends AppCompatActivity {
         } catch (Exception E) {
             assert true;
         }
+
+        app.saveWallPanels();
     }
 
     private void genGenPreview(LinearLayout bottom_buttons) {
