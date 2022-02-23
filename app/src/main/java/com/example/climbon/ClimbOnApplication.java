@@ -6,13 +6,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 public class ClimbOnApplication extends Application {
@@ -22,11 +17,6 @@ public class ClimbOnApplication extends Application {
     - Try/catch statements
     */
     public UniversalData data = new UniversalData();
-
-    class WallData {
-        ArrayList<ArrayList<Float>> corners;
-        ArrayList<Integer> hold_types;
-    }
 
     @Override
     public void onCreate() {
@@ -41,9 +31,7 @@ public class ClimbOnApplication extends Application {
 
         File[] files = cacheDir.listFiles();
         if (files != null) {
-            for (int i = 0; i < files.length; ++i) {
-                File file = files[i];
-
+            for (File file : files) {
                 String file_name = file.getName();
                 data.wall_names.add(file_name);
             }
@@ -54,6 +42,10 @@ public class ClimbOnApplication extends Application {
         /* Save the current wall panel data into memory. */
         try {
             String wall_name = data.current_wall;
+            if (data.wall_names.contains(wall_name)) {
+                File wall_dir = new File(this.getFilesDir().getName() + File.pathSeparator + wall_name);
+                wall_dir.mkdir();
+            }
 
             FileWriter fw = new FileWriter(wall_name + "/" + data.PANEL_FILE, false);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -85,7 +77,7 @@ public class ClimbOnApplication extends Application {
         }
     }
 
-    public void saveAddRoutes() {
+    public void saveAddRoute() {
         /* Save final route to end of file. */
         try {
             String wall_name = data.current_wall;
@@ -95,8 +87,8 @@ public class ClimbOnApplication extends Application {
             BufferedWriter bw_routes = new BufferedWriter(fw_routes);
             BufferedWriter bw_info = new BufferedWriter(fw_info);
             int size = data.routes.routes.size();
-            bw_routes.write(data.routes.routes.get(size).toString());
-            bw_info.write(data.routes.routes.get(size).toStringInfo());
+            bw_routes.write(data.routes.routes.get(size - 1).toString());
+            bw_info.write(data.routes.routes.get(size - 1).toStringInfo());
         } catch (IOException e) {
             //exception handling left as an exercise for the reader
         }
@@ -117,11 +109,6 @@ public class ClimbOnApplication extends Application {
 
         loadCornersHolds(dir_path + wall_name);
         loadRoutes(dir_path + wall_name);
-
-//        cacheDir.mkdir();
-//
-//        current_shape = saved_data.wall.panel_set.get(saved_data.current_shape);
-//        current_hold_types = current_shape.hold_types;
     }
 
     private void loadRoutes(String wall_name) {
@@ -143,8 +130,8 @@ public class ClimbOnApplication extends Application {
 
                 String[] route_values = route_line.split(",");
                 ArrayList<Boolean> current_route_holds = new ArrayList<>();
-                for (int i=0; i< route_values.length; ++i) {
-                    current_route_holds.add(Boolean.parseBoolean(route_values[i]));
+                for (String hold : route_values) {
+                    current_route_holds.add(Boolean.parseBoolean(hold));
                 }
                 RouteData current_route = new RouteData(rating, current_route_holds, type, name);
                 data.routes.routes.add(current_route);
@@ -164,8 +151,8 @@ public class ClimbOnApplication extends Application {
                 String line= inputStream.next();
                 String[] values = line.split(",");
                 ArrayList<Float> current_panel = new ArrayList<>();
-                for (int i=0; i< values.length; ++i) {
-                    current_panel.add(Float.parseFloat(values[i]));
+                for (String value : values) {
+                    current_panel.add(Float.parseFloat(value));
                 }
                 corners.add(current_panel);
             }
@@ -180,8 +167,8 @@ public class ClimbOnApplication extends Application {
             while(inputStream.hasNext()){ // Should only go once
                 String line= inputStream.next();
                 String[] values = line.split(",");
-                for (int i=0; i< values.length; ++i) {
-                    hold_types.add(Integer.parseInt(values[i]));
+                for (String value : values) {
+                    hold_types.add(Integer.parseInt(value));
                 }
             }
         } catch (Exception e) {
