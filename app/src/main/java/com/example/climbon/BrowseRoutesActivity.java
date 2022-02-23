@@ -44,12 +44,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
     }
 
     private void setupBottomButtons() {
-        /* Create the bottom buttons.
-
-        These include:
-        - Add/Remove/Preview buttons
-        - Confirm (exit) button
-        */
+        /* Route the buttons to correct activities. */
 
         Button back = findViewById(R.id.BackButton);
         Button new_route = findViewById(R.id.NewRoute);
