@@ -22,7 +22,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
         // Create button for each route
-        for (RouteData route : saved_data.route_data) {
+        for (RouteData route : saved_data.routes.routes) {
             String name = route.name;
 
             Button current_button = new Button(this);
