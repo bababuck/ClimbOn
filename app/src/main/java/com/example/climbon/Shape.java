@@ -7,6 +7,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Shape {
     /* Contains the shape of a panel.
@@ -72,6 +73,7 @@ public class Shape {
         shiftCorners();
         cornersToEdges();
         genHolds(start_point);
+        hold_types = new ArrayList<Integer>(Collections.nCopies(this.getNumHolds(), HoldType.NO_HOLD.ordinal()));
     }
 
     public void setHoldTypes(ArrayList<Integer> hold_types) {
