@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +25,7 @@ public class MainMenu extends AppCompatActivity {
 
         Will download the data and save it to the app.
         */
+        Log.e("Main Menu","Entering MainMenu activity...");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
@@ -41,9 +43,11 @@ public class MainMenu extends AppCompatActivity {
         browse_routes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 Intent intent = new Intent(view.getContext(), BrowseRoutesActivity.class);
+                Log.e("Main Menu","'BrowseRoutes' button selected...");
+                Intent intent = new Intent(view.getContext(), BrowseRoutesActivity.class);
 
-                 view.getContext().startActivity(intent);
+                Log.e("Main Menu","Entering BrowseRoutes activity...");
+                view.getContext().startActivity(intent);
             }
         });
 
@@ -51,9 +55,10 @@ public class MainMenu extends AppCompatActivity {
         create_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Log.e("Main Menu","'CreateRoute' button selected...");
                 Intent intent = new Intent(view.getContext(), CollectRouteInfoActivity.class);
 
+                Log.e("Main Menu","Entering CollectRouteInfoActivity activity...");
                 view.getContext().startActivity(intent);
             }
         });
@@ -62,8 +67,10 @@ public class MainMenu extends AppCompatActivity {
         edit_wall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("Main Menu","'EditWall' button selected...");
                 Intent intent = new Intent(view.getContext(), EditWall.class);
 
+                Log.e("Main Menu","Entering EditWall activity...");
                 view.getContext().startActivity(intent);
             }
         });
@@ -72,9 +79,11 @@ public class MainMenu extends AppCompatActivity {
         edit_holds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 Intent intent = new Intent(view.getContext(), SetHoldsOuter.class);
+                Log.e("Main Menu","'EditHolds' button selected...");
+                Intent intent = new Intent(view.getContext(), SetHoldsOuter.class);
 
-                 view.getContext().startActivity(intent);
+                Log.e("Main Menu","Entering SetHoldsOuter activity...");
+                view.getContext().startActivity(intent);
             }
         });
     }

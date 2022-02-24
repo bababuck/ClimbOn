@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -129,10 +130,13 @@ public class CreateWallActivity extends AppCompatActivity {
             current_button.setText("Confirm and Add Another");
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
+                    Log.e("CreateWall","'Confirm and Add Another' button selected...");
                     doConfirmStuff();
                     saved_data.current_shape++;
 
                     Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
+
+                    Log.e("CreateWall","Heading to CreateWall activity...");
                     view.getContext().startActivity(intent);
                 }
             });
@@ -145,9 +149,12 @@ public class CreateWallActivity extends AppCompatActivity {
             current_button.setText("Confirm and Exit");
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
+                    Log.e("CreateWall","'Confirm and Exit' button selected...");
                     doConfirmStuff();
 
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
+
+                    Log.e("CreateWall","Heading to Main Menu...");
                     view.getContext().startActivity(intent);
                 }
             });
@@ -164,10 +171,12 @@ public class CreateWallActivity extends AppCompatActivity {
 
         For now will save even if still adding another panel.
         */
+        Log.e("CreateWall","Entering doConfirmStuff");
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
 
         try {
+            Log.e("CreateWall","Creating Shape...");
             Shape shape = new Shape(getCorners(), getStartHoldLoc());
             saved_data.wall.panel_set.add(saved_data.current_shape, shape);
         } catch (Exception E) {
@@ -189,6 +198,7 @@ public class CreateWallActivity extends AppCompatActivity {
         current_button.setText("Generate Preview");
         current_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Log.e("CreateWall","'GeneratePreview' button selected...");
                 generatePreview();
             }
         });
@@ -204,7 +214,7 @@ public class CreateWallActivity extends AppCompatActivity {
         TODO: Change shape constructor to take list of Coordinates
         TODO: Only use a much vertical space as required (no vertical white space on wide shapes)
         */
-
+        Log.e("CreateWall","Generating preview...");
         // If previous preview exists, remove it
         if (generated) {
             scroll.removeViewAt(num_buttons + 2);
@@ -232,6 +242,10 @@ public class CreateWallActivity extends AppCompatActivity {
 
             LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(screen_width, box_height, 1);
             scroll.addView(shape, num_buttons + 2, button_params);
+            Log.e("CreateWall","Preview successfully generated...");
+        }
+        else {
+            Log.e("CreateWall","Not enough corners for a valid panel");
         }
     }
 

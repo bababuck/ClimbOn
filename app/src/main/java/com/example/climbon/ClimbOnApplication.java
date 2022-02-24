@@ -1,6 +1,7 @@
 package com.example.climbon;
 
 import android.app.Application;
+import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,19 +42,32 @@ public class ClimbOnApplication extends Application {
     public void saveWallPanels() {
         /* Save the current wall panel data into memory. */
         try {
+            Log.e("Application","Entering saveWallPanels...");
             String wall_name = data.current_wall;
-            if (data.wall_names.contains(wall_name)) {
-                File wall_dir = new File(this.getFilesDir().getName() + File.pathSeparator + wall_name);
+
+            if (!data.wall_names.contains(wall_name)) {
+                File wall_dir = new File(this.getFilesDir(), wall_name);
+                Log.e("Application","Making new directory");
                 wall_dir.mkdir();
             }
 
-            FileWriter fw = new FileWriter(wall_name + "/" + data.PANEL_FILE, false);
+            String file_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator + data.PANEL_FILE;
+            Log.e("Application","Writing file: " + file_path);
+
+            Log.e("Application","Create FileWriter");
+            FileWriter fw = new FileWriter(file_path, false);
+            Log.e("Application","Create BufferedWriter");
             BufferedWriter bw = new BufferedWriter(fw);
             for (String line : data.wall.printString()) {
                 bw.write(line);
             }
+            Log.e("Application","Closing BufferedWriter");
+            bw.close();
+
+            Log.e("Application","Exiting saveWallPanels successfully...");
         } catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            Log.e("Application", e.toString());
+            Log.e("Application","Exiting saveWallPanels un-successfully...");
         }
     }
 

@@ -55,7 +55,6 @@ public class Boundary extends Drawable {
         path.moveTo( translater.translateX(corners.get(corners.size()-1).x),
                 translater.translateY(corners.get(corners.size()-1).y));
         for (int i=0;i<corners.size();++i) {
-            Log.e("fuck", String.valueOf(translater.translateX(corners.get(i).x)));
             path.lineTo( translater.translateX(corners.get(i).x),
                     translater.translateY(corners.get(i).y));
         }
