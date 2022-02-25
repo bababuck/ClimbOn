@@ -51,7 +51,7 @@ public class ClimbOnApplication extends Application {
                 wall_dir.mkdir();
             }
 
-            String file_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator + data.PANEL_FILE;
+            String file_path = this.getFilesDir() + File.separator + wall_name + File.separator + data.PANEL_FILE;
             Log.e("Application","Writing file: " + file_path);
 
             Log.e("Application","Create FileWriter");
@@ -77,7 +77,7 @@ public class ClimbOnApplication extends Application {
             Log.e("Application","Entering saveHoldTypes...");
             String wall_name = data.current_wall;
 
-            String file_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator + data.HOLD_TYPES_FILE;
+            String file_path = this.getFilesDir() + File.separator + wall_name + File.separator + data.HOLD_TYPES_FILE;
             Log.e("Application","Writing file: " + file_path);
 
             Log.e("Application","Create FileWriter");
@@ -102,7 +102,7 @@ public class ClimbOnApplication extends Application {
         try {
             String wall_name = data.current_wall;
 
-            String base_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator;
+            String base_path = this.getFilesDir() + File.separator + wall_name + File.separator;
             Log.e("Application","Writing file: " + base_path + data.ROUTES_FILE);
             FileWriter fw_routes = new FileWriter(base_path + data.ROUTES_FILE, false);
             Log.e("Application","Create BufferedWriter");
@@ -135,7 +135,7 @@ public class ClimbOnApplication extends Application {
         try {
             String wall_name = data.current_wall;
             int size = data.routes.routes.size();
-            String base_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator;
+            String base_path = this.getFilesDir() + File.separator + wall_name + File.separator;
 
             Log.e("Application","Writing file: " + base_path + data.ROUTES_FILE);
             FileWriter fw_routes = new FileWriter(base_path + data.ROUTES_FILE, true);
@@ -160,7 +160,7 @@ public class ClimbOnApplication extends Application {
         }
     }
 
-    private void LoadWall(String wall_name) {
+    public void loadWall(String wall_name) {
         /* Load all the information about the current wall.
 
         For now will load all the information about every route.
@@ -172,8 +172,10 @@ public class ClimbOnApplication extends Application {
         */
         File cacheDir = this.getFilesDir();
 
-        loadCornersHolds(cacheDir + File.pathSeparator + wall_name);
-        loadRoutes(cacheDir + File.pathSeparator + wall_name);
+        Log.e("Application","Loading Wall");
+        loadCornersHolds(cacheDir + File.separator + wall_name);
+        loadRoutes(cacheDir + File.separator + wall_name);
+        Log.e("Application","Finished Loading Wall");
     }
 
     private void loadRoutes(String wall_name) {
@@ -181,8 +183,8 @@ public class ClimbOnApplication extends Application {
         data.routes = new AllRoute();
         try {
             Log.e("Application","Loading Routes...");
-            File info_file = new File(wall_name + File.pathSeparator + data.ROUTE_INFO_FILE);
-            File route_file = new File(wall_name + File.pathSeparator + data.ROUTES_FILE);
+            File info_file = new File(wall_name + File.separator + data.ROUTE_INFO_FILE);
+            File route_file = new File(wall_name + File.separator + data.ROUTES_FILE);
 
             Log.e("Application","Creating scanner for: " + info_file);
             Scanner info_inputStream = new Scanner(info_file);
@@ -220,7 +222,7 @@ public class ClimbOnApplication extends Application {
         /* Load the corners from a wall. */
         ArrayList<ArrayList<Float>> corners = new ArrayList<>();
         try {
-            File file = new File(wall_name + File.pathSeparator + data.PANEL_FILE);
+            File file = new File(wall_name + File.separator + data.PANEL_FILE);
             Scanner inputStream = new Scanner(file);
             while(inputStream.hasNext()){
                 String line= inputStream.next();
@@ -237,7 +239,7 @@ public class ClimbOnApplication extends Application {
 
         ArrayList<Integer> hold_types = new ArrayList<>();
         try {
-            File file = new File(wall_name + File.pathSeparator + data.HOLD_TYPES_FILE);
+            File file = new File(wall_name + File.separator + data.HOLD_TYPES_FILE);
             Scanner inputStream = new Scanner(file);
             while(inputStream.hasNext()){
                 String line= inputStream.next();

@@ -44,7 +44,7 @@ public class ChooseWallActivity extends AppCompatActivity {
                     Log.e("ChooseWall","Wall by name of '" + wall_name + "' selected...");
                     saved_data.current_wall = wall_name;
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
-
+                    app.loadWall(wall_name);
                     Log.e("ChooseWall","Entering MainMenu activity...");
                     view.getContext().startActivity(intent);
                 }
