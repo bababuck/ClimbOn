@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,8 +39,11 @@ public class ChooseWallActivity extends AppCompatActivity {
             current_button.setText(wall_name);
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
+                    Log.e("ChooseWall","Wall by name of '" + wall_name + "' selected...");
                     saved_data.current_wall = wall_name;
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
+
+                    Log.e("ChooseWall","Entering MainMenu activity...");
                     view.getContext().startActivity(intent);
                 }
             });
@@ -57,8 +61,12 @@ public class ChooseWallActivity extends AppCompatActivity {
         current_button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // TODO: Make sure name is not reused
-                saved_data.current_wall = input.getText().toString();
+                String new_name = input.getText().toString();
+                Log.e("ChooseWall","New wall to be created by the name of '" + new_name + "'...");
+                saved_data.current_wall = new_name;
                 Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
+
+                Log.e("ChooseWall","Entering CreateWallActivity activity...");
                 view.getContext().startActivity(intent);
             }
         });
