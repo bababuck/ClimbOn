@@ -264,4 +264,13 @@ public class Shape {
         outstring += hold_set.get(0).toString();
         return outstring;
     }
+
+    public String holdTypesToString() {
+        String outstring = "";
+        for (Integer hold : hold_types) {
+            outstring += hold.toString();
+            outstring += ",";
+        }
+        return outstring;
+    }
 }

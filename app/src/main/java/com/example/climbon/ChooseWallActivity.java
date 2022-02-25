@@ -18,6 +18,8 @@ public class ChooseWallActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("ChooseWall","Entering ChooseWallActivity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_wall);
 

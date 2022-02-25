@@ -2,10 +2,9 @@ package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -36,6 +35,7 @@ public abstract class RouteView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Download data and then create the needed panels. */
+        Log.e("RouteView","Entering RouteViewActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_view);
 

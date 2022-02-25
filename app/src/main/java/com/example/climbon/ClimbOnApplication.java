@@ -71,23 +71,62 @@ public class ClimbOnApplication extends Application {
         }
     }
 
+    public void saveHoldTypes() {
+        /* Save the current walls hold types into memory. */
+        try {
+            Log.e("Application","Entering saveHoldTypes...");
+            String wall_name = data.current_wall;
+
+            String file_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator + data.HOLD_TYPES_FILE;
+            Log.e("Application","Writing file: " + file_path);
+
+            Log.e("Application","Create FileWriter");
+            FileWriter fw = new FileWriter(file_path, false);
+            Log.e("Application","Create BufferedWriter");
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (Shape shape : data.wall.panel_set) {
+                bw.write(shape.holdTypesToString());
+            }
+            Log.e("Application","Closing BufferedWriter");
+            bw.close();
+
+            Log.e("Application","Exiting saveHoldTypes successfully...");
+        } catch (IOException e) {
+            Log.e("Application", e.toString());
+            Log.e("Application","Exiting saveHoldTypes un-successfully...");
+        }
+    }
+
     public void updateAllRoutes() {
         /* Save all routes, will need to be done after file deletion. */
         try {
             String wall_name = data.current_wall;
 
-            FileWriter fw_routes = new FileWriter(wall_name + "/" + data.ROUTES_FILE, false);
-            FileWriter fw_info = new FileWriter(wall_name + "/" + data.ROUTE_INFO_FILE, false);
+            String base_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator;
+            Log.e("Application","Writing file: " + base_path + data.ROUTES_FILE);
+            FileWriter fw_routes = new FileWriter(base_path + data.ROUTES_FILE, false);
+            Log.e("Application","Create BufferedWriter");
             BufferedWriter bw_routes = new BufferedWriter(fw_routes);
-            BufferedWriter bw_info = new BufferedWriter(fw_info);
             for (String line : data.routes.printRoutes()) {
                 bw_routes.write(line);
             }
+            Log.e("Application","Closing BufferedWriter");
+            bw_routes.close();
+
+            Log.e("Application","Writing file: " + base_path + data.ROUTE_INFO_FILE);
+            FileWriter fw_info = new FileWriter(base_path + data.ROUTE_INFO_FILE, false);
+            Log.e("Application","Create BufferedWriter");
+            BufferedWriter bw_info = new BufferedWriter(fw_info);
             for (String line : data.routes.printRouteInfo()) {
                 bw_info.write(line);
             }
+            Log.e("Application","Closing BufferedWriter");
+            bw_info.close();
+
+            Log.e("Application","Exiting updateAllRoutes un-successfully...");
         } catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            Log.e("Application", e.toString());
+            Log.e("Application","Exiting updateAllRoutes un-successfully...");
         }
     }
 
@@ -95,16 +134,29 @@ public class ClimbOnApplication extends Application {
         /* Save final route to end of file. */
         try {
             String wall_name = data.current_wall;
-
-            FileWriter fw_routes = new FileWriter(wall_name + "/" + data.ROUTES_FILE, true);
-            FileWriter fw_info = new FileWriter(wall_name + "/" + data.ROUTE_INFO_FILE, true);
-            BufferedWriter bw_routes = new BufferedWriter(fw_routes);
-            BufferedWriter bw_info = new BufferedWriter(fw_info);
             int size = data.routes.routes.size();
+            String base_path = this.getFilesDir() + File.pathSeparator + wall_name + File.pathSeparator;
+
+            Log.e("Application","Writing file: " + base_path + data.ROUTES_FILE);
+            FileWriter fw_routes = new FileWriter(base_path + data.ROUTES_FILE, true);
+            Log.e("Application","Create BufferedWriter");
+            BufferedWriter bw_routes = new BufferedWriter(fw_routes);
             bw_routes.write(data.routes.routes.get(size - 1).toString());
+            Log.e("Application","Closing BufferedWriter");
+            bw_routes.close();
+
+            Log.e("Application","Writing file: " + base_path + data.ROUTE_INFO_FILE);
+            FileWriter fw_info = new FileWriter(base_path + data.ROUTE_INFO_FILE, true);
+            Log.e("Application","Create BufferedWriter");
+            BufferedWriter bw_info = new BufferedWriter(fw_info);
             bw_info.write(data.routes.routes.get(size - 1).toStringInfo());
+            Log.e("Application","Closing BufferedWriter");
+            bw_info.close();
+
+            Log.e("Application","Exiting saveAddRoute un-successfully...");
         } catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            Log.e("Application", e.toString());
+            Log.e("Application","Exiting saveAddRoute un-successfully...");
         }
     }
 
@@ -119,19 +171,22 @@ public class ClimbOnApplication extends Application {
         - route hold status information: routes.txt
         */
         File cacheDir = this.getFilesDir();
-        String dir_path = cacheDir.getName();
 
-        loadCornersHolds(dir_path + wall_name);
-        loadRoutes(dir_path + wall_name);
+        loadCornersHolds(cacheDir + File.pathSeparator + wall_name);
+        loadRoutes(cacheDir + File.pathSeparator + wall_name);
     }
 
     private void loadRoutes(String wall_name) {
         /* Load the routes from a wall */
         data.routes = new AllRoute();
         try {
-            File info_file = new File(wall_name + "/" + data.ROUTE_INFO_FILE);
-            File route_file = new File(wall_name + "/" + data.ROUTES_FILE);
+            Log.e("Application","Loading Routes...");
+            File info_file = new File(wall_name + File.pathSeparator + data.ROUTE_INFO_FILE);
+            File route_file = new File(wall_name + File.pathSeparator + data.ROUTES_FILE);
+
+            Log.e("Application","Creating scanner for: " + info_file);
             Scanner info_inputStream = new Scanner(info_file);
+            Log.e("Application","Creating scanner for: " + route_file);
             Scanner route_inputStream = new Scanner(route_file);
             while(info_inputStream.hasNext() && route_inputStream.hasNext()){
                 String info_line= info_inputStream.next();
@@ -150,8 +205,14 @@ public class ClimbOnApplication extends Application {
                 RouteData current_route = new RouteData(rating, current_route_holds, type, name);
                 data.routes.routes.add(current_route);
             }
+            info_inputStream.close();
+            route_inputStream.close();
+
+            Log.e("Application","Successfully finished loading Routes...");
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("Application", e.toString());
+            Log.e("Application","Un-successfully exiting loading Routes...");
         }
     }
 
@@ -159,7 +220,7 @@ public class ClimbOnApplication extends Application {
         /* Load the corners from a wall. */
         ArrayList<ArrayList<Float>> corners = new ArrayList<>();
         try {
-            File file = new File(wall_name + "/" + data.PANEL_FILE);
+            File file = new File(wall_name + File.pathSeparator + data.PANEL_FILE);
             Scanner inputStream = new Scanner(file);
             while(inputStream.hasNext()){
                 String line= inputStream.next();
@@ -176,17 +237,20 @@ public class ClimbOnApplication extends Application {
 
         ArrayList<Integer> hold_types = new ArrayList<>();
         try {
-            File file = new File(wall_name + "/" + data.HOLD_TYPES_FILE);
+            File file = new File(wall_name + File.pathSeparator + data.HOLD_TYPES_FILE);
             Scanner inputStream = new Scanner(file);
-            while(inputStream.hasNext()){ // Should only go once
+            while(inputStream.hasNext()){
                 String line= inputStream.next();
                 String[] values = line.split(",");
                 for (String value : values) {
                     hold_types.add(Integer.parseInt(value));
                 }
             }
+            Log.e("Application","Successfully loaded hold_types...");
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("Application", e.toString());
+            Log.e("Application","Un-successfully loaded hold_types...");
         }
 
         createShapes(corners, hold_types);

@@ -184,6 +184,7 @@ public class CreateWallActivity extends AppCompatActivity {
         }
 
         app.saveWallPanels();
+        app.saveHoldTypes();
     }
 
     private void genGenPreview(LinearLayout bottom_buttons) {
