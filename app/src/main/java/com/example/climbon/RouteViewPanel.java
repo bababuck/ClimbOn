@@ -30,7 +30,7 @@ public class RouteViewPanel extends Drawable {
     ArrayList<Drawable> holds = new ArrayList<>();
     ArrayList<Rect> bounds = new ArrayList<>();
 
-    public RouteViewPanel(Context context, Shape shape, ArrayList<Boolean> hold_status, Translater translater){
+    public RouteViewPanel(Context context, Shape shape, ArrayList<Boolean> hold_status, Translater translater, int hold_offset){
         /* Create a panel to be added to a button for RouteView.
 
         Takes translator since that can only be calculated from entire set of panels.
@@ -48,7 +48,7 @@ public class RouteViewPanel extends Drawable {
 
          // If a hold is active, translate it and create
         for (int i=0;i<holds.size();++i){
-            if (hold_status.get(i)){
+            if (hold_status == null || hold_status.get(i+hold_offset)){
                 this.holds.add(context.getResources().getDrawable(PanelViewHold.getImageId(holds.get(i))));
                 int left = translater.translateX(coords.get(i).x);
                 int top = translater.translateY(coords.get(i).y);

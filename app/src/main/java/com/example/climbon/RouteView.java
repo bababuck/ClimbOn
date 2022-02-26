@@ -31,7 +31,7 @@ public abstract class RouteView extends AppCompatActivity {
     int screen_height= 1500;
     int total_width = 1500;
     int screen_width;
-
+    // SET CURRENT_ROUTE_TO_OFF (in RouteView, set attrs to null?)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Download data and then create the needed panels. */
@@ -48,6 +48,7 @@ public abstract class RouteView extends AppCompatActivity {
 
     private void initializeDimensions() {
         /* Initialize certain final variables. */
+        Log.e("RouteView","Initializing dimensions...");
         number_of_shapes = saved_data.wall.panel_set.size();
         screen_width = total_width / number_of_shapes;
     }
@@ -57,6 +58,7 @@ public abstract class RouteView extends AppCompatActivity {
 
         Each button will be an image of a panel.
         */
+        Log.e("RouteView","Creating buttons...");
         getMinRatio();
         for (int i=0;i<number_of_shapes;++i){
             createButton(i);
@@ -66,6 +68,7 @@ public abstract class RouteView extends AppCompatActivity {
     private void createButton(int i) {
         /* Create a single button (panel). */
         // Load the current shape from the save data.
+        Log.e("RouteView","Creating button for panel number " + Integer.toString(i));
         Shape current_shape;
         current_shape = saved_data.wall.panel_set.get(i);
 
@@ -73,8 +76,11 @@ public abstract class RouteView extends AppCompatActivity {
         Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width(), ratio);
 
         // Generate the drawable to set to the button
-        ArrayList<Boolean> hold_status = new ArrayList<>(Arrays.asList(true,false,true,false,true,false,false,false,false,false,false,true,false,true,false));
-        RouteViewPanel panel = new RouteViewPanel(this, current_shape, hold_status, translater);
+        ArrayList<Boolean> holds = null;
+        if (saved_data.current_route != null) {
+            holds = saved_data.current_route.holds;
+        }
+        RouteViewPanel panel = new RouteViewPanel(this, current_shape, holds, translater, saved_data.wall.findCumulativeHoldNumbers().get(i));
 
         LinearLayout layout = findViewById(R.id.RouteViewLL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screen_width, screen_height);

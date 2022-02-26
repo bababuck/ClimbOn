@@ -17,6 +17,7 @@ public class SetHoldsActivity extends PanelView {
 
     LinearLayout bottom_buttons;
     PanelViewHold currently_clicked;
+    int hold_number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class SetHoldsActivity extends PanelView {
     }
 
     @Override
-    protected void setOnCLickListener(PanelViewHold button) {
+    protected void setOnCLickListener(PanelViewHold button, int i) {
         /* Sets the OnClickListener for a hold/button
 
         By pulling out, we can override this function in other classes.
@@ -116,6 +117,7 @@ public class SetHoldsActivity extends PanelView {
                 button.setHoldImage();
                 currently_clicked = button;
                 disableHolds();
+                hold_number = i;
             }
         });
     }
@@ -131,6 +133,7 @@ public class SetHoldsActivity extends PanelView {
                 currently_clicked.hold_type = HoldType.values()[i];
                 currently_clicked.on = true;
                 currently_clicked.setHoldImage();
+                current_hold_types.set(hold_number,i);
                 enableHolds();
             }
         });
@@ -156,5 +159,13 @@ public class SetHoldsActivity extends PanelView {
         for (int i = 0; i < all_holds.size(); ++i){
             all_holds.get(i).setEnabled(true);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* Save state when back button pressed. */
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        app.saveHoldTypes();
+        super.onBackPressed();
     }
 }
