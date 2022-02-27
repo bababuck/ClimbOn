@@ -22,6 +22,7 @@ public abstract class RouteView extends AppCompatActivity {
     panel view screen and allow for editing of route.
 
     TODO: 3D model
+    TODO: On restart
     */
 
     UniversalData saved_data;
@@ -31,7 +32,7 @@ public abstract class RouteView extends AppCompatActivity {
     int screen_height= 1500;
     int total_width = 1500;
     int screen_width;
-    // SET CURRENT_ROUTE_TO_OFF (in RouteView, set attrs to null?)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Download data and then create the needed panels. */
@@ -65,7 +66,7 @@ public abstract class RouteView extends AppCompatActivity {
         }
     }
 
-    private void createButton(int i) {
+    protected void createButton(int i) {
         /* Create a single button (panel). */
         // Load the current shape from the save data.
         Log.e("RouteView","Creating button for panel number " + Integer.toString(i));
@@ -89,7 +90,7 @@ public abstract class RouteView extends AppCompatActivity {
         button.setImageDrawable(panel);
         button.setCropToPadding(false);
         setNavigation(button, i);
-        layout.addView(button, params);
+        layout.addView(button, i, params);
     }
 
     /* Where to route to when the button is clicked. */

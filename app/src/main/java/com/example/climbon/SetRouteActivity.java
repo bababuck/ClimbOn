@@ -3,6 +3,7 @@ package com.example.climbon;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 public class SetRouteActivity extends RouteView {
 
@@ -16,5 +17,22 @@ public class SetRouteActivity extends RouteView {
                 view.getContext().startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* Save state when back button pressed. */
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        app.saveAddRoute();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+
+        LinearLayout layout = findViewById(R.id.RouteViewLL);
+        layout.removeViewAt(saved_data.current_shape);
+        createButton(saved_data.current_shape);
     }
 }

@@ -3,6 +3,7 @@ package com.example.climbon;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 public class SetHoldsOuter extends RouteView {
     protected void setNavigation(ImageButton button, int i) {
@@ -16,5 +17,15 @@ public class SetHoldsOuter extends RouteView {
                 view.getContext().startActivity(intent);
             }
         });
+    }
+
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+
+        LinearLayout layout = findViewById(R.id.RouteViewLL);
+        layout.removeViewAt(saved_data.current_shape);
+        createButton(saved_data.current_shape);
     }
 }

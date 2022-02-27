@@ -125,7 +125,7 @@ public class PanelView extends AppCompatActivity {
             if (saved_data.current_route == null) {
                 hold = true;
             } else {
-                hold = saved_data.current_route.holds.get(starting_hold);
+                hold = saved_data.current_route.holds.get(starting_hold+i);
             }
             PanelViewHold button = new PanelViewHold(this, current_hold_types.get(i),hold);
             ++starting_hold;
@@ -151,6 +151,9 @@ public class PanelView extends AppCompatActivity {
                 if (button.hold_type != HoldType.NO_HOLD) {
                     button.on = !button.on;
                     button.setHoldImage();
+                    Integer starting_hold = saved_data.wall.findCumulativeHoldNumbers().get(saved_data.current_shape);
+                    saved_data.current_route.holds.set(starting_hold+i,button.on);
+                    current_hold_types.set(i, current_hold_types.get(i));
                 }
             }
         });
