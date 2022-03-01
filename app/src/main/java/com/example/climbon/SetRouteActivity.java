@@ -20,19 +20,17 @@ public class SetRouteActivity extends RouteView {
     }
 
     @Override
+    public void onRestart() {
+        super.onRestart();
+        deleteButtons();
+        createButtons();
+    }
+
+    @Override
     public void onBackPressed() {
         /* Save state when back button pressed. */
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         app.saveAddRoute();
         super.onBackPressed();
-    }
-
-    @Override
-    public void onRestart() {
-        super.onRestart();
-
-        LinearLayout layout = findViewById(R.id.RouteViewLL);
-        layout.removeViewAt(saved_data.current_shape);
-        createButton(saved_data.current_shape);
     }
 }
