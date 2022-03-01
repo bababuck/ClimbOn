@@ -47,6 +47,11 @@ public abstract class RouteView extends AppCompatActivity {
         createButtons();
     }
 
+    protected void deleteButtons() {
+        LinearLayout layout = findViewById(R.id.RouteViewLL);
+        layout.removeAllViews();
+    }
+
     private void initializeDimensions() {
         /* Initialize certain final variables. */
         Log.e("RouteView","Initializing dimensions...");
@@ -54,7 +59,7 @@ public abstract class RouteView extends AppCompatActivity {
         screen_width = total_width / number_of_shapes;
     }
 
-    private void createButtons(){
+    protected void createButtons(){
         /* Create buttons and add them to the layout.
 
         Each button will be an image of a panel.

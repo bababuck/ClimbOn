@@ -19,7 +19,6 @@ public class SetHoldsOuter extends RouteView {
         });
     }
 
-
     @Override
     public void onRestart() {
         super.onRestart();
