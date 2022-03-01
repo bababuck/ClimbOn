@@ -22,7 +22,6 @@ public abstract class RouteView extends AppCompatActivity {
     panel view screen and allow for editing of route.
 
     TODO: 3D model
-    TODO: On restart
     */
 
     UniversalData saved_data;
@@ -36,10 +35,11 @@ public abstract class RouteView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /* Download data and then create the needed panels. */
-        Log.e("RouteView","Entering RouteViewActivity");
+        Log.e("RouteView","Entering RouteView");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_view);
 
+        Log.e("RouteView","Getting app data");
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
 
@@ -48,6 +48,7 @@ public abstract class RouteView extends AppCompatActivity {
     }
 
     protected void deleteButtons() {
+        Log.e("RouteView","Deleting buttons");
         LinearLayout layout = findViewById(R.id.RouteViewLL);
         layout.removeAllViews();
     }
@@ -56,7 +57,11 @@ public abstract class RouteView extends AppCompatActivity {
         /* Initialize certain final variables. */
         Log.e("RouteView","Initializing dimensions...");
         number_of_shapes = saved_data.wall.panel_set.size();
-        screen_width = total_width / number_of_shapes;
+        if (number_of_shapes == 0) {
+            screen_width = 0;
+        } else {
+            screen_width = total_width / number_of_shapes;
+        }
     }
 
     protected void createButtons(){
@@ -78,10 +83,10 @@ public abstract class RouteView extends AppCompatActivity {
         Shape current_shape;
         current_shape = saved_data.wall.panel_set.get(i);
 
-        // Setup the translater
+        Log.e("RouteView","Initializing translater...");
         Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width(), ratio);
 
-        // Generate the drawable to set to the button
+        Log.e("RouteView","Generating RouteViewPanel to be placed in view.");
         ArrayList<Boolean> holds = null;
         if (saved_data.current_route != null) {
             holds = saved_data.current_route.holds;
@@ -95,6 +100,7 @@ public abstract class RouteView extends AppCompatActivity {
         button.setImageDrawable(panel);
         button.setCropToPadding(false);
         setNavigation(button, i);
+        Log.e("RouteView","Adding Panel to linear layout...");
         layout.addView(button, i, params);
     }
 
@@ -110,6 +116,7 @@ public abstract class RouteView extends AppCompatActivity {
 
         Don't want to add more almost duplicate functions than needed.
         */
+        Log.e("RouteView","Entering getMinRatio()...");
         float min_ratio = Float.POSITIVE_INFINITY;
 
         for (int i=0;i<number_of_shapes;++i){
@@ -123,6 +130,7 @@ public abstract class RouteView extends AppCompatActivity {
 
         See notes in getMinRatio();
         */
+        Log.e("RouteView","Gathering ratio for panel " + Integer.toString(i));
         Shape current_shape = saved_data.wall.panel_set.get(i);
         Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width());
         return translater.getRatio();
