@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public abstract class RouteView extends AppCompatActivity {
     /* Allows the user to view the entire wall at once.
@@ -79,7 +78,7 @@ public abstract class RouteView extends AppCompatActivity {
     protected void createButton(int i) {
         /* Create a single button (panel). */
         // Load the current shape from the save data.
-        Log.e("RouteView","Creating button for panel number " + Integer.toString(i));
+        Log.e("RouteView","Creating button for panel number " + i);
         Shape current_shape;
         current_shape = saved_data.wall.panel_set.get(i);
 
@@ -130,7 +129,7 @@ public abstract class RouteView extends AppCompatActivity {
 
         See notes in getMinRatio();
         */
-        Log.e("RouteView","Gathering ratio for panel " + Integer.toString(i));
+        Log.e("RouteView","Gathering ratio for panel " + i);
         Shape current_shape = saved_data.wall.panel_set.get(i);
         Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width());
         return translater.getRatio();
