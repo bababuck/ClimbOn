@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("CollectRouteInfo","Entering CollectRouteInfoActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collect_route_info);
 
@@ -42,19 +44,5 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
                 view.getContext().startActivity(intent);
             }
         });
-
-        button = findViewById(R.id.abort);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Intent intent = new Intent(view.getContext(), EditWall.class);
-//
-//                view.getContext().startActivity(intent);
-            }
-        });
-
-
     }
-
-
 }

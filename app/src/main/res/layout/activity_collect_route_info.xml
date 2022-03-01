@@ -87,15 +87,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Abort"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:layout_gravity="center"
-            android:id="@+id/abort"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:text="Create Route"
             android:textColor="#000000"
             android:textSize="24sp"
