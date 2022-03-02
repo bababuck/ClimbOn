@@ -22,25 +22,26 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
 
-        EditText input = findViewById(R.id.v_rating);
-        int v_rating = Integer.parseInt(String.valueOf(input.getText()));
-
-        input = findViewById(R.id.v_rating);
-        String name = String.valueOf(input.getText());
-
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio);
-        int selectedId = radioGroup.getCheckedRadioButtonId();
-        RadioButton radioButton = (RadioButton) findViewById(selectedId);
-        String style = radioButton.getText().toString();
-
-
         Button button = findViewById(R.id.create_route);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("CollectRouteInfo","Create Route button clicked...");
+                EditText input = findViewById(R.id.v_rating);
+                int v_rating = Integer.parseInt(String.valueOf(input.getText()));
+
+                input = findViewById(R.id.v_rating);
+                String name = String.valueOf(input.getText());
+
+                RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio);
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                String style = radioButton.getText().toString();
+
                 saved_data.current_route = new RouteData(v_rating,null, style, name);
                 Intent intent = new Intent(view.getContext(), SetRouteActivity.class);
 
+                Log.e("CollectRouteInfo","Entering SetRouteActivity...");
                 view.getContext().startActivity(intent);
             }
         });
