@@ -262,6 +262,7 @@ public class Shape {
             outstring += ",";
         }
         outstring += hold_set.get(0).toString();
+        outstring += "/n";
         return outstring;
     }
 
@@ -271,6 +272,7 @@ public class Shape {
             outstring += hold.toString();
             outstring += ",";
         }
+        outstring += "/n";
         return outstring;
     }
 }

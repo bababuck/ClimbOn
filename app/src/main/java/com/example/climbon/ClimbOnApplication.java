@@ -59,7 +59,7 @@ public class ClimbOnApplication extends Application {
             Log.e("Application","Create BufferedWriter");
             BufferedWriter bw = new BufferedWriter(fw);
             for (String line : data.wall.printString()) {
-                bw.write(line);
+                bw.write(line + "");
             }
             Log.e("Application","Closing BufferedWriter");
             bw.close();
