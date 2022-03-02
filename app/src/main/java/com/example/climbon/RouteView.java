@@ -68,9 +68,10 @@ public abstract class RouteView extends AppCompatActivity {
 
         Each button will be an image of a panel.
         */
-        Log.e("RouteView","Creating buttons...");
+        Log.e("RouteView","Creating buttons: " + number_of_shapes + " shapes");
         getMinRatio();
         for (int i=0;i<number_of_shapes;++i){
+            Log.e("RouteView","Creating button " + i);
             createButton(i);
         }
     }
@@ -119,9 +120,11 @@ public abstract class RouteView extends AppCompatActivity {
         float min_ratio = Float.POSITIVE_INFINITY;
 
         for (int i=0;i<number_of_shapes;++i){
+            Log.e("RouteView","Getting ratio for shape " + i);
             min_ratio = Math.min(getRatio(i), min_ratio);
         }
         ratio = min_ratio;
+        Log.e("RouteView","Exiting getMinRatio()...");
     }
 
     private float getRatio(int i) {

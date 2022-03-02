@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:inputType="numberSigned"
         android:ems="15"
-        android:text="V-Rating"/>
+        android:hint="V-Rating"
+        android:layout_alignParentTop="true"/>
 
     <EditText
         android:id="@+id/routeName"
@@ -23,16 +24,18 @@
         android:layout_height="wrap_content"
         android:ems="15"
         android:inputType="text"
-        android:text="Route Name" />
+        android:hint="Route Name"
+        android:layout_below="@id/v_rating" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/radio">
+        android:id="@+id/radio"
+        android:layout_below="@id/routeName">
         <RadioButton
             android:id="@+id/jugs"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:buttonTint="#1A99C4"
             android:layout_marginLeft="16dp"
             android:text="Jugs"
@@ -40,7 +43,7 @@
         <RadioButton
             android:id="@+id/slopers"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:buttonTint="#1A99C4"
@@ -48,7 +51,7 @@
         <RadioButton
             android:id="@+id/crimps"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:buttonTint="#1A99C4"
@@ -56,7 +59,7 @@
         <RadioButton
             android:id="@+id/pinches"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:buttonTint="#1A99C4"
             android:layout_marginLeft="16dp"
             android:text="Pinches"
@@ -64,7 +67,7 @@
         <RadioButton
             android:id="@+id/footStuff"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:buttonTint="#1A99C4"
             android:layout_marginLeft="16dp"
             android:text="Foot Stuff"
@@ -73,25 +76,21 @@
         <RadioButton
             android:id="@+id/mixed"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:buttonTint="#1A99C4"
             android:text="Mixed" />
     </RadioGroup>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/create_route"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Create Route"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:layout_gravity="center"
-            android:id="@+id/create_route"
-            />
-    </LinearLayout>
-</LinearLayout>
+        android:layout_below="@id/radio"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:text="Create Route"
+        android:textColor="#000000"
+        android:textSize="24sp" />
+</RelativeLayout>
