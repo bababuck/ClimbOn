@@ -1,9 +1,9 @@
 package com.example.climbon;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 public class SetRouteActivity extends RouteView {
 
@@ -12,8 +12,10 @@ public class SetRouteActivity extends RouteView {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("SetRouteActivity","Button clicked: " + i);
                 saved_data.current_shape = i;
                 Intent intent = new Intent(view.getContext(), PanelView.class);
+                Log.e("SetRouteActivity","Entering PanelView");
                 view.getContext().startActivity(intent);
             }
         });
@@ -22,6 +24,7 @@ public class SetRouteActivity extends RouteView {
     @Override
     public void onRestart() {
         super.onRestart();
+        Log.e("SetRouteActivity","Restarting SetRouteActivity...");
         deleteButtons();
         createButtons();
     }
@@ -29,8 +32,10 @@ public class SetRouteActivity extends RouteView {
     @Override
     public void onBackPressed() {
         /* Save state when back button pressed. */
+        Log.e("SetRouteActivity","Back button pressed...");
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
-        app.saveAddRoute();
+        Log.e("SetRouteActivity","Updating all routes...");
+        app.updateAllRoutes();
         super.onBackPressed();
     }
 }
