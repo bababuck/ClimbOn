@@ -23,11 +23,11 @@ public class ClimbOnApplication extends Application {
     public void onCreate() {
         super.onCreate();
         loadWallNames();
-        // initializeSaveData();
     }
 
     private void loadWallNames() {
         /* Load all the wall names from the save data. */
+        Log.e("Application","Loading wall names...");
         File cacheDir = this.getFilesDir();
 
         File[] files = cacheDir.listFiles();
@@ -37,6 +37,7 @@ public class ClimbOnApplication extends Application {
                 data.wall_names.add(file_name);
             }
         }
+        Log.e("Application","Finished loading wall names...");
     }
 
     public void saveWallPanels() {
@@ -60,6 +61,7 @@ public class ClimbOnApplication extends Application {
             BufferedWriter bw = new BufferedWriter(fw);
             for (String line : data.wall.printString()) {
                 bw.write(line + "");
+                bw.newLine();
             }
             Log.e("Application","Closing BufferedWriter");
             bw.close();
@@ -86,6 +88,7 @@ public class ClimbOnApplication extends Application {
             BufferedWriter bw = new BufferedWriter(fw);
             for (Shape shape : data.wall.panel_set) {
                 bw.write(shape.holdTypesToString());
+                bw.newLine();
             }
             Log.e("Application","Closing BufferedWriter");
             bw.close();
@@ -109,6 +112,7 @@ public class ClimbOnApplication extends Application {
             BufferedWriter bw_routes = new BufferedWriter(fw_routes);
             for (String line : data.routes.printRoutes()) {
                 bw_routes.write(line);
+                bw_routes.newLine();
             }
             Log.e("Application","Closing BufferedWriter");
             bw_routes.close();
@@ -119,6 +123,7 @@ public class ClimbOnApplication extends Application {
             BufferedWriter bw_info = new BufferedWriter(fw_info);
             for (String line : data.routes.printRouteInfo()) {
                 bw_info.write(line);
+                bw_info.newLine();
             }
             Log.e("Application","Closing BufferedWriter");
             bw_info.close();
@@ -143,6 +148,7 @@ public class ClimbOnApplication extends Application {
             BufferedWriter bw_routes = new BufferedWriter(fw_routes);
             bw_routes.write(data.routes.routes.get(size - 1).toString());
             Log.e("Application","Closing BufferedWriter");
+            bw_routes.newLine();
             bw_routes.close();
 
             Log.e("Application","Writing file: " + base_path + data.ROUTE_INFO_FILE);
@@ -150,6 +156,7 @@ public class ClimbOnApplication extends Application {
             Log.e("Application","Create BufferedWriter");
             BufferedWriter bw_info = new BufferedWriter(fw_info);
             bw_info.write(data.routes.routes.get(size - 1).toStringInfo());
+            bw_info.newLine();
             Log.e("Application","Closing BufferedWriter");
             bw_info.close();
 
@@ -222,6 +229,7 @@ public class ClimbOnApplication extends Application {
         /* Load the corners from a wall. */
         ArrayList<ArrayList<Float>> corners = new ArrayList<>();
         try {
+            Log.e("Application","Loading corners...");
             File file = new File(wall_name + File.separator + data.PANEL_FILE);
             Scanner inputStream = new Scanner(file);
             while(inputStream.hasNext()){
@@ -233,12 +241,15 @@ public class ClimbOnApplication extends Application {
                 }
                 corners.add(current_panel);
             }
+            Log.e("Application","Successfully loaded corner holds...");
         } catch (Exception e) {
+            Log.e("Application","Un-successfully loaded corner holds...");
             e.printStackTrace();
         }
 
         ArrayList<Integer> hold_types = new ArrayList<>();
         try {
+            Log.e("Application","Loading hold types...");
             File file = new File(wall_name + File.separator + data.HOLD_TYPES_FILE);
             Scanner inputStream = new Scanner(file);
             while(inputStream.hasNext()){
@@ -254,22 +265,6 @@ public class ClimbOnApplication extends Application {
             Log.e("Application", e.toString());
             Log.e("Application","Un-successfully loaded hold_types...");
         }
-
-        createShapes(corners, hold_types);
-    }
-
-    private void initializeSaveData() {
-        /* Fake function since no data to download yet. */
-        data.current_shape = 1;
-        ArrayList<ArrayList<Float>> corners = new ArrayList<>();
-        ArrayList<Float> corner1 = new ArrayList<>(Arrays.asList(0f, 0f, 10f, 0f, 10f, 8f, 8f, 10f, 0f, 10f, 0.5f, 0.5f));
-        ArrayList<Float> corner2 = new ArrayList<>(Arrays.asList(0f, 0f, 4f, 0f, 5f, 16f, 3f, 18f, 0f, 12f, 0.5f, 0.5f ));
-        ArrayList<Float> corner3 = new ArrayList<>(Arrays.asList(0f, 0f, 10f, 0f, 10f, 8f, 8f, 10f, 0f, 10f, 0.5f, 0.5f));
-        corners.add(corner1);
-        corners.add(corner2);
-        corners.add(corner3);
-
-        ArrayList<Integer> hold_types = new ArrayList<>(Arrays.asList(1, 2, 3, 5, 7, 0, 1, 0, 3, 2, 4, 1, 4, 2, 6,3,5,2,5,2,4,1,5,0,0,0,4,2,4,3,2,4,7,5,1,0,3,2,6,6,6,3,5,1,4,5));
 
         createShapes(corners, hold_types);
     }

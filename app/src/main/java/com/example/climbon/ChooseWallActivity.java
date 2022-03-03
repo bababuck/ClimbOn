@@ -64,12 +64,14 @@ public class ChooseWallActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // TODO: Make sure name is not reused
                 String new_name = input.getText().toString();
-                Log.e("ChooseWall","New wall to be created by the name of '" + new_name + "'...");
-                saved_data.current_wall = new_name;
-                Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
+                if (!wall_names.contains(new_name) && new_name != "") {
+                    Log.e("ChooseWall", "New wall to be created by the name of '" + new_name + "'...");
+                    saved_data.current_wall = new_name;
+                    Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
 
-                Log.e("ChooseWall","Entering CreateWallActivity activity...");
-                view.getContext().startActivity(intent);
+                    Log.e("ChooseWall", "Entering CreateWallActivity activity...");
+                    view.getContext().startActivity(intent);
+                }
             }
         });
         current_button.setTextColor(Color.BLACK);

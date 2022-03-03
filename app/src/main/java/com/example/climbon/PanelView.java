@@ -122,8 +122,8 @@ public class PanelView extends AppCompatActivity {
         Integer starting_hold = saved_data.wall.findCumulativeHoldNumbers().get(saved_data.current_shape);
         for (int i=0;i< buttons.size();++i) {
             boolean hold;
-            if (saved_data.current_route == null) {
-                hold = true;
+            if (saved_data.current_route.holds == null) {
+                hold = false;
             } else {
                 hold = saved_data.current_route.holds.get(starting_hold+i);
             }
