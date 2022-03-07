@@ -48,4 +48,12 @@ public class Wall {
         return outlist;
     }
 
+    public ArrayList<Boolean> getHolds() {
+        ArrayList<Boolean> out = new ArrayList<>();
+        for (int i=0;i<findTotalHolds();++i) {
+            out.add(false);
+        }
+        return out;
+    }
+
 }

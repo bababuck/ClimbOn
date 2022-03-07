@@ -35,6 +35,9 @@ public class SetRouteActivity extends RouteView {
         Log.e("SetRouteActivity","Back button pressed...");
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         Log.e("SetRouteActivity","Updating all routes...");
+        if (saved_data.routes.routes.contains(saved_data.current_route)) {
+            saved_data.routes.routes.add(saved_data.current_route);
+        }
         app.updateAllRoutes();
         super.onBackPressed();
     }

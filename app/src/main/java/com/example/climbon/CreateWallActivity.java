@@ -135,7 +135,7 @@ public class CreateWallActivity extends AppCompatActivity {
                     saved_data.current_shape++;
 
                     Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
-
+                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                     Log.e("CreateWall","Heading to CreateWall activity...");
                     view.getContext().startActivity(intent);
                 }

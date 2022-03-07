@@ -45,6 +45,7 @@ public class ChooseWallActivity extends AppCompatActivity {
                     saved_data.current_wall = wall_name;
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
                     app.loadWall(wall_name);
+                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                     Log.e("ChooseWall","Entering MainMenu activity...");
                     view.getContext().startActivity(intent);
                 }

@@ -128,7 +128,7 @@ public class ClimbOnApplication extends Application {
             Log.e("Application","Closing BufferedWriter");
             bw_info.close();
 
-            Log.e("Application","Exiting updateAllRoutes un-successfully...");
+            Log.e("Application","Exiting updateAllRoutes successfully...");
         } catch (IOException e) {
             Log.e("Application", e.toString());
             Log.e("Application","Exiting updateAllRoutes un-successfully...");

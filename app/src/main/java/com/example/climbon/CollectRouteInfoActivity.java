@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.util.ArrayList;
+
 public class CollectRouteInfoActivity extends AppCompatActivity {
 
     @Override
@@ -38,7 +40,8 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
                 RadioButton radioButton = (RadioButton) findViewById(selectedId);
                 String style = radioButton.getText().toString();
 
-                saved_data.current_route = new RouteData(v_rating,null, style, name);
+                ArrayList<Boolean> holds = saved_data.wall.getHolds();
+                saved_data.current_route = new RouteData(v_rating,holds, style, name);
                 Intent intent = new Intent(view.getContext(), SetRouteActivity.class);
 
                 Log.e("CollectRouteInfo","Entering SetRouteActivity...");
