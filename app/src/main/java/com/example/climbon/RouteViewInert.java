@@ -20,21 +20,21 @@ public class RouteViewInert extends RouteView {
 
     private void routeEditButton() {
         Log.e("RouteViewInert","Changing content view to route view inert...");
-        setContentView(R.layout.activity_route_view_inert);
-        Button edit_button = findViewById(R.id.Edit);
-        edit_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("RouteViewInert","'Edit' button selected...");
-                Intent intent = new Intent(view.getContext(), SetRouteActivity.class);
-
-                Log.e("RouteViewInert","Entering SetRouteActivity");
-                view.getContext().startActivity(intent);
-            }
-        });
-
-        Log.e("RouteViewInert","Resetting content view");
-        setContentView(R.layout.activity_route_view);
+//        setContentView(R.layout.activity_route_view_inert);
+//        Button edit_button = findViewById(R.id.Edit);
+//        edit_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e("RouteViewInert","'Edit' button selected...");
+//                Intent intent = new Intent(view.getContext(), SetRouteActivity.class);
+//
+//                Log.e("RouteViewInert","Entering SetRouteActivity");
+//                view.getContext().startActivity(intent);
+//            }
+//        });
+//
+//        Log.e("RouteViewInert","Resetting content view");
+//        setContentView(R.layout.activity_route_view);
     }
 
     @Override

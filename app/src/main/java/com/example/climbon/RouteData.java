@@ -14,11 +14,15 @@ class RouteData {
     }
 
     public String toStringInfo() {
-        return name + v_rating.toString() + type;
+        return name + "," + v_rating.toString() + "," + type;
     }
 
     public String toString() {
-        return holds.toString();
+        String outstring = "";
+        for (Boolean hold : holds) {
+            outstring += hold.toString() + ",";
+        }
+        return outstring;
     }
 }
 

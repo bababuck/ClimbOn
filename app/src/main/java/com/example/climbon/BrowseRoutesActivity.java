@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 public class BrowseRoutesActivity extends AppCompatActivity {
@@ -58,16 +59,8 @@ public class BrowseRoutesActivity extends AppCompatActivity {
     private void setupBottomButtons() {
         /* Route the buttons to correct activities. */
         Log.e("BrowseRoutesActivity","Routing bottom buttons...");
-        Button back = findViewById(R.id.BackButton);
+        EditText back = findViewById(R.id.BackButton);
         Button new_route = findViewById(R.id.NewRoute);
-
-        back.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), MainMenu.class);
-                Log.e("BrowseRoutesActivity","Back button clicked");
-                view.getContext().startActivity(intent);
-            }
-        });
 
         new_route.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

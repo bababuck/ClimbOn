@@ -57,7 +57,8 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View view) {
                 Log.e("Main Menu","'CreateRoute' button selected...");
                 Intent intent = new Intent(view.getContext(), CollectRouteInfoActivity.class);
-
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                
                 Log.e("Main Menu","Entering CollectRouteInfoActivity activity...");
                 view.getContext().startActivity(intent);
             }

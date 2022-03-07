@@ -32,7 +32,7 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
                 EditText input = findViewById(R.id.v_rating);
                 int v_rating = Integer.parseInt(String.valueOf(input.getText()));
 
-                input = findViewById(R.id.v_rating);
+                input = findViewById(R.id.routeName);
                 String name = String.valueOf(input.getText());
 
                 RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio);

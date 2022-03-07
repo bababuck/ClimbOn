@@ -38,6 +38,7 @@ public class SetRouteActivity extends RouteView {
         if (saved_data.routes.routes.contains(saved_data.current_route)) {
             saved_data.routes.routes.add(saved_data.current_route);
         }
+        saved_data.routes.routes.add(saved_data.current_route);
         app.updateAllRoutes();
         super.onBackPressed();
     }

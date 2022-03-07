@@ -125,7 +125,7 @@ public class PanelView extends AppCompatActivity {
             if (saved_data.current_route == null || saved_data.current_route.holds == null) {
                 hold = false;
             } else {
-                hold = saved_data.current_route.holds.get(i);
+                hold = saved_data.current_route.holds.get(i+starting_hold);
             }
             PanelViewHold button = new PanelViewHold(this, current_hold_types.get(i),hold);
             button.setId(i);

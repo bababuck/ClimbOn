@@ -10,6 +10,22 @@
         android:layout_height="match_parent"
         android:id="@+id/main"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp" >
+            <Button
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/NewRoute">
+            </Button>
+            <EditText
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/BackButton">
+            </EditText>
+        </LinearLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -20,21 +36,5 @@
                 android:orientation="vertical">
             </LinearLayout>
         </ScrollView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp" >
-            <Button
-                android:layout_width="0dip"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:id="@+id/NewRoute">
-            </Button>
-            <Button
-                android:layout_width="0dip"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:id="@+id/BackButton">
-            </Button>
-        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
