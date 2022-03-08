@@ -27,8 +27,7 @@ public class ChooseWallActivity extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
 
-        LinearLayout main = new LinearLayout(this);
-        main = findViewById(R.id.LL);
+        LinearLayout main = findViewById(R.id.LL);
 
         // Params for adding EditTexts to the linear layout rows
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
