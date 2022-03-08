@@ -160,12 +160,4 @@ public class SetHoldsActivity extends PanelView {
             all_holds.get(i).setEnabled(true);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        /* Save state when back button pressed. */
-        ClimbOnApplication app = (ClimbOnApplication) getApplication();
-        app.saveHoldTypes();
-        super.onBackPressed();
-    }
 }
