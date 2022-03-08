@@ -152,6 +152,9 @@ public class CreateWallActivity extends AppCompatActivity {
                     Log.e("CreateWall","'Confirm and Exit' button selected...");
                     doConfirmStuff();
 
+                    app.saveWallPanels();
+                    app.saveHoldTypes();
+
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
 
                     Log.e("CreateWall","Heading to Main Menu...");
@@ -182,9 +185,6 @@ public class CreateWallActivity extends AppCompatActivity {
         } catch (Exception E) {
             assert true;
         }
-
-        app.saveWallPanels();
-        app.saveHoldTypes();
     }
 
     private void genGenPreview(LinearLayout bottom_buttons) {
