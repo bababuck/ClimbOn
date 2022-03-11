@@ -18,4 +18,7 @@ public class EditWall extends RouteView {
             }
         });
     }
+
+    @Override
+    public void saveData(){}
 }

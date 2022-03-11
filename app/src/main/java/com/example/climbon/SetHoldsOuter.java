@@ -35,41 +35,15 @@ public class SetHoldsOuter extends RouteView {
         super.onCreate(savedInstanceState);
         Log.e("SetHoldsOuter","Entering SetHoldsOuter");
 
-        ConstraintLayout main = findViewById(R.id.Main);
-        saved_data.saved = true;
-
         saved_hold_types = saved_data.wall.copyHolds();
 
-        Button save = new Button(this);
-        save.setText("Save");
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        params.topToBottom = R.id.HoriScroll;
-        main.addView(save, params);
+        createSaveButton();
+    }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to save route?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ClimbOnApplication app = (ClimbOnApplication) getApplication();
-                        app.saveHoldTypes();
-                        saved_data.saved = true;
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        assert true;
-                    }
-                });
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("SetHoldsOuter","Save button clicked.");
-
-                if (!saved_data.saved)
-                    builder.create().show();
-            }
-        });
+    public void saveData() {
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        app.saveHoldTypes();
+        saved_hold_types = saved_data.wall.copyHolds();
     }
 
     protected void setNavigation(ImageButton button, int i) {
@@ -116,8 +90,9 @@ public class SetHoldsOuter extends RouteView {
                             assert true;
                         }
                     });
+            builder.create().show();
         } else {
-            SetHoldsOuter.super.onBackPressed();
+            super.onBackPressed();
         }
     }
 }

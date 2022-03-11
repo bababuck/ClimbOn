@@ -18,6 +18,8 @@ public class RouteViewInert extends RouteView {
         routeEditButton();
     }
 
+    public void saveData() {}
+
     private void routeEditButton() {
         Log.e("RouteViewInert","Changing content view to route view inert...");
 //        setContentView(R.layout.activity_route_view_inert);

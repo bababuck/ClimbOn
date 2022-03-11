@@ -14,6 +14,7 @@ public class UniversalData {
     int current_shape; // Store which panel we are currently looking at for PanelViewer
     String current_wall = "";
     RouteData current_route;
+    int current_route_number;
     ArrayList<String> wall_names = new ArrayList<>();
     AllRoute routes = new AllRoute();
     Boolean saved;

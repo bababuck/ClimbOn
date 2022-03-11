@@ -33,15 +33,18 @@ public class BrowseRoutesActivity extends AppCompatActivity {
     private void createButtons(LinearLayout.LayoutParams button_params, LinearLayout scroll, UniversalData saved_data) {
         // Create button for each route
         Log.e("BrowseRoutesActivity","Creating buttons...");
-        for (RouteData route : saved_data.routes.routes) {
+        for (int i=0;i<saved_data.routes.routes.size();++i) {
+            RouteData route = saved_data.routes.routes.get(i);
             String name = route.name;
 
             Button current_button = new Button(this);
             current_button.setBackgroundColor(Color.GREEN);
             current_button.setText(name);
+            int finalI = i;
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     saved_data.current_route = route;
+                    saved_data.current_route_number = finalI;
                     Log.e("BrowseRoutesActivity","Route selected: " + route.name);
                     Intent intent = new Intent(view.getContext(), RouteViewInert.class);
 

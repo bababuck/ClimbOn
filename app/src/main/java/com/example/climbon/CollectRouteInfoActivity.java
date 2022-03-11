@@ -42,6 +42,7 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
 
                 ArrayList<Boolean> holds = saved_data.wall.getHolds();
                 saved_data.current_route = new RouteData(v_rating,holds, style, name);
+                saved_data.current_route_number = saved_data.routes.routes.size();
                 Intent intent = new Intent(view.getContext(), SetRouteActivity.class);
 
                 Log.e("CollectRouteInfo","Entering SetRouteActivity...");

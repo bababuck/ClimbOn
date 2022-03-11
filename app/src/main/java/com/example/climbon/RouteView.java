@@ -1,10 +1,15 @@
 package com.example.climbon;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -137,4 +142,40 @@ public abstract class RouteView extends AppCompatActivity {
         Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width());
         return translater.getRatio();
     }
+
+    protected void createSaveButton() {
+        ConstraintLayout main = findViewById(R.id.Main);
+        saved_data.saved = true;
+
+        Button save = new Button(this);
+        save.setText("Save");
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        params.topToBottom = R.id.HoriScroll;
+        main.addView(save, params);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to save route?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        saved_data.saved = true;
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        assert true;
+                    }
+                });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("SetHoldsOuter","Save button clicked.");
+
+                if (!saved_data.saved)
+                    builder.create().show();
+            }
+        });
+    }
+
+    public abstract void saveData();
 }

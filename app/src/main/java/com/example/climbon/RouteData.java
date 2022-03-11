@@ -13,6 +13,13 @@ class RouteData {
         this.name = name;
     }
 
+    public RouteData(RouteData oldRoute) {
+        this.holds = new ArrayList<>(oldRoute.holds);
+        this.v_rating = oldRoute.v_rating;
+        this.type = oldRoute.type;
+        this.name = oldRoute.name;
+    }
+
     public String toStringInfo() {
         return name + "," + v_rating.toString() + "," + type;
     }
