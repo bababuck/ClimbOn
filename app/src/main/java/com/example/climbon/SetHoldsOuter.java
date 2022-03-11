@@ -1,7 +1,6 @@
 package com.example.climbon;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
+
 public class SetHoldsOuter extends RouteView {
+
+    ArrayList<ArrayList<Integer>> saved_hold_types;
+    /* For now, save upon exiting this activity.
+
+    If changes discarded, have to revert back to wall upon entering.
+
+    TODO: Move all saving to the sSetHoldsActivity
+    This will allow us to not save everything which could cause issues
+    if activity data is cleared before backing up theoretically.
+    Also more intuitive I think.
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +37,8 @@ public class SetHoldsOuter extends RouteView {
 
         ConstraintLayout main = findViewById(R.id.Main);
         saved_data.saved = true;
+
+        saved_hold_types = saved_data.wall.copyHolds();
 
         Button save = new Button(this);
         save.setText("Save");
@@ -38,7 +52,6 @@ public class SetHoldsOuter extends RouteView {
                     public void onClick(DialogInterface dialog, int id) {
                         ClimbOnApplication app = (ClimbOnApplication) getApplication();
                         app.saveHoldTypes();
-                        SetHoldsOuter.super.onBackPressed();
                         saved_data.saved = true;
                     }
                 })
@@ -94,6 +107,7 @@ public class SetHoldsOuter extends RouteView {
             builder.setMessage("Are you sure you want exit? All unsaved changes will be lost")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            saved_data.wall.setHolds(saved_hold_types);
                             SetHoldsOuter.super.onBackPressed();
                         }
                     })

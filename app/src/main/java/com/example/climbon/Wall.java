@@ -56,4 +56,18 @@ public class Wall {
         return out;
     }
 
+    ArrayList<ArrayList<Integer>> copyHolds() {
+        ArrayList<ArrayList<Integer>> copied_holds = new ArrayList<>();
+        for (Shape panel : panel_set) {
+            copied_holds.add(new ArrayList<Integer>(panel.hold_types));
+        }
+        return copied_holds;
+    }
+
+    public void setHolds(ArrayList<ArrayList<Integer>> new_holds) {
+        for (int i=0;i < panel_set.size(); ++i) {
+            panel_set.get(i).setHoldTypes(new_holds.get(i));
+        }
+    }
+
 }
