@@ -135,6 +135,7 @@ public class SetHoldsActivity extends PanelView {
                 currently_clicked.setHoldImage();
                 current_hold_types.set(hold_number,i);
                 enableHolds();
+                ((ClimbOnApplication) getApplication()).data.saved = false;
             }
         });
     }

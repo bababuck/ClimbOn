@@ -16,6 +16,7 @@ public class UniversalData {
     RouteData current_route;
     ArrayList<String> wall_names = new ArrayList<>();
     AllRoute routes = new AllRoute();
+    Boolean saved;
 
     String PANEL_FILE = "corners.txt";
     String HOLD_TYPES_FILE = "holds.txt";
