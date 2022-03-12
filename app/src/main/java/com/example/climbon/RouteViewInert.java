@@ -22,6 +22,7 @@ public class RouteViewInert extends RouteView {
 
     private void routeEditButton() {
         Log.e("RouteViewInert","Changing content view to route view inert...");
+        saved_data.saved = true;
 //        setContentView(R.layout.activity_route_view_inert);
 //        Button edit_button = findViewById(R.id.Edit);
 //        edit_button.setOnClickListener(new View.OnClickListener() {

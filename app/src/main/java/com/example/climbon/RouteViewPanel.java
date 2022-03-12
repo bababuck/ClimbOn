@@ -48,7 +48,7 @@ public class RouteViewPanel extends Drawable {
 
          // If a hold is active, translate it and create
         for (int i=0;i<holds.size();++i){
-            if (hold_status != null && hold_status.get(i+hold_offset)){
+            if (hold_status == null || hold_status.get(i+hold_offset)){
                 this.holds.add(context.getResources().getDrawable(PanelViewHold.getImageId(holds.get(i))));
                 int left = translater.translateX(coords.get(i).x);
                 int top = translater.translateY(coords.get(i).y);

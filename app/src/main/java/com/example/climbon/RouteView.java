@@ -92,10 +92,7 @@ public abstract class RouteView extends AppCompatActivity {
         Translater translater = new Translater(top_buffer, 0, bottom_buffer, screen_height, screen_width, current_shape.get_height(), current_shape.get_width(), ratio);
 
         Log.e("RouteView","Generating RouteViewPanel to be placed in view.");
-        ArrayList<Boolean> holds = null;
-        if (saved_data.current_route != null) {
-            holds = saved_data.current_route.holds;
-        }
+        ArrayList<Boolean> holds = get_holds();
         RouteViewPanel panel = new RouteViewPanel(this, current_shape, holds, translater, saved_data.wall.findCumulativeHoldNumbers().get(i));
 
         LinearLayout layout = findViewById(R.id.RouteViewLL);
@@ -107,6 +104,13 @@ public abstract class RouteView extends AppCompatActivity {
         setNavigation(button, i);
         Log.e("RouteView","Adding Panel to linear layout...");
         layout.addView(button, i, params);
+    }
+
+    protected ArrayList<Boolean> get_holds() {
+        if (saved_data.current_route != null) {
+            return saved_data.current_route.holds;
+        }
+        return null;
     }
 
     /* Where to route to when the button is clicked. */
@@ -145,7 +149,6 @@ public abstract class RouteView extends AppCompatActivity {
 
     protected void createSaveButton() {
         ConstraintLayout main = findViewById(R.id.Main);
-        saved_data.saved = true;
 
         Button save = new Button(this);
         save.setText("Save");
@@ -154,10 +157,11 @@ public abstract class RouteView extends AppCompatActivity {
         main.addView(save, params);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to save route?")
+        builder.setMessage("Are you sure you want to save?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         saved_data.saved = true;
+                        saveData();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -169,10 +173,13 @@ public abstract class RouteView extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("SetHoldsOuter","Save button clicked.");
+                Log.e("RouteView","Save button clicked.");
 
-                if (!saved_data.saved)
+                if (!saved_data.saved) {
                     builder.create().show();
+                } else {
+                    Log.e("RouteView","Already saved.");
+                }
             }
         });
     }

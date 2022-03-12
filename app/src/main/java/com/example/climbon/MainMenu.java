@@ -81,6 +81,8 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.e("Main Menu","'EditHolds' button selected...");
+                saved_data.saved = true;
+
                 Intent intent = new Intent(view.getContext(), SetHoldsOuter.class);
 
                 Log.e("Main Menu","Entering SetHoldsOuter activity...");

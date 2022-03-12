@@ -148,6 +148,7 @@ public class PanelView extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (button.hold_type != HoldType.NO_HOLD) {
+                    saved_data.saved = false;
                     button.on = !button.on;
                     button.setHoldImage();
                     Integer starting_hold = saved_data.wall.findCumulativeHoldNumbers().get(saved_data.current_shape);
