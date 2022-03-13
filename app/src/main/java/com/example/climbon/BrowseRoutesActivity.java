@@ -11,8 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+
 public class BrowseRoutesActivity extends AppCompatActivity {
 
+    Boolean search_open = false;
+
+    ArrayList<EditText> search_fields = new ArrayList();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("BrowseRoutesActivity","Entering BrowseRoutesActivity...");
@@ -27,7 +33,11 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         saved_data = app.data;
 
         createButtons(button_params, scroll, saved_data);
-        setupBottomButtons();
+        setupSearchButtons();
+
+        LinearLayout main = findViewById(R.id.main);
+        EditText rating = new EditText(this);
+        rating.setHint("V-Rating");
     }
 
     private void createButtons(LinearLayout.LayoutParams button_params, LinearLayout scroll, UniversalData saved_data) {
@@ -59,17 +69,29 @@ public class BrowseRoutesActivity extends AppCompatActivity {
     }
 
 
-    private void setupBottomButtons() {
+    private void setupSearchButtons() {
         /* Route the buttons to correct activities. */
         Log.e("BrowseRoutesActivity","Routing bottom buttons...");
-        EditText back = findViewById(R.id.BackButton);
-        Button new_route = findViewById(R.id.NewRoute);
+        Button search = findViewById(R.id.Search);
 
-        new_route.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CollectRouteInfoActivity.class);
-                Log.e("BrowseRoutesActivity","New Route button clicked");
-                view.getContext().startActivity(intent);
+                Log.e("BrowseRoutesActivity","Search button clicked");
+                if (search_open) {
+                    hide_search_options();
+                    filter_routes();
+                } else {
+                    display_search_options();
+                }
+            }
+
+            private void filter_routes() {
+            }
+
+            private void hide_search_options() {
+            }
+
+            private void display_search_options() {
             }
         });
     }
