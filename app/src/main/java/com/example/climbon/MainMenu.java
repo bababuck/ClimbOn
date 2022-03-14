@@ -13,7 +13,12 @@ public class MainMenu extends AppCompatActivity {
 
     Allows for user to select mode.
     TODO: Create cooler starting screen
-    TODO: Choose from available walls on startup or new one
+
+    For entire project
+    TODO: SQL
+    TODO: Bluetooth
+    TODO: 3D
+    TODO: Holds as paths
     */
 
     @Override
