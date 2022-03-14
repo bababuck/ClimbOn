@@ -64,6 +64,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         type.setAdapter(adapter);
         main.addView(type, index);
         ++index;
+        hide_search_options();
     }
 
     private void createButtons(LinearLayout.LayoutParams button_params, LinearLayout scroll, UniversalData saved_data) {
@@ -136,18 +137,20 @@ public class BrowseRoutesActivity extends AppCompatActivity {
                     }
                 }
             }
-
-            private void hide_search_options() {
-                type.setVisibility(View.GONE);
-                rating.setVisibility(View.GONE);
-                name.setVisibility(View.GONE);
-            }
-
-            private void display_search_options() {
-                type.setVisibility(View.VISIBLE);
-                rating.setVisibility(View.VISIBLE);
-                name.setVisibility(View.VISIBLE);
-            }
         });
+    }
+
+    private void hide_search_options() {
+        type.setVisibility(View.GONE);
+        rating.setVisibility(View.GONE);
+        name.setVisibility(View.GONE);
+        search_open = false;
+    }
+
+    private void display_search_options() {
+        type.setVisibility(View.VISIBLE);
+        rating.setVisibility(View.VISIBLE);
+        name.setVisibility(View.VISIBLE);
+        search_open = true;
     }
 }
