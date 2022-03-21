@@ -74,10 +74,10 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.e("Main Menu","'EditWall' button selected...");
-//                Intent intent = new Intent(view.getContext(), EditWall.class);
-//
-//                Log.e("Main Menu","Entering EditWall activity...");
-//                view.getContext().startActivity(intent);
+                Intent intent = new Intent(view.getContext(), ThreeDeeWall.class);
+
+                Log.e("Main Menu","Entering EditWall activity...");
+                view.getContext().startActivity(intent);
             }
         });
 
