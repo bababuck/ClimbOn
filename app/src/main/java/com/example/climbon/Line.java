@@ -23,7 +23,7 @@ public class Line {
     float triangleCoords[];
 
     // Set color with red, green, blue and alpha (opacity) values
-    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 
     public Line(float triangleCoords[]) {
         this.triangleCoords = triangleCoords;

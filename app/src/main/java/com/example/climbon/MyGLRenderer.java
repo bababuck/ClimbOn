@@ -48,6 +48,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onDrawFrame(GL10 unused) {
+        unused.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         // Set the camera position (View matrix)
         Matrix.setLookAtM(viewMatrix, 0, eye_loc[0], eye_loc[1], eye_loc[2], eye_loc[0]+view_loc[0], eye_loc[1]+view_loc[1], eye_loc[2]+view_loc[2], 0f, 0f, 1.0f);
 
@@ -56,7 +57,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // Redraw background color
         mTriangle.draw(vPMatrix);
-        mTriangle2.draw(vPMatrix);
+        //mTriangle2.draw(vPMatrix);
         mSquare.draw(vPMatrix);
     }
 
@@ -94,7 +95,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         float rotation_matrix[] = new float[16];
         float x_ratio = view_loc[1]/(view_loc[0] +view_loc[1]);
         float y_ratio = view_loc[0]/(view_loc[0] +view_loc[1]);
-        Matrix.setRotateEulerM(rotation_matrix, 0, horizontal*x_ratio, horizontal*y_ratio, vertical);
+        Matrix.setRotateEulerM(rotation_matrix, 0, vertical*x_ratio, vertical*y_ratio, horizontal);
         Matrix.multiplyMV(view_loc, 0, rotation_matrix, 0, view_loc, 0);
     }
 

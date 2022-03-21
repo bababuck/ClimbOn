@@ -70,8 +70,8 @@ public class ThreeDeeWall extends AppCompatActivity {
                     if (x < getWidth() / 2) {
                         dy = dy * -1 ;
                     }
-
-                    renderer.rotate_view_loc(dx, dy);
+                    float ratio = -0.1f;
+                    renderer.rotate_view_loc(dx*ratio, dy*ratio);
                     requestRender();
             }
 

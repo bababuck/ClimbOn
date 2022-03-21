@@ -8,7 +8,7 @@ public class ProgramSingleton {
     private static ProgramSingleton program_singleton = null;
 
     private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
+            "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
                     "void main() {" +
                     "  gl_Position = uMVPMatrix * vPosition;" +
