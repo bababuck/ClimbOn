@@ -5,17 +5,21 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private Triangle mTriangle;
-    private Triangle mTriangle2;
-    private Quadangle mSquare;
+    private ThreeDeeShape mTriangle,mTriangle2, mSquare, ground;
 
-    private volatile float[] eye_loc = {4f, 0f, 0f, 0f};
-    private volatile float[] view_loc = {-4.0f, 0f, 0f,0f};
+    private ArrayList<ThreeDeeShape> shapes = new ArrayList<>();
+
+    private float vertAngle, horiAngle;
+
+    private volatile float[] eye_loc = {-4f, 0f, 1.0f, 0f};
+    private volatile float[] view_loc = {4.0f, 0f, -1.0f,0f};
 
     private final float[] vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
@@ -24,18 +28,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
         float coords [] = {   // in counterclockwise order:
-                0.0f,  1.0f, 0.0f, // top
-                0.0f, 0.0f, -1.0f, // bottom left
-                0.0f, 0.0f, 1.0f  // bottom right
+                0.0f, 0.0f, 0.0f,
+                0.0f,  1.0f, 0.0f,
+                0.0f, 0.0f, 1.0f
         };
-        mTriangle = new Triangle(coords);
+
+        float color [] = {0.0f, 1.0f, 1.0f, 1.0f};
+        shapes.add(new ThreeDeeShape(coords,color));
 
         float coords2 [] = {   // in counterclockwise order:
                 0.0f, 0.0f, 1.0f, // top
-                0.0f,  2.0f, 1.0f,  // bottom right
-                0.0f,  1.0f, 0.0f // bottom left
+                0.0f,  -1.0f, 0.0f,  // bottom right
+                0.0f,  0.0f, 0.0f // bottom left
         };
-        mTriangle2 = new Triangle(coords2);
+        float color2 [] = {0.0f, 0.0f, 1.0f, 1.0f};
+        shapes.add(new ThreeDeeShape(coords2, color2));
 
         float coords3 [] = {   // in counterclockwise order:
                 0.0f, 1.0f, 0.0f,  // top right
@@ -44,7 +51,34 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 0.0f, 1.0f, -1.0f, // top left
 
         };
-        mSquare = new Quadangle(coords3);
+        float color3 [] = {1.0f, 1.0f, 0.2f, 1.0f};
+        shapes.add(new ThreeDeeShape(coords3, color3));
+
+        float groundCoors [] = {   // in counterclockwise order:
+                10.0f, 10.0f, -10.0f,  // top right
+                10.0f, -10.0f, -10.0f, // top left
+                -10.0f, -10.0f, -10.0f,  // top right
+                -10.0f, 10.0f, -10.0f, // top left
+
+        };
+        float groundColor [] = {0.2f, 1.0f, 0.2f, 1.0f};
+        shapes.add(new ThreeDeeShape(groundCoors, groundColor));
+
+        float coords4 [] = {   // in counterclockwise order:
+                0.0f, 1.0f, -1.0f,
+                0.0f, -1.0f, -1.0f,
+                3.0f, -1.0f, -4.0f,
+                3.0f, 1.0f, -4.0f,
+
+        };
+        float color4 [] = {1.0f, 1.0f, 0.2f, 1.0f};
+        shapes.add(new ThreeDeeShape(coords4, color4));
+    }
+
+    public void addShape(float coordinates[], float base_color[]){
+        assert coordinates.length == 12 || coordinates.length == 9;
+        assert base_color.length == 4;
+        shapes.add(new ThreeDeeShape(coordinates, base_color));
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -56,9 +90,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
         // Redraw background color
-        mTriangle.draw(vPMatrix);
-        //mTriangle2.draw(vPMatrix);
-        mSquare.draw(vPMatrix);
+        for (ThreeDeeShape shape: shapes ){
+            shape.draw(vPMatrix);
+        }
     }
 
     @Override

@@ -29,7 +29,7 @@ public class ThreeDeeWall extends AppCompatActivity {
 
         private final MyGLRenderer renderer;
 
-        private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
+        private final float ratio = 0.1f;
         private float previousX;
         private float previousY;
 
@@ -61,17 +61,7 @@ public class ThreeDeeWall extends AppCompatActivity {
                     float dx = x - previousX;
                     float dy = y - previousY;
 
-                    // reverse direction of rotation above the mid-line
-                    if (y > getHeight() / 2) {
-                        dx = dx * -1 ;
-                    }
-
-                    // reverse direction of rotation to left of the mid-line
-                    if (x < getWidth() / 2) {
-                        dy = dy * -1 ;
-                    }
-                    float ratio = -0.1f;
-                    renderer.rotate_view_loc(dx*ratio, dy*ratio);
+                    renderer.rotate_view_loc(-dx*ratio, dy*ratio);
                     requestRender();
             }
 

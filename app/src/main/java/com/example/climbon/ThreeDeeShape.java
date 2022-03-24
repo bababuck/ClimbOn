@@ -1,6 +1,7 @@
 package com.example.climbon;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -26,8 +27,8 @@ public class ThreeDeeShape {
     float color[];
 
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
-    private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 1};
-    private short triangle_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
+    private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
+    private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
 
     float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -49,7 +50,9 @@ public class ThreeDeeShape {
 
         square = (coordinates.length == 12);
 
-        ByteBuffer llb = ByteBuffer.allocateDirect(vertexCount * 2);
+        adjustColor();
+
+        ByteBuffer llb = ByteBuffer.allocateDirect(vertexCount * 4);
         llb.order(ByteOrder.nativeOrder());
         lineListBuffer = llb.asShortBuffer();
 
@@ -67,6 +70,18 @@ public class ThreeDeeShape {
         lineListBuffer.position(0);
     }
 
+    private void adjustColor() {
+        float angle = angle(3, 6, 0);
+        if (square) {
+            float angle2 = angle(3, 9, 0);
+            assert angle2-0.001 < angle && angle < angle2+0.001;
+        }
+        for (int i=0;i<3;i++) {
+            color[i] = color[i] * (angle + 1f)/2f;
+        }
+
+    }
+
     public void draw(float[] mvpMatrix) {
         GLES20.glUseProgram(mProgram);
         positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
@@ -82,9 +97,10 @@ public class ThreeDeeShape {
         vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         if (square) {
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 1, vertexCount);
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length,GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+        } else {
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         }
         GLES20.glDisableVertexAttribArray(positionHandle);
 
@@ -97,7 +113,7 @@ public class ThreeDeeShape {
 
         GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
-                vertexStride, vertexBuffer);
+                vertexStride, lineListBuffer);
 
         colorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
         GLES20.glUniform4fv(colorHandle, 1, line_color, 0);
@@ -105,9 +121,23 @@ public class ThreeDeeShape {
         vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
 
-        for (int i=0;i<(vertexCount+1);++i){
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, i, vertexCount);
-        }
+        GLES20.glDrawElements(GLES20.GL_LINES, vertexCount*2, GLES20.GL_UNSIGNED_SHORT, lineListBuffer);
+    }
 
+    public float angle(int start_loc_1, int start_loc_2, int start_loc_3) {
+        float x = (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]) *
+                (coordinates[start_loc_2+2]-coordinates[start_loc_3+2]) -
+                (coordinates[start_loc_2+1]-coordinates[start_loc_3+1]) *
+                        (coordinates[start_loc_1+2]-coordinates[start_loc_3+2]);
+        float y = (coordinates[start_loc_1+2]-coordinates[start_loc_3+2]) *
+                (coordinates[start_loc_2]-coordinates[start_loc_3]) -
+                (coordinates[start_loc_2+2]-coordinates[start_loc_3+2]) *
+                        (coordinates[start_loc_1]-coordinates[start_loc_3]);
+        float z = (coordinates[start_loc_1]-coordinates[start_loc_3]) *
+                (coordinates[start_loc_2+1]-coordinates[start_loc_3+1]) -
+                (coordinates[start_loc_2]-coordinates[start_loc_3]) *
+                        (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]);
+
+        return (float) (Math.acos(z/(Math.sqrt(x*x+y*y+z*z)))/(Math.PI));
     }
 }
