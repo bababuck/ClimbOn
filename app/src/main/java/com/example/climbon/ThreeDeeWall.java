@@ -46,27 +46,70 @@ public class ThreeDeeWall extends AppCompatActivity {
             setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         }
 
+//        @Override
+//        public boolean onTouchEvent(MotionEvent e) {
+//            // MotionEvent reports input details from the touch screen
+//            // and other input controls. In this case, you are only
+//            // interested in events where the touch position changed.
+//
+//            float x = e.getX();
+//            float y = e.getY();
+//
+//            switch (e.getAction()) {
+//                case MotionEvent.ACTION_MOVE:
+//
+//                    float dx = x - previousX;
+//                    float dy = y - previousY;
+//
+//                    renderer.rotate_view_loc(-dx*ratio, dy*ratio);
+//                    requestRender();
+//            }
+//
+//            previousX = x;
+//            previousY = y;
+//            return true;
+//        }
+
+        private float mDownX;
+        private float mDownY;
+        private final float SCROLL_THRESHOLD = 100;
+        private boolean isOnClick;
+
         @Override
         public boolean onTouchEvent(MotionEvent e) {
-            // MotionEvent reports input details from the touch screen
-            // and other input controls. In this case, you are only
-            // interested in events where the touch position changed.
-
             float x = e.getX();
             float y = e.getY();
-
             switch (e.getAction()) {
                 case MotionEvent.ACTION_MOVE:
+                    if (!isOnClick || ((Math.abs(mDownX - e.getX()) > SCROLL_THRESHOLD || Math.abs(mDownY - e.getY()) > SCROLL_THRESHOLD) && ((e.getEventTime() - e.getDownTime()) > 1000))) {
 
-                    float dx = x - previousX;
-                    float dy = y - previousY;
+                        float dx = x - previousX;
+                        float dy = y - previousY;
 
-                    renderer.rotate_view_loc(-dx*ratio, dy*ratio);
-                    requestRender();
+                        renderer.rotate_view_loc(-dx*ratio, dy*ratio);
+                        requestRender();
+
+                        isOnClick = false;
+                    }
+                    break;
+                case MotionEvent.ACTION_DOWN:
+                    mDownX = e.getX();
+                    mDownY = e.getY();
+                    isOnClick = true;
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    if (isOnClick) {
+                        int i=0;
+                        //TODO onClick code
+                    }
+                    break;
+                default:
+                    break;
             }
-
             previousX = x;
             previousY = y;
+
             return true;
         }
     }
