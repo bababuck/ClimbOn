@@ -24,11 +24,14 @@ public class ThreeDeeShape {
     static final int COORDS_PER_VERTEX = 3;
     float coordinates[];
 
+    float baryocentric[];
+
     float color[];
 
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
     private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
     private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
+    private float normal[];
 
     float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -40,6 +43,7 @@ public class ThreeDeeShape {
         this.coordinates = coordinates;
         this.color = color;
         vertexCount = coordinates.length / COORDS_PER_VERTEX;
+        setNormal(3, 6, 0);
 
         ByteBuffer bb = ByteBuffer.allocateDirect(coordinates.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -68,6 +72,8 @@ public class ThreeDeeShape {
             lineListBuffer.put(triangle_line_order);
         }
         lineListBuffer.position(0);
+
+        findBaryocentric();
     }
 
     private void adjustColor() {
@@ -125,19 +131,54 @@ public class ThreeDeeShape {
     }
 
     public float angle(int start_loc_1, int start_loc_2, int start_loc_3) {
-        float x = (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]) *
+        float x = normal[0];
+        float y = normal[1];
+        float z = normal[2];
+
+        return (float) (Math.acos(z/(Math.sqrt(x*x+y*y+z*z)))/(Math.PI));
+    }
+
+    public float setNormal(int start_loc_1, int start_loc_2, int start_loc_3) {
+        normal[0] = (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]) *
                 (coordinates[start_loc_2+2]-coordinates[start_loc_3+2]) -
                 (coordinates[start_loc_2+1]-coordinates[start_loc_3+1]) *
                         (coordinates[start_loc_1+2]-coordinates[start_loc_3+2]);
-        float y = (coordinates[start_loc_1+2]-coordinates[start_loc_3+2]) *
+        normal[1] = (coordinates[start_loc_1+2]-coordinates[start_loc_3+2]) *
                 (coordinates[start_loc_2]-coordinates[start_loc_3]) -
                 (coordinates[start_loc_2+2]-coordinates[start_loc_3+2]) *
                         (coordinates[start_loc_1]-coordinates[start_loc_3]);
-        float z = (coordinates[start_loc_1]-coordinates[start_loc_3]) *
+        normal[2] = (coordinates[start_loc_1]-coordinates[start_loc_3]) *
                 (coordinates[start_loc_2+1]-coordinates[start_loc_3+1]) -
                 (coordinates[start_loc_2]-coordinates[start_loc_3]) *
                         (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]);
+    }
 
-        return (float) (Math.acos(z/(Math.sqrt(x*x+y*y+z*z)))/(Math.PI));
+    public boolean clicked(float[] click_vector, float[] eye_loc) {
+        float denominator = click_vector[0] * normal[0] + click_vector[1] * normal[1] + click_vector[2] * normal[2];
+        if (denominator <= 0.0f) return false;
+
+        float d = ((click_vector[0] - coordinates[0]) * normal[0] + (click_vector[1] - coordinates[1]) * normal[1] + (click_vector[2] - coordinates[2]) * normal[2])/denominator;
+
+        float intersection[] = new float[3];
+        intersection[0] = eye_loc[0] + click_vector[0] * d;
+        intersection[1] = eye_loc[0] + click_vector[0] * d;
+        intersection[2] = eye_loc[0] + click_vector[0] * d;
+        return inShape(intersection);
+    }
+
+    private void findBaryocentric() {
+        baryocentric = new float[coordinates.length];
+        for (int i=0;i<COORDS_PER_VERTEX;++i){
+            baryocentric[i] = coordinates[i];
+        }
+        for (int i=COORDS_PER_VERTEX;i<coordinates.length;++i){
+            baryocentric[i] = coordinates[i] - coordinates[i % COORDS_PER_VERTEX];
+        }
+    }
+
+    private boolean inShape(float[] intersection) {
+        v2
+        v2 . v0 = u * (v0 . v0) + v * (v1 . v0)
+                v2 . v1 = u * (v0 . v1) + v * (v1 . v1)
     }
 }

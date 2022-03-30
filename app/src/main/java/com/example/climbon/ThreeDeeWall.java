@@ -5,19 +5,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class ThreeDeeWall extends AppCompatActivity {
 
-    private GLSurfaceView gLView;
-
+    private MyGLSurfaceView gLView;
+    private ScaleGestureDetector mScaleGestureDetector;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mScaleGestureDetector = new ScaleGestureDetector(this, new SpecialScaleGestureDetector());
+
 
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity.
@@ -27,7 +32,7 @@ public class ThreeDeeWall extends AppCompatActivity {
 
     class MyGLSurfaceView extends GLSurfaceView {
 
-        private final MyGLRenderer renderer;
+        public final MyGLRenderer renderer;
 
         private final float ratio = 0.1f;
         private float previousX;
@@ -46,30 +51,6 @@ public class ThreeDeeWall extends AppCompatActivity {
             setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         }
 
-//        @Override
-//        public boolean onTouchEvent(MotionEvent e) {
-//            // MotionEvent reports input details from the touch screen
-//            // and other input controls. In this case, you are only
-//            // interested in events where the touch position changed.
-//
-//            float x = e.getX();
-//            float y = e.getY();
-//
-//            switch (e.getAction()) {
-//                case MotionEvent.ACTION_MOVE:
-//
-//                    float dx = x - previousX;
-//                    float dy = y - previousY;
-//
-//                    renderer.rotate_view_loc(-dx*ratio, dy*ratio);
-//                    requestRender();
-//            }
-//
-//            previousX = x;
-//            previousY = y;
-//            return true;
-//        }
-
         private float mDownX;
         private float mDownY;
         private final float SCROLL_THRESHOLD = 100;
@@ -77,6 +58,8 @@ public class ThreeDeeWall extends AppCompatActivity {
 
         @Override
         public boolean onTouchEvent(MotionEvent e) {
+            mScaleGestureDetector.onTouchEvent(e);
+
             float x = e.getX();
             float y = e.getY();
             switch (e.getAction()) {
@@ -100,8 +83,21 @@ public class ThreeDeeWall extends AppCompatActivity {
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
                     if (isOnClick) {
-                        int i=0;
-                        //TODO onClick code
+                        y = e.getY();
+                        x = e.getX();
+                        float invertProjection[] = new float[16];
+                        float temp[] = new float[4];
+                        float result[] = new float[4];
+                        float invertView[] = new float[16];
+                        float click_loc[] = {(2.0f * x) / renderer.width - 1.0f, 1.0f - (2.0f * y) / renderer.height, -1.0f, 1.0f};
+                        Matrix.invertM(invertProjection,0, renderer.projectionMatrix, 0);
+                        Matrix.multiplyMV(temp, 0, invertProjection, 0, click_loc, 0);
+                        temp[3] = -1.0f;
+                        temp[4] = 0.0f;
+                        Matrix.invertM(invertView,0, renderer.viewMatrix, 0);
+                        Matrix.multiplyMV(result, 0, invertView, 0, temp, 0);
+                        ThreeDeeShape shape = renderer.findClickedShape(result);
+                        isOnClick = false;
                     }
                     break;
                 default:
@@ -114,5 +110,14 @@ public class ThreeDeeWall extends AppCompatActivity {
         }
     }
 
+    private class SpecialScaleGestureDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
+        @Override
+        public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
+            float zoom;
+            zoom = scaleGestureDetector.getScaleFactor();
+            gLView.renderer.zoom(zoom);
+            return true;
+        }
+    }
 }
