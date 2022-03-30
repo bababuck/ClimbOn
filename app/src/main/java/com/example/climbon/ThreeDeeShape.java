@@ -177,8 +177,25 @@ public class ThreeDeeShape {
     }
 
     private boolean inShape(float[] intersection) {
-        v2
-        v2 . v0 = u * (v0 . v0) + v * (v1 . v0)
+        float v2[] = intersection - coordinates[0:2];
+        x = v2 . v0;
+        y= v1 . v0;
+        z = v0 . v0;
+
+        x * a = u * z * a + v * y * a;
+        w = u * y + v * a;
+
+        (x * a - w * y) / (z * a - y * y) = u;
+
+        (w - u * y)/a = v;
+
                 v2 . v1 = u * (v0 . v1) + v * (v1 . v1)
+
+        w = v2 . v1;
+        a = v1 . v1;
+
+        x - v * y = z * u;
+
+        (z * w - (x * y))/(z * a + y * y)  = v;
     }
 }
