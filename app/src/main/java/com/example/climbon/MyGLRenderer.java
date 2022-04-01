@@ -20,11 +20,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     public float width, height;
 
-    public volatile float[] eye_loc = {-4f, 0f, 1.0f, 0f};
-    private volatile float[] view_loc = {4.0f, 0f, -1.0f,0f};
+    public volatile float[] eye_loc = {-4f, 0f, 0.0f, 0f};
+    private volatile float[] view_loc = {4.0f, 0f, 0.0f,0f};
 
-    private final float[] vPMatrix = new float[16];
+    public final float[] vPMatrix = new float[16];
     public final float[] projectionMatrix = new float[16];
+    float invertProjection[] = new float[16];
     public final float[] viewMatrix = new float[16];
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -97,15 +98,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    public void getInverseProjection(float return_matrix[]) {
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(viewMatrix, 0, eye_loc[0], eye_loc[1], eye_loc[2], eye_loc[0]+view_loc[0], eye_loc[1]+view_loc[1], eye_loc[2]+view_loc[2], 0f, 0f, 1.0f);
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-
-        Matrix.invertM(return_matrix,0, vPMatrix, 0);
-
+    public void getInverseView(float return_matrix[]) {
+        Matrix.invertM(return_matrix,0, viewMatrix, 0);
     }
 
     @Override
@@ -120,6 +114,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 1, 10);
+        Matrix.invertM(invertProjection,0, projectionMatrix, 0);
     }
 
     public static int loadShader(int type, String shaderCode){

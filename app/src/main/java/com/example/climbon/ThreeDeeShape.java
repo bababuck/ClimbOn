@@ -24,14 +24,17 @@ public class ThreeDeeShape {
     static final int COORDS_PER_VERTEX = 3;
     float coordinates[];
 
-    float baryocentric[];
+    float baryocentric[] = new float[6];
+    float v1dotv0;
+    float v0dotv0;
+    float v1dotv1;
 
     float color[];
 
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
     private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
     private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
-    private float normal[];
+    private float normal[] = new float[3];
 
     float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -138,7 +141,7 @@ public class ThreeDeeShape {
         return (float) (Math.acos(z/(Math.sqrt(x*x+y*y+z*z)))/(Math.PI));
     }
 
-    public float setNormal(int start_loc_1, int start_loc_2, int start_loc_3) {
+    public void setNormal(int start_loc_1, int start_loc_2, int start_loc_3) {
         normal[0] = (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]) *
                 (coordinates[start_loc_2+2]-coordinates[start_loc_3+2]) -
                 (coordinates[start_loc_2+1]-coordinates[start_loc_3+1]) *
@@ -157,45 +160,73 @@ public class ThreeDeeShape {
         float denominator = click_vector[0] * normal[0] + click_vector[1] * normal[1] + click_vector[2] * normal[2];
         if (denominator <= 0.0f) return false;
 
-        float d = ((click_vector[0] - coordinates[0]) * normal[0] + (click_vector[1] - coordinates[1]) * normal[1] + (click_vector[2] - coordinates[2]) * normal[2])/denominator;
+        float d = ((eye_loc[0] - coordinates[0]) * normal[0] + (eye_loc[1] - coordinates[1]) * normal[1] + (eye_loc[2] - coordinates[2]) * normal[2])/denominator;
 
         float intersection[] = new float[3];
         intersection[0] = eye_loc[0] + click_vector[0] * d;
-        intersection[1] = eye_loc[0] + click_vector[0] * d;
-        intersection[2] = eye_loc[0] + click_vector[0] * d;
+        intersection[1] = eye_loc[1] + click_vector[1] * d;
+        intersection[2] = eye_loc[2] + click_vector[2] * d;
+        Log.e("ThreeDeeShape",intersection[0] + "  " + intersection[1] + "  " + intersection[2]);
         return inShape(intersection);
     }
 
     private void findBaryocentric() {
-        baryocentric = new float[coordinates.length];
-        for (int i=0;i<COORDS_PER_VERTEX;++i){
-            baryocentric[i] = coordinates[i];
+        for (int i=0;i<6;++i){
+            baryocentric[i] = coordinates[i + 3] - coordinates[i % COORDS_PER_VERTEX];
         }
-        for (int i=COORDS_PER_VERTEX;i<coordinates.length;++i){
-            baryocentric[i] = coordinates[i] - coordinates[i % COORDS_PER_VERTEX];
-        }
+        v1dotv0 = baryocentric[0] * baryocentric[3] +
+                baryocentric[1] * baryocentric[4] +
+                baryocentric[2] * baryocentric[5];
+        v0dotv0 = baryocentric[0] * baryocentric[0] +
+                baryocentric[1] * baryocentric[1] +
+                baryocentric[2] * baryocentric[2];
+        v1dotv1 = baryocentric[3] * baryocentric[3] +
+                baryocentric[4] * baryocentric[4] +
+                baryocentric[5] * baryocentric[5];
     }
 
     private boolean inShape(float[] intersection) {
-        float v2[] = intersection - coordinates[0:2];
-        x = v2 . v0;
-        y= v1 . v0;
-        z = v0 . v0;
+        float v2[] = {intersection[0] - coordinates[0], intersection[1] - coordinates[1], intersection[2] - coordinates[2]};
+        float v2dotv0 = baryocentric[0] * v2[0] +
+                baryocentric[1] * v2[1] +
+                baryocentric[2] * v2[2];
+        float v2dotv1 = baryocentric[3] * v2[0] +
+                baryocentric[4] * v2[1] +
+                baryocentric[5] * v2[2];
+        float u = (v2dotv0 * v1dotv1 - v2dotv1 * v1dotv0)/(v0dotv0* v1dotv1 - v1dotv0 * v1dotv0);
+        float v = (v2dotv1 - u * v1dotv0)/v1dotv1;
+        Log.e("ThreeDeeShape",u + "  " + v);
+        if (vertexCount == 3) {
+            return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f);
+        }
+        if (vertexCount == 4) {
+            return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f);
+        }
+        return false; // to stop lint error
+//        x = v2 . v0;
+//        y= v1 . v0;
+//        z = v0 . v0;
+//
+//        x * a = u * z * a + v * y * a;
+//        w = u * y + v * a;
+//
+//        (x * a - w * y) / (z * a - y * y) = u;
+//
+//        (w - u * y)/a = v;
+//
+//                v2 . v1 = u * (v0 . v1) + v * (v1 . v1)
+//
+//        w = v2 . v1;
+//        a = v1 . v1;
+//
+//        x - v * y = z * u;
+//
+//        (z * w - (x * y))/(z * a + y * y)  = v;
+    }
 
-        x * a = u * z * a + v * y * a;
-        w = u * y + v * a;
-
-        (x * a - w * y) / (z * a - y * y) = u;
-
-        (w - u * y)/a = v;
-
-                v2 . v1 = u * (v0 . v1) + v * (v1 . v1)
-
-        w = v2 . v1;
-        a = v1 . v1;
-
-        x - v * y = z * u;
-
-        (z * w - (x * y))/(z * a + y * y)  = v;
+    public void setColor() {
+        color[0] = 1.0f;
+        color[1] = 0.0f;
+        color[2] = 0.0f;
     }
 }
