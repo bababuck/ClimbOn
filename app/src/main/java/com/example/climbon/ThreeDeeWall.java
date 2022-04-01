@@ -17,12 +17,12 @@ import javax.microedition.khronos.opengles.GL10;
 public class ThreeDeeWall extends AppCompatActivity {
 
     private MyGLSurfaceView gLView;
-    // private ScaleGestureDetector mScaleGestureDetector;
+    private ScaleGestureDetector mScaleGestureDetector;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // mScaleGestureDetector = new ScaleGestureDetector(this, new SpecialScaleGestureDetector());
+        mScaleGestureDetector = new ScaleGestureDetector(this, new SpecialScaleGestureDetector());
 
 
         // Create a GLSurfaceView instance and set it
@@ -63,7 +63,7 @@ public class ThreeDeeWall extends AppCompatActivity {
 
         @Override
         public boolean onTouchEvent(MotionEvent e) {
-            // mScaleGestureDetector.onTouchEvent(e);
+            mScaleGestureDetector.onTouchEvent(e);
 
             float x = e.getX();
             float y = e.getY();
@@ -126,6 +126,7 @@ public class ThreeDeeWall extends AppCompatActivity {
             float zoom;
             zoom = scaleGestureDetector.getScaleFactor();
             gLView.renderer.zoom(zoom);
+            Log.e("ThreeDeeWall","Scale");
             return true;
         }
     }

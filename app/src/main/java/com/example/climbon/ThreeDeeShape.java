@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-
+// TODO: Will use bounding boxes for holds, and will sort each hold by its bounding box into quadrants (dynamically sized for how many), then only search to see if click is onto shape in certain quadrant
 public class ThreeDeeShape {
     protected FloatBuffer vertexBuffer;
     private ShortBuffer drawListBuffer;
@@ -37,6 +37,7 @@ public class ThreeDeeShape {
     private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
     private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
     private float normal[] = new float[3];
+    private float rotationMatrix[] = new float[9];
 
     float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -79,6 +80,37 @@ public class ThreeDeeShape {
         lineListBuffer.position(0);
 
         findBaryocentric();
+        getRotationMatrix();
+    }
+
+    private void getRotationMatrix() {
+        // https://math.stackexchange.com/questions/1167717/transform-a-plane-to-the-xy-plane
+        float a,b,c;
+        a = normal[0];
+        b = normal[1];
+        c = normal[2];
+        float sos = a*a+b*b+c*c;
+        float ssos = ((float) Math.sqrt(sos));
+        float u1 = b / ssos;
+        float u2 = -a / ssos;
+        float cos = c / ssos;
+        float sin = ((float) Math.sqrt(a*a+b*b)) / ssos;
+
+        rotationMatrix[0] = cos + u1*u1*(1-cos);
+        rotationMatrix[1] = u1*u2*(1-cos);
+        rotationMatrix[2] = -u2 * sin;
+        rotationMatrix[3] = u1*u2*(1-cos);
+        rotationMatrix[4] = cos + u2*u2*(1-cos);
+        rotationMatrix[5] = u1 * sin;
+        rotationMatrix[6] = u2 * sin;
+        rotationMatrix[7] = -u1 * sin;
+        rotationMatrix[8] = cos;
+    }
+
+    public void rotate(float coordinate[]) {
+        // Z's will all be same so we don't care about em...
+        float x = rotationMatrix[0] * coordinate[0] + rotationMatrix[3] * coordinate[1] + rotationMatrix[6] * coordinate[2];
+        float y = rotationMatrix[1] * coordinate[0] + rotationMatrix[4] * coordinate[1] + rotationMatrix[5] * coordinate[2];
     }
 
     private void adjustColor() {
