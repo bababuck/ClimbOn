@@ -95,44 +95,13 @@ public class ThreeDeeWall extends AppCompatActivity {
                         float invertProjection[] = new float[16];
                         renderer.getInverseView(invertView);
                         invertProjection = renderer.invertProjection;
-//                        Log.e("ThreeDeeWall","Proj: ");
-//                        for (int i=0;i<4;++i){
-//                            Log.e("ThreeDeeWall",renderer.projectionMatrix[i]+" "+renderer.projectionMatrix[i+4]+" "+renderer.projectionMatrix[i+8]+" "+renderer.projectionMatrix[i+12]);
-//                        }
-//                        Log.e("ThreeDeeWall","InvProj: ");
-//                        for (int i=0;i<4;++i){
-//                            Log.e("ThreeDeeWall",invertProjection[i]+" "+invertProjection[i+4]+" "+invertProjection[i+8]+" "+invertProjection[i+12]);
-//                        }
-                        Log.e("ThreeDeeWall","InvView: ");
-                        for (int i=0;i<4;++i){
-                            Log.e("ThreeDeeWall",invertView[i]+" "+invertView[i+4]+" "+invertView[i+8]+" "+invertView[i+12]);
-                        }
-                        Log.e("ThreeDeeWall","View: ");
-                        for (int i=0;i<4;++i){
-                            Log.e("ThreeDeeWall",renderer.viewMatrix[i]+" "+renderer.viewMatrix[i+4]+" "+renderer.viewMatrix[i+8]+" "+renderer.viewMatrix[i+12]);
-                        }
-                        Log.e("ThreeDeeWall","Click: "+clickX + "  " + clickY);
                         float click_loc[] = {(2.0f * clickX) / renderer.width - 1.0f, 1.0f - (2.0f * clickY) / renderer.height, -1.0f, 1.0f};
 
-                        Log.e("ThreeDeeWall","ClickScaled: "+click_loc[0] + "  " + click_loc[1]+ "  " + click_loc[2]+ "  " + click_loc[3]);
                         Matrix.multiplyMV(temp, 0, invertProjection, 0, click_loc, 0);
                         temp[2] = -1.0f;
-                        //for (int i=0;i<3;i++) temp[i] = temp[i] * 1f;
                         temp[3] = 0.0f;
-                        Log.e("ThreeDeeWall","Temp: "+temp[0] + "  " + temp[1]+" "+temp[2] + "  " + temp[3]);
                         Matrix.multiplyMV(result, 0, invertView, 0, temp, 0);
-                        Log.e("ThreeDeeWall","Results0: "+result[0] + "  " + result[1] + "  " + result[2]+ "  " + result[3]);
 
-                        click_loc[2] = -10f;
-                        invertProjection = renderer.invertProjection;
-                        Log.e("ThreeDeeWall","ClickScaled: "+click_loc[0] + "  " + click_loc[1]+ "  " + click_loc[2]+ "  " + click_loc[3]);
-                        Matrix.multiplyMV(temp, 0, invertProjection, 0, click_loc, 0);
-                        temp[2] = -1.0f;
-                        //for (int i=0;i<3;i++) temp[i] = temp[i] * 10f;
-                        temp[3] = 0.0f;
-                        Log.e("ThreeDeeWall","Temp: "+temp[0] + "  " + temp[1]+" "+temp[2] + "  " + temp[3]);
-                        Matrix.multiplyMV(result, 0, invertView, 0, temp, 0);
-                        Log.e("ThreeDeeWall","Results1: "+result[0] + "  " + result[1] + "  " + result[2]+ "  " + result[3]);
                         ThreeDeeShape shape = renderer.findClickedShape(result);
                         if (shape != null) {
                             shape.setColor();

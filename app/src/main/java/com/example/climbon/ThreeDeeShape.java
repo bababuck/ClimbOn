@@ -24,10 +24,12 @@ public class ThreeDeeShape {
     static final int COORDS_PER_VERTEX = 3;
     float coordinates[];
 
-    float baryocentric[] = new float[6];
+    float baryocentric[] = new float[9];
     float v1dotv0;
     float v0dotv0;
     float v1dotv1;
+    float v3dotv3;
+    float v1dotv3;
 
     float color[];
 
@@ -171,7 +173,7 @@ public class ThreeDeeShape {
     }
 
     private void findBaryocentric() {
-        for (int i=0;i<6;++i){
+        for (int i=0;i<((vertexCount-1)*COORDS_PER_VERTEX);++i){
             baryocentric[i] = coordinates[i + 3] - coordinates[i % COORDS_PER_VERTEX];
         }
         v1dotv0 = baryocentric[0] * baryocentric[3] +
@@ -183,6 +185,14 @@ public class ThreeDeeShape {
         v1dotv1 = baryocentric[3] * baryocentric[3] +
                 baryocentric[4] * baryocentric[4] +
                 baryocentric[5] * baryocentric[5];
+        if (vertexCount == 4){
+            v3dotv3 = baryocentric[6] * baryocentric[6] +
+                    baryocentric[7] * baryocentric[7] +
+                    baryocentric[8] * baryocentric[8];
+            v1dotv3 = baryocentric[3] * baryocentric[6] +
+                    baryocentric[4] * baryocentric[7] +
+                    baryocentric[5] * baryocentric[8];
+        }
     }
 
     private boolean inShape(float[] intersection) {
@@ -196,13 +206,19 @@ public class ThreeDeeShape {
         float u = (v2dotv0 * v1dotv1 - v2dotv1 * v1dotv0)/(v0dotv0* v1dotv1 - v1dotv0 * v1dotv0);
         float v = (v2dotv1 - u * v1dotv0)/v1dotv1;
         Log.e("ThreeDeeShape",u + "  " + v);
-        if (vertexCount == 3) {
-            return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f);
+        if ((u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f)) {
+            return true;
         }
         if (vertexCount == 4) {
-            return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f);
+            float v2dotv3 = baryocentric[6] * v2[0] +
+                    baryocentric[7] * v2[1] +
+                    baryocentric[8] * v2[2];
+            u = (v2dotv3 * v1dotv1 - v2dotv1 * v1dotv3)/(v1dotv1* v3dotv3 - v1dotv3 * v1dotv3);
+            v = (v2dotv1 - u * v1dotv3)/v1dotv1;
+            Log.e("ThreeDeeShape",u + "  " + v);
+            return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f);
         }
-        return false; // to stop lint error
+        return false;
 //        x = v2 . v0;
 //        y= v1 . v0;
 //        z = v0 . v0;
