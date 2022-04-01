@@ -160,7 +160,7 @@ public class ThreeDeeShape {
         float denominator = click_vector[0] * normal[0] + click_vector[1] * normal[1] + click_vector[2] * normal[2];
         if (denominator <= 0.0f) return false;
 
-        float d = ((eye_loc[0] - coordinates[0]) * normal[0] + (eye_loc[1] - coordinates[1]) * normal[1] + (eye_loc[2] - coordinates[2]) * normal[2])/denominator;
+        float d = ((coordinates[0]-eye_loc[0]) * normal[0] + (coordinates[1]-eye_loc[1]) * normal[1] + (coordinates[2]-eye_loc[2]) * normal[2])/denominator;
 
         float intersection[] = new float[3];
         intersection[0] = eye_loc[0] + click_vector[0] * d;
