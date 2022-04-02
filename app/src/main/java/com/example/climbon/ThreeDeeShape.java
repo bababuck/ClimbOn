@@ -29,96 +29,9 @@ public class ThreeDeeShape {
         holds.add(shape);
     }
 
-    /* arraylist<arraylist<arraylist<holds>>>
-    split in four, check bounding boxes
-    SPLIT_STOP = 1.5;
-    average = findAverage();
-    horizontal_split = true;
-    vertical_split = true;
-    num_horizontal_splits = 0;
-    num_vertical_splits = 0;
-    total_bins = 1;
-    total_holds = holds.length * 2;
-    while (horizontal_split || vertical_split)
-    if (horizontal_split)
-        total_bins *= 2;
-        ++num_horizontal_splits;
-        new_total_holds = split_horizontal();
-        if total_holds == new_total_holds
-            horizontal_split  = false
-        total_holds = new_total_holds
-
-    if (vertical_split)
-        total_bins *= 2;
-        ++num_vertical_splits;
-        new_total_holds = split_vertical();
-        if total_holds == new_total_holds
-            horizontal_split  = false
-        total_holds = new_total_holds
-
-    total_holds = holds.length
-    for (int i; i<hold_bins.length;++i){
-        for (int j; j<hold_bins[0].length;++j){ // Will this change?
-            hold_bins[i].add(2*j+1, new ArrayList<ThreeDeeList>);
-            float bin_size = (right_edge - left_edge) / Math.pow(2, num_horizontal_splits);
-            float bin_left = left_edge + j * bin_size
-            float bin_mid = bin_left + bin_size;
-            float bin_right = bin_mid + bin_size;
-            for (int k=0;k<hold_bins[i][2*j].length;++k) { // will this change
-                ThreeDeeShape hold = hold_bins[i][2*j][k]
-                if (!(hold.left_bound < bin_mid && hold.right_bound > bin_left)) {
-                    hold_bins[i][2*j].delete(k);
-                    --k;
-                    --total_holds;
-                }
-                if (hold.left_bound < bin_right && hold.right_bound > bin_mid) {
-                    hold_bins[i][2*j+1].add(hold);
-                    ++total_holds;
-                }
-            }
-        }
-    }
-    return total_holds;
-
-    total_holds = holds.length
-    for (int i; i<hold_bins.length;++i){ // will this change
-        hold_bins.add(2*i+1, new ArrayList<ArrayList<ThreeDeeList>>);
-        for (int j; j<hold_bins[0].length;++j){
-            float bin_size = (top_edge - bottom_edge) / Math.pow(2, num_vertical_splits);
-            float bin_top = top_edge - j * bin_size
-            float bin_mid = bin_top - bin_size;
-            float bin_bottom = bin_mid - bin_size;
-            for (int k=0;k<hold_bins[2*i][j].length;++k) { // will this change
-                ThreeDeeShape hold = hold_bins[2*i][j][k]
-                if (!(hold.top_bound > bin_mid && hold.bottom_bound < bin_top)) {
-                    hold_bins[2*i][j].delete(k);
-                    --k;
-                    --total_holds;
-                }
-                if (hold.left_bound < bin_right && hold.right_bound > bin_mid) {
-                    hold_bins[2*i+1][j].add(hold);
-                    ++total_holds;
-                }
-            }
-        }
-    }
-    return total_holds;
-
-
-    click_region_x = (int) (click[0] - left_edge) / (right_edge - left_edge) * Math.pow(2, num_horizontal_splits)
-    click_region_y = (int) (click[1] - bottom_edge) / (top_edge - bottom_edge) * Math.pow(2, num_vertical_splits)
-    for (ThreeDeeShape hold : hold_bins[click_region_y][click_region_x]) {
-        if (hold.contains(click)){
-            hold.setColor("Blue")
-            return true
-        }
-    }
-    return false
-     */
-
     private int vPMatrixHandle;
 
-    private final int vertexCount;
+    protected final int vertexCount;
     private final int vertexStride = COORDS_PER_VERTEX * 4;
 
     static final int COORDS_PER_VERTEX = 3;
@@ -185,6 +98,7 @@ public class ThreeDeeShape {
 
         findBaryocentric();
         getRotationMatrix();
+        rotate(coordinates, 0, rotated_coordinates, 0);
     }
 
     private void getRotationMatrix() {
@@ -383,5 +297,11 @@ public class ThreeDeeShape {
         color[0] = 1.0f;
         color[1] = 0.0f;
         color[2] = 0.0f;
+    }
+
+    public void setColor(String new_color) {
+        color[0] = 0.0f;
+        color[1] = 0.0f;
+        color[2] = 1.0f;
     }
 }
