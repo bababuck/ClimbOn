@@ -37,21 +37,26 @@ public class ThreeDeeShape {
     vertical_split = true;
     num_horizontal_splits = 0;
     num_vertical_splits = 0;
+    total_bins = 1;
+    total_holds = holds.length * 2;
     while (horizontal_split || vertical_split)
     if (horizontal_split)
+        total_bins *= 2;
         ++num_horizontal_splits;
-        new_average = split_horizontal
-        if average/new_average < SPLIT_STOP
+        new_total_holds = split_horizontal();
+        if total_holds == new_total_holds
             horizontal_split  = false
-        average = new_average
+        total_holds = new_total_holds
 
     if (vertical_split)
-        new_average = split_vertical
-        if average/new_average < SPLIT_STOP
-            horizontal_split  = false
-        average = new_average
+        total_bins *= 2;
         ++num_vertical_splits;
+        new_total_holds = split_vertical();
+        if total_holds == new_total_holds
+            horizontal_split  = false
+        total_holds = new_total_holds
 
+    total_holds = holds.length
     for (int i; i<hold_bins.length;++i){
         for (int j; j<hold_bins[0].length;++j){ // Will this change?
             hold_bins[i].add(2*j+1, new ArrayList<ThreeDeeList>);
@@ -64,14 +69,18 @@ public class ThreeDeeShape {
                 if (!(hold.left_bound < bin_mid && hold.right_bound > bin_left)) {
                     hold_bins[i][2*j].delete(k);
                     --k;
+                    --total_holds;
                 }
                 if (hold.left_bound < bin_right && hold.right_bound > bin_mid) {
                     hold_bins[i][2*j+1].add(hold);
+                    ++total_holds;
                 }
             }
         }
     }
+    return total_holds;
 
+    total_holds = holds.length
     for (int i; i<hold_bins.length;++i){ // will this change
         hold_bins.add(2*i+1, new ArrayList<ArrayList<ThreeDeeList>>);
         for (int j; j<hold_bins[0].length;++j){
@@ -84,13 +93,16 @@ public class ThreeDeeShape {
                 if (!(hold.top_bound > bin_mid && hold.bottom_bound < bin_top)) {
                     hold_bins[2*i][j].delete(k);
                     --k;
+                    --total_holds;
                 }
                 if (hold.left_bound < bin_right && hold.right_bound > bin_mid) {
                     hold_bins[2*i+1][j].add(hold);
+                    ++total_holds;
                 }
             }
         }
     }
+    return total_holds;
 
 
     click_region_x = (int) (click[0] - left_edge) / (right_edge - left_edge) * Math.pow(2, num_horizontal_splits)
