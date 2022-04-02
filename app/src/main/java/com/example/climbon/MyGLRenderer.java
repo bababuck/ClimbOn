@@ -56,6 +56,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         };
         float color3 [] = {1.0f, 1.0f, 0.2f, 1.0f};
         shapes.add(new ThreeDeeShape(coords3, color3));
+        float coordsHold [] = {   // in counterclockwise order:
+                0.0f, 0.5f, 0.0f,  // top right
+                0.0f, 0.0f, 0.0f, // top left
+                0.0f, 0.0f, -0.5f
+        };
+        shapes.get(2).addHold(coordsHold);
 
         float groundCoors [] = {   // in counterclockwise order:
                 10.0f, 10.0f, -10.0f,  // top right

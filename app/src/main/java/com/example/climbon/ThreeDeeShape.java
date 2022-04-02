@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
+
 // TODO: Will use bounding boxes for holds, and will sort each hold by its bounding box into quadrants (dynamically sized for how many), then only search to see if click is onto shape in certain quadrant
 public class ThreeDeeShape {
     protected FloatBuffer vertexBuffer;
@@ -15,6 +17,13 @@ public class ThreeDeeShape {
     protected final int mProgram;
     protected int positionHandle;
     protected int colorHandle;
+
+    public ArrayList<ThreeDeeShape> holds;
+
+    public void addHold(float coordinates[]){
+        float color[] = {0.0f, 0.0f,1.0f, 1.0f};
+        holds.add(new ThreeDeeShape(coordinates, color));
+    }
 
     private int vPMatrixHandle;
 
@@ -38,6 +47,9 @@ public class ThreeDeeShape {
     private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
     private float normal[] = new float[3];
     private float rotationMatrix[] = new float[9];
+    float intersection[] = new float[3];
+
+
 
     float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -107,10 +119,10 @@ public class ThreeDeeShape {
         rotationMatrix[8] = cos;
     }
 
-    public void rotate(float coordinate[]) {
+    public void rotate(float coordinate[], float return_vec[]) {
         // Z's will all be same so we don't care about em...
-        float x = rotationMatrix[0] * coordinate[0] + rotationMatrix[3] * coordinate[1] + rotationMatrix[6] * coordinate[2];
-        float y = rotationMatrix[1] * coordinate[0] + rotationMatrix[4] * coordinate[1] + rotationMatrix[5] * coordinate[2];
+        return_vec[0] = rotationMatrix[0] * coordinate[0] + rotationMatrix[3] * coordinate[1] + rotationMatrix[6] * coordinate[2];
+        return_vec[1] = rotationMatrix[1] * coordinate[0] + rotationMatrix[4] * coordinate[1] + rotationMatrix[5] * coordinate[2];
     }
 
     private void adjustColor() {
@@ -148,6 +160,9 @@ public class ThreeDeeShape {
         GLES20.glDisableVertexAttribArray(positionHandle);
 
         draw_lines(mvpMatrix);
+        for (ThreeDeeShape hold : holds) {
+            hold.draw(mvpMatrix);
+        }
     }
 
     private void draw_lines(float[] mvpMatrix) {
@@ -196,12 +211,12 @@ public class ThreeDeeShape {
 
         float d = ((coordinates[0]-eye_loc[0]) * normal[0] + (coordinates[1]-eye_loc[1]) * normal[1] + (coordinates[2]-eye_loc[2]) * normal[2])/denominator;
 
-        float intersection[] = new float[3];
+
         intersection[0] = eye_loc[0] + click_vector[0] * d;
         intersection[1] = eye_loc[1] + click_vector[1] * d;
         intersection[2] = eye_loc[2] + click_vector[2] * d;
         Log.e("ThreeDeeShape",intersection[0] + "  " + intersection[1] + "  " + intersection[2]);
-        return inShape(intersection);
+        return inShape();
     }
 
     private void findBaryocentric() {
@@ -227,7 +242,7 @@ public class ThreeDeeShape {
         }
     }
 
-    private boolean inShape(float[] intersection) {
+    private boolean inShape() {
         float v2[] = {intersection[0] - coordinates[0], intersection[1] - coordinates[1], intersection[2] - coordinates[2]};
         float v2dotv0 = baryocentric[0] * v2[0] +
                 baryocentric[1] * v2[1] +
