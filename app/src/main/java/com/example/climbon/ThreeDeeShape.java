@@ -1,7 +1,10 @@
 package com.example.climbon;
 
 import android.opengl.GLES20;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,16 +20,36 @@ public class ThreeDeeShape {
     protected final int mProgram;
     protected int positionHandle;
     protected int colorHandle;
+    private HoldHash hold_hash;
 
-    public ArrayList<ThreeDeeShape> holds = new ArrayList<>();
+    public ArrayList<ThreeDeeHold> holds = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addHold(float coordinates[]){
         float color[] = {0.0f, 0.0f,1.0f, 1.0f};
-        ThreeDeeShape shape = new ThreeDeeShape(coordinates, color);
-        for (int i=0;i<3;++i){
-            rotate(coordinates, i, shape.rotated_coordinates, i);
+        ThreeDeeHold hold = new ThreeDeeHold(coordinates, color);
+        rotate(coordinates, 0, hold.rotated_coordinates, 0);
+        holds.add(hold);
+        hashHolds();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void hashHolds() {
+        float left_bound = Float.MAX_VALUE;
+        float right_bound = -Float.MAX_VALUE;
+        float top_bound = -Float.MAX_VALUE;
+        float bottom_bound = Float.MAX_VALUE;
+        Log.e("ThreeDeeShape", "shape: ");
+        for (int i=0;i<vertexCount;++i) {
+            left_bound = Float.min(rotated_coordinates[2*i], left_bound);
+            right_bound = Float.max(rotated_coordinates[2*i], right_bound);
+            bottom_bound = Float.min(rotated_coordinates[2*i+1], bottom_bound);
+            top_bound = Float.max(rotated_coordinates[2*i+1], top_bound);
+//            Log.e("ThreeDeeShape", "counts: "+vertexCount+" "+i);
+            Log.e("ThreeDeeShape", "x: "+rotated_coordinates[2*i]+" y: "+rotated_coordinates[2*i+1]);
+//            Log.e("ThreeDeeShape", "top: "+top_bound+" right: "+right_bound);
         }
-        holds.add(shape);
+        hold_hash = new HoldHash(holds, left_bound, top_bound, right_bound, bottom_bound);
     }
 
     private int vPMatrixHandle;
@@ -98,7 +121,9 @@ public class ThreeDeeShape {
 
         findBaryocentric();
         getRotationMatrix();
+        rotated_coordinates = new float[vertexCount * 2];
         rotate(coordinates, 0, rotated_coordinates, 0);
+        hashHolds();
     }
 
     private void getRotationMatrix() {
@@ -127,8 +152,12 @@ public class ThreeDeeShape {
 
     public void rotate(float coordinate[], int offset1, float return_vec[], int offset2) {
         // Z's will all be same so we don't care about em...
-        return_vec[offset2] = rotationMatrix[0] * coordinate[offset1] + rotationMatrix[3] * coordinate[offset1+1] + rotationMatrix[6] * coordinate[offset1+2];
-        return_vec[1+offset2] = rotationMatrix[1] * coordinate[offset1] + rotationMatrix[4] * coordinate[offset1+1] + rotationMatrix[5] * coordinate[offset1+2];
+        for (int i=offset1;i<(coordinate.length/COORDS_PER_VERTEX);++i) {
+            for (int j = 0; j < 2; ++j) {
+                return_vec[2 * i + offset2 + j] = rotationMatrix[j] * coordinate[COORDS_PER_VERTEX * i + offset1] + rotationMatrix[j+3] * coordinate[COORDS_PER_VERTEX * i + offset1 + 1] + rotationMatrix[j+6] * coordinate[COORDS_PER_VERTEX * i + offset1 + 2];
+            }
+        }
+
     }
 
     private void adjustColor() {
@@ -221,8 +250,12 @@ public class ThreeDeeShape {
         intersection[0] = eye_loc[0] + click_vector[0] * d;
         intersection[1] = eye_loc[1] + click_vector[1] * d;
         intersection[2] = eye_loc[2] + click_vector[2] * d;
-        Log.e("ThreeDeeShape",intersection[0] + "  " + intersection[1] + "  " + intersection[2]);
-        return inShape();
+//        Log.e("ThreeDeeShape",intersection[0] + "  " + intersection[1] + "  " + intersection[2]);
+        boolean clicked = inShape();
+        float click_2D[] = new float[2];
+        rotate(intersection, 0 ,click_2D, 0);
+        if (clicked) hold_hash.findClickedHold(click_2D[0], click_2D[1]);
+        return clicked;
     }
 
     private void findBaryocentric() {
@@ -258,7 +291,7 @@ public class ThreeDeeShape {
                 baryocentric[5] * v2[2];
         float u = (v2dotv0 * v1dotv1 - v2dotv1 * v1dotv0)/(v0dotv0* v1dotv1 - v1dotv0 * v1dotv0);
         float v = (v2dotv1 - u * v1dotv0)/v1dotv1;
-        Log.e("ThreeDeeShape",u + "  " + v);
+//        Log.e("ThreeDeeShape",u + "  " + v);
         if ((u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f)) {
             return true;
         }
@@ -268,7 +301,7 @@ public class ThreeDeeShape {
                     baryocentric[8] * v2[2];
             u = (v2dotv3 * v1dotv1 - v2dotv1 * v1dotv3)/(v1dotv1* v3dotv3 - v1dotv3 * v1dotv3);
             v = (v2dotv1 - u * v1dotv3)/v1dotv1;
-            Log.e("ThreeDeeShape",u + "  " + v);
+//            Log.e("ThreeDeeShape",u + "  " + v);
             return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f);
         }
         return false;
@@ -300,8 +333,15 @@ public class ThreeDeeShape {
     }
 
     public void setColor(String new_color) {
-        color[0] = 0.0f;
-        color[1] = 0.0f;
-        color[2] = 1.0f;
+        if (color[2] == 1.0f){
+            color[0] = 1.0f;
+            color[1] = 0.0f;
+            color[2] = 0.0f;
+        } else {
+            color[0] = 0.0f;
+            color[1] = 0.0f;
+            color[2] = 1.0f;
+        }
+
     }
 }

@@ -64,9 +64,9 @@ public class Shape {
         /* Initializes a shape with holds from list of x,y pairs */
         corners = new ArrayList<>();
         edges = new ArrayList<>();
-        if (_corners.size() % 2 == 1){
-            throw new Exception("Can't give half coordinate.");
-        }
+//        if (_corners.size() % 2 == 1){
+//            throw new Exception("Can't give half coordinate.");
+//        }
         for (int i=0;i<_corners.size() / 2;++i) {
             corners.add(new Coordinate(_corners.get(2*i),_corners.get(2*i+1)));
         }
