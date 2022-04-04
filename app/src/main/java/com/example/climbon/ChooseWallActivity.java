@@ -3,6 +3,8 @@ package com.example.climbon;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -33,7 +35,7 @@ public class ChooseWallActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        ArrayList<String> wall_names = saved_data.wall_names;
+        ArrayList<String> wall_names = loadWallNames(app.db);
         for (String wall_name : wall_names) {
             Button current_button = new Button(this);
             current_button.setBackgroundColor(Color.GREEN);
@@ -75,5 +77,27 @@ public class ChooseWallActivity extends AppCompatActivity {
         });
         current_button.setTextColor(Color.BLACK);
         main.addView(current_button, params);
+    }
+
+    private ArrayList<String> loadWallNames(SQLiteDatabase db) {
+        String[] projection = {
+                WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME
+        };
+        Cursor cursor = db.query(
+                WallInformationContract.WallEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+        ArrayList<String> return_list = new ArrayList<>();
+        int wall_column_index = cursor.getColumnIndex(WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME);
+        while (cursor.moveToNext()) {
+            return_list.add(cursor.getString(wall_column_index));
+        }
+        cursor.close();
+        return return_list;
     }
 }

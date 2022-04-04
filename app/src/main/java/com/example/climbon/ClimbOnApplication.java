@@ -1,6 +1,7 @@
 package com.example.climbon;
 
 import android.app.Application;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -18,11 +19,13 @@ public class ClimbOnApplication extends Application {
     - Try/catch statements
     */
     public UniversalData data = new UniversalData();
+    public SQLiteDatabase db;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        loadWallNames();
+        WallInfoDbHelper dbHelper = new WallInfoDbHelper(this);
+        db = dbHelper.getReadableDatabase();
     }
 
     private void loadWallNames() {
