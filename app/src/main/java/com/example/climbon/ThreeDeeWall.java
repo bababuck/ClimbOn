@@ -45,7 +45,7 @@ public class ThreeDeeWall extends AppCompatActivity {
             // Create an OpenGL ES 2.0 context
             setEGLContextClientVersion(2);
 
-            renderer = new MyGLRenderer();
+            renderer = new MyGLRenderer(context);
 
             // Set the Renderer for drawing on the GLSurfaceView
             setRenderer(renderer);

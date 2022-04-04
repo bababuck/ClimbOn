@@ -1,9 +1,13 @@
 package com.example.climbon;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.view.MotionEvent;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -11,6 +15,59 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
+
+    public MyGLRenderer(Context context) {
+        super();
+        WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES,
+                WallInformationContract.WallPanels.COLUMN_NAME_COLOR,
+                WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER
+        };
+        Cursor cursor = db.query(
+                WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+
+        public static final String TABLE_NAME = "holds";
+        public static final String COLUMN_NAME_PANEL_NUMBER = "panel_number";
+        public static final String COLUMN_NAME_HOLD_NUMBER = "hold_number";
+        public static final String COLUMN_NAME_COORDINATES = "coordinates";
+        public static final String COLUMN_NAME_COLOR = "color";
+
+        int panel_number_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER);
+        int color_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COLOR);
+        int coordinates_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES);
+        ThreeDeeShape shape;
+        while (cursor.moveToNext()) {
+            shape = new ThreeDeeShape(WallInfoDbHelper.convertStringToList(cursor.getString(coordinates_index)),
+                    WallInfoDbHelper.convertStringToList(cursor.getString(color_index)));
+            String[] inner_projection = {
+                    WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES,
+                    WallInformationContract.WallPanels.COLUMN_NAME_COLOR,
+                    WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER
+            };
+            Cursor inner_cursor = db.query(
+                    WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
+                    projection,             // The array of columns to return (pass null to get all)
+                    null,              // The columns for the WHERE clause
+                    null,          // The values for the WHERE clause
+                    null,                   // don't group the rows
+                    null,                   // don't filter by row groups
+                    null               // The sort order
+            );
+            shape.addHold();
+            shapes.add(shape);
+        }
+        cursor.close();
+    }
 
     private ThreeDeeShape mTriangle,mTriangle2, mSquare, ground;
 
