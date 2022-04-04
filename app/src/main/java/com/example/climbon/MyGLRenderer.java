@@ -15,58 +15,10 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
-
+    private Context context;
     public MyGLRenderer(Context context) {
         super();
-        WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String[] projection = {
-                WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES,
-                WallInformationContract.WallPanels.COLUMN_NAME_COLOR,
-                WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER
-        };
-        Cursor cursor = db.query(
-                WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                null,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null               // The sort order
-        );
-
-        public static final String TABLE_NAME = "holds";
-        public static final String COLUMN_NAME_PANEL_NUMBER = "panel_number";
-        public static final String COLUMN_NAME_HOLD_NUMBER = "hold_number";
-        public static final String COLUMN_NAME_COORDINATES = "coordinates";
-        public static final String COLUMN_NAME_COLOR = "color";
-
-        int panel_number_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER);
-        int color_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COLOR);
-        int coordinates_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES);
-        ThreeDeeShape shape;
-        while (cursor.moveToNext()) {
-            shape = new ThreeDeeShape(WallInfoDbHelper.convertStringToList(cursor.getString(coordinates_index)),
-                    WallInfoDbHelper.convertStringToList(cursor.getString(color_index)));
-            String[] inner_projection = {
-                    WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES,
-                    WallInformationContract.WallPanels.COLUMN_NAME_COLOR,
-                    WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER
-            };
-            Cursor inner_cursor = db.query(
-                    WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
-                    projection,             // The array of columns to return (pass null to get all)
-                    null,              // The columns for the WHERE clause
-                    null,          // The values for the WHERE clause
-                    null,                   // don't group the rows
-                    null,                   // don't filter by row groups
-                    null               // The sort order
-            );
-            shape.addHold();
-            shapes.add(shape);
-        }
-        cursor.close();
+        this.context = context;
     }
 
     private ThreeDeeShape mTriangle,mTriangle2, mSquare, ground;
@@ -87,58 +39,55 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
-        float coords [] = {   // in counterclockwise order:
-                0.0f, 0.0f, 0.0f,
-                0.0f,  1.0f, 0.0f,
-                0.0f, 0.0f, 1.0f
+        WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {
+                WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES,
+                WallInformationContract.WallPanels.COLUMN_NAME_COLOR,
+                WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER
         };
+        Cursor cursor = db.query(
+                WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
 
-        float color [] = {0.0f, 1.0f, 1.0f, 1.0f};
-        shapes.add(new ThreeDeeShape(coords,color));
-
-        float coords2 [] = {   // in counterclockwise order:
-                0.0f, 0.0f, 1.0f, // top
-                0.0f,  -1.0f, 0.0f,  // bottom right
-                0.0f,  0.0f, 0.0f // bottom left
-        };
-        float color2 [] = {0.0f, 0.0f, 1.0f, 1.0f};
-        shapes.add(new ThreeDeeShape(coords2, color2));
-
-        float coords3 [] = {   // in counterclockwise order:
-                0.0f, 1.0f, 0.0f,  // top right
-                0.0f, -1.0f, 0.0f, // top left
-                0.0f, -1.0f, -1.0f,  // top right
-                0.0f, 1.0f, -1.0f, // top left
-
-        };
-        float color3 [] = {1.0f, 1.0f, 0.2f, 1.0f};
-        shapes.add(new ThreeDeeShape(coords3, color3));
-        float coordsHold [] = {   // in counterclockwise order:
-                0.0f, 0.5f, 0.0f,  // top right
-                0.0f, 0.0f, 0.0f, // top left
-                0.0f, 0.0f, -0.5f
-        };
-        shapes.get(2).addHold(coordsHold);
-
-        float groundCoors [] = {   // in counterclockwise order:
-                10.0f, 10.0f, -10.0f,  // top right
-                10.0f, -10.0f, -10.0f, // top left
-                -10.0f, -10.0f, -10.0f,  // top right
-                -10.0f, 10.0f, -10.0f, // top left
-
-        };
-        float groundColor [] = {0.2f, 1.0f, 0.2f, 1.0f};
-        shapes.add(new ThreeDeeShape(groundCoors, groundColor));
-
-        float coords4 [] = {   // in counterclockwise order:
-                0.0f, 1.0f, -1.0f,
-                0.0f, -1.0f, -1.0f,
-                3.0f, -1.0f, -4.0f,
-                3.0f, 1.0f, -4.0f,
-
-        };
-        float color4 [] = {1.0f, 1.0f, 0.2f, 1.0f};
-        shapes.add(new ThreeDeeShape(coords4, color4));
+        int panel_number_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER);
+        int color_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COLOR);
+        int coordinates_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES);
+        ThreeDeeShape shape;
+        while (cursor.moveToNext()) {
+            shape = new ThreeDeeShape(WallInfoDbHelper.convertStringToList(cursor.getString(coordinates_index)),
+                    WallInfoDbHelper.convertStringToList(cursor.getString(color_index)));
+            String[] inner_projection = {
+                    WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES,
+                    WallInformationContract.WallHolds.COLUMN_NAME_COLOR
+            };
+            // Filter results WHERE "title" = 'My Title'
+            String selection =  WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER + " = ?";
+            String[] selectionArgs = { Integer.toString(cursor.getInt(panel_number_index)) };
+            Cursor inner_cursor = db.query(
+                    WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
+                    projection,             // The array of columns to return (pass null to get all)
+                    selection,              // The columns for the WHERE clause
+                    selectionArgs ,          // The values for the WHERE clause
+                    null,                   // don't group the rows
+                    null,                   // don't filter by row groups
+                    null               // The sort order
+            );
+            int inner_coordinates_index = cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES);
+            while (inner_cursor.moveToNext()) {
+                shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)));
+            }
+            inner_cursor.close();
+            shapes.add(shape);
+        }
+        cursor.close();
     }
 
     public void addShape(float coordinates[], float base_color[]){

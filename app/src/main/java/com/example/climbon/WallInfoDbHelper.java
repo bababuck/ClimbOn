@@ -4,8 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class WallInfoDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
@@ -29,6 +33,41 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
     private void addFakeData(SQLiteDatabase sqLiteDatabase) {
         addFakeWallNames(sqLiteDatabase);
         addFakeWall(sqLiteDatabase);
+        addFakeRoutes(sqLiteDatabase);
+    }
+
+    private void addFakeRoutes(SQLiteDatabase sqLiteDatabase) {
+        int rowID;
+        ContentValues values = new ContentValues();
+        String[] route_names = {"Easy Route", "Hard Route", "Really Hard Route"};
+        for (int i=0;i<route_names.length;++i) {
+            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_WALL_NAME, "Big Wall");
+            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_USER, "bababuck");
+            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME, route_names[i]);
+            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE, 3);
+            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE, i);
+            rowID = (int) sqLiteDatabase.insert(WallInformationContract.RouteEntry.TABLE_NAME, null, values);
+            values.clear();
+            addFakeRouteInfo(sqLiteDatabase, rowID);
+        }
+    }
+
+    private void addFakeRouteInfo(SQLiteDatabase sqLiteDatabase, int rowID) {
+        int prev = -1;
+        int randomNum = prev;
+        ContentValues values = new ContentValues();
+        for (int i=0;i<2;++i) {
+            while (randomNum == prev)
+                randomNum = ThreadLocalRandom.current().nextInt(0, 5);
+            prev = randomNum;
+
+            values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_HOLD_ID, hold_ids.get(randomNum));
+            values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_ROUTE_ID, rowID);
+            values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_COLOR, coordinatesToSQLString(new float[] {1.0f, 1.0f, 1.0f, 1.0f}));
+            sqLiteDatabase.insert(WallInformationContract.HoldRouteJoinTable.TABLE_NAME, null, values);
+            values.clear();
+        }
+
     }
 
     private void addFakeWall(SQLiteDatabase sqLiteDatabase) {
@@ -136,14 +175,18 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
         rowID = (int) sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
     }
 
+    private ArrayList<Integer> hold_ids = new ArrayList<>();
+
     private void addFakeHolds(SQLiteDatabase sqLiteDatabase, int rowID, float[][] hold_coordinates) {
+        int rowID_hold;
         ContentValues values = new ContentValues();
         for (int i=0;i<hold_coordinates.length;++i) {
             values.put(WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER, rowID);
             values.put(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES, coordinatesToSQLString(hold_coordinates[i]));
             values.put(WallInformationContract.WallPanels.COLUMN_NAME_COLOR, coordinatesToSQLString(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
-            rowID = (int) sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
+            rowID_hold = (int) sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
             values.clear();
+            hold_ids.add(rowID_hold);
         }
     }
 
