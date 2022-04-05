@@ -113,7 +113,7 @@ public class HoldHash {
         return size_change;
     }
 
-    public boolean findClickedHold(float click_x, float click_y) {
+    public ThreeDeeHold findClickedHold(float click_x, float click_y) {
         Log.e("HoldHash", "w: "+width+" h: "+height);
         Log.e("HoldHash", "left: "+left_edge+" top: "+top_edge);
         Log.e("HoldHash", "click_x: "+click_x+" click_y: "+click_y);
@@ -125,9 +125,9 @@ public class HoldHash {
             Log.e("HoldHash", "CheckingHold");
             if (hold.contains2D(click_x, click_y)) {
                 hold.setColor("Blue");
-                return true;
+                return hold;
             }
         }
-        return false;
+        return null;
     }
 }

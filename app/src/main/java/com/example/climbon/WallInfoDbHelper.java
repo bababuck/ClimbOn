@@ -44,7 +44,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
             values.put(WallInformationContract.RouteEntry.COLUMN_NAME_WALL_NAME, "Big Wall");
             values.put(WallInformationContract.RouteEntry.COLUMN_NAME_USER, "bababuck");
             values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME, route_names[i]);
-            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE, 3);
+            values.put(WallInformationContract.RouteEntry.COLUMN_NAME_RATING, 3);
             values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE, i);
             rowID = (int) sqLiteDatabase.insert(WallInformationContract.RouteEntry.TABLE_NAME, null, values);
             values.clear();
@@ -67,7 +67,6 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
             sqLiteDatabase.insert(WallInformationContract.HoldRouteJoinTable.TABLE_NAME, null, values);
             values.clear();
         }
-
     }
 
     private void addFakeWall(SQLiteDatabase sqLiteDatabase) {

@@ -20,14 +20,14 @@ public class ThreeDeeShape {
     protected final int mProgram;
     protected int positionHandle;
     protected int colorHandle;
-    private HoldHash hold_hash;
+    public HoldHash hold_hash;
 
     public ArrayList<ThreeDeeHold> holds = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void addHold(float coordinates[]){
+    public void addHold(float[] coordinates, int SQL_id){
         float color[] = {0.0f, 0.0f,1.0f, 1.0f};
-        ThreeDeeHold hold = new ThreeDeeHold(coordinates, color);
+        ThreeDeeHold hold = new ThreeDeeHold(coordinates, color, SQL_id);
         rotate(coordinates, 0, hold.rotated_coordinates, 0);
         holds.add(hold);
         hashHolds();
@@ -240,7 +240,7 @@ public class ThreeDeeShape {
                         (coordinates[start_loc_1+1]-coordinates[start_loc_3+1]);
     }
 
-    public boolean clicked(float[] click_vector, float[] eye_loc) {
+    public float[] clicked(float[] click_vector, float[] eye_loc) {
         float denominator = click_vector[0] * normal[0] + click_vector[1] * normal[1] + click_vector[2] * normal[2];
         if (denominator <= 0.0f) return false;
 
@@ -252,10 +252,12 @@ public class ThreeDeeShape {
         intersection[2] = eye_loc[2] + click_vector[2] * d;
 //        Log.e("ThreeDeeShape",intersection[0] + "  " + intersection[1] + "  " + intersection[2]);
         boolean clicked = inShape();
-        float click_2D[] = new float[2];
-        rotate(intersection, 0 ,click_2D, 0);
-        if (clicked) hold_hash.findClickedHold(click_2D[0], click_2D[1]);
-        return clicked;
+        if (clicked){
+            float click_2D[] = new float[2];
+            rotate(intersection, 0 ,click_2D, 0);
+            return click_2D;
+        }
+        return null;
     }
 
     private void findBaryocentric() {

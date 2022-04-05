@@ -10,10 +10,13 @@ import java.util.Arrays;
 
 public class ThreeDeeHold extends ThreeDeeShape{
     public float left_bound, right_bound, top_bound, bottom_bound;
+    public int SQL_id;
+    public float[] base_color;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public ThreeDeeHold(float[] coordinates, float[] color) {
+    public ThreeDeeHold(float[] coordinates, float[] color, int SQL_id) {
         super(coordinates, color);
+        this.SQL_id = SQL_id;
         left_bound = Float.MAX_VALUE;
         right_bound = -Float.MAX_VALUE;
         top_bound = -Float.MAX_VALUE;
@@ -25,6 +28,7 @@ public class ThreeDeeHold extends ThreeDeeShape{
             top_bound = Float.max(rotated_coordinates[2*i+1], top_bound);
 //            Log.e("ThreeDeeHold", "counts: "+vertexCount+" "+i);
         }
+        base_color = color;
     }
 
     public boolean contains2D(float click_x, float click_y) {
@@ -40,5 +44,9 @@ public class ThreeDeeHold extends ThreeDeeShape{
             Log.e("ThreeDeeHold", E.toString());
         }
         return false;
+    }
+
+    public void setColor(float new_color[]) {
+        color = new_color;
     }
 }

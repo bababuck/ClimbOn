@@ -81,8 +81,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     null               // The sort order
             );
             int inner_coordinates_index = cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES);
+            int inner_id_index = cursor.getColumnIndex(WallInformationContract.WallHolds._ID);
             while (inner_cursor.moveToNext()) {
-                shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)));
+                shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)), Integer.parseInt(inner_cursor.getString(inner_id_index)));
             }
             inner_cursor.close();
             shapes.add(shape);
@@ -164,9 +165,20 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     public ThreeDeeShape findClickedShape(float click_vector[]) {
         for (ThreeDeeShape shape : shapes) {
-            if (shape.clicked(click_vector, eye_loc))
+            if (shape.clicked(click_vector, eye_loc) != null)
                 return shape;
         }
         return null;
     }
+
+    public ThreeDeeHold findClickedHold(float click_vector[]) {
+        for (ThreeDeeShape shape : shapes) {
+            float click_2D[] = shape.clicked(click_vector, eye_loc);
+            if (click_2D != null)
+                return shape.hold_hash.findClickedHold(click_2D[0], click_2D[1]);
+        }
+        return null;
+    }
+
+
 }
