@@ -3,6 +3,8 @@ package com.example.climbon;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -41,7 +43,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
 
-        createButtons(button_params, scroll, saved_data);
+        createButtons(button_params, scroll, null, null,null);
         setupSearchButtons();
 
         int index = 0;
@@ -67,22 +69,74 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         hide_search_options();
     }
 
-    private void createButtons(LinearLayout.LayoutParams button_params, LinearLayout scroll, UniversalData saved_data) {
+    private void createButtons(LinearLayout.LayoutParams button_params, LinearLayout scroll, String type, String rating, String name) {
         // Create button for each route
         Log.e("BrowseRoutesActivity","Creating buttons...");
-        for (int i=0;i<saved_data.routes.routes.size();++i) {
-            RouteData route = saved_data.routes.routes.get(i);
-            String name = route.name;
+        WallInfoDbHelper dbHelper = new WallInfoDbHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        ArrayList<String> projection_list = new ArrayList<>();
+        String query_params[] = {type, rating, name};
+        String selection = "";
+        boolean previous = false;
+        for (int i=0;i<query_params.length;++i){
+            if (query_params[i] != null) {
+                projection_list.add(query_params[i]);
+                if (!previous){
+                    previous = true;
+                } else {
+                    selection += " AND ";
+                }
+                if (i == 0){
+                    selection += WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE + " = ? ";
+                }
+                if (i ==1){
+                    selection += WallInformationContract.RouteEntry.COLUMN_NAME_RATING + " = ? ";
+                }
+                if (i ==2){
+                    selection += WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME + " LIKE ? ";
+                }
+            }
+        }
+        String[] selectionArgs = projection_list.toArray(new String[0]);
+
+
+        String[] projection = {
+                WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE,
+                WallInformationContract.RouteEntry.COLUMN_NAME_RATING,
+                WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME,
+                WallInformationContract.RouteEntry._ID
+        };
+
+        Cursor cursor = db.query(
+                WallInformationContract.RouteEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+
+        int route_type_index = cursor.getColumnIndex(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE);
+        int route_rating_index = cursor.getColumnIndex(WallInformationContract.RouteEntry.COLUMN_NAME_RATING);
+        int route_name_index = cursor.getColumnIndex(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME);
+        int route_id_index = cursor.getColumnIndex(WallInformationContract.RouteEntry._ID);
+        ThreeDeeShape shape;
+        int i=0;
+        while (cursor.moveToNext() && i < 15) {
+            ++i;
+            String route_name = cursor.getString(route_name_index);
+            Integer route_rating = cursor.getInt(route_rating_index);
+            Integer route_type = cursor.getInt(route_type_index);
+            Integer route_id = cursor.getInt(route_id_index);
             Button current_button = new Button(this);
             current_button.setBackgroundColor(Color.GREEN);
-            current_button.setText(name);
-            int finalI = i;
+            current_button.setText(route_name);
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    saved_data.current_route = route;
-                    saved_data.current_route_number = finalI;
-                    Log.e("BrowseRoutesActivity","Route selected: " + route.name);
+                    saved_data.current_route_number = route_id;
+                    Log.e("BrowseRoutesActivity","Route selected: " + route_name);
                     Intent intent = new Intent(view.getContext(), RouteViewInert.class);
 
                     view.getContext().startActivity(intent);
@@ -107,6 +161,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
                 Log.e("BrowseRoutesActivity","Search button clicked");
                 if (search_open) {
                     hide_search_options();
+                    deleteButtons();
                     filter_routes();
                 } else {
                     display_search_options();
@@ -120,22 +175,11 @@ public class BrowseRoutesActivity extends AppCompatActivity {
                 String search_name = null;
                 if (!String.valueOf(name.getText()).isEmpty())
                     search_name = String.valueOf(name.getText());
-                Integer search_rating = null;
+                String search_rating = null;
                 if (!String.valueOf(rating.getText()).isEmpty())
-                    search_rating = Integer.parseInt(String.valueOf(rating.getText()));
+                    search_rating = String.valueOf(rating.getText());
 
-                for (int i=0; i<saved_data.routes.routes.size();++i) {
-                    if ((search_name == null ||
-                            saved_data.routes.routes.get(i).name == search_name) &&
-                            (search_route_type == null ||
-                                    saved_data.routes.routes.get(i).type == search_route_type) &&
-                            (search_rating == null ||
-                                    saved_data.routes.routes.get(i).v_rating == search_rating)) {
-                        route_buttons.get(i).setVisibility(View.VISIBLE);
-                    } else {
-                        route_buttons.get(i).setVisibility(View.GONE);
-                    }
-                }
+                createButtons(button_params, scroll, search_route_type, search_rating, search_name);
             }
         });
     }
