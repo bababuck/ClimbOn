@@ -59,9 +59,10 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         main.addView(name, index);
         ++index;
         type = new Spinner(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+
+        ArrayAdapter<RouteTypesEnum> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
-                Arrays.asList("Route Type", "Jugs", "Crimps", "Slopers", "Pinches",  "Foot Stuff", "Mixed"));
+                RouteTypesEnum.values());
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         type.setAdapter(adapter);
@@ -136,7 +137,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
             current_button.setText(route_name);
             current_button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    saved_data.current_route_number = route_id;
+                    saved_data.current_route = new RouteData(route_rating, route_type, route_name, route_id);
                     Log.e("BrowseRoutesActivity","Route selected: " + route_name);
                     Intent intent = new Intent(view.getContext(), RouteViewInert.class);
 
@@ -171,7 +172,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
             private void filter_routes() {
                 String search_route_type = null;
                 if (type.getSelectedItem().toString() != "Route Type")
-                    search_route_type = type.getSelectedItem().toString();
+                    search_route_type = ((Integer) RouteTypesEnum.valueOf(type.getSelectedItem().toString()).ordinal()).toString();
                 String search_name = null;
                 if (!String.valueOf(name.getText()).isEmpty())
                     search_name = String.valueOf(name.getText());

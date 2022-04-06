@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,11 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         UniversalData saved_data = app.data;
 
+
+        Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
+        mySpinner.setAdapter(new ArrayAdapter<RouteTypesEnum>(this, android.R.layout.simple_spinner_item, RouteTypesEnum.values()));
+
+
         Button button = findViewById(R.id.create_route);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,17 +42,11 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
                 input = findViewById(R.id.routeName);
                 String name = String.valueOf(input.getText());
 
-                RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio);
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = (RadioButton) findViewById(selectedId);
-                String style = radioButton.getText().toString();
-
-                ArrayList<Boolean> holds = saved_data.wall.getHolds();
-                saved_data.current_route = new RouteData(v_rating,holds, style, name);
-                saved_data.current_route_number = saved_data.routes.routes.size();
+                int type = RouteTypesEnum.valueOf(mySpinner.getSelectedItem().toString()).ordinal();
+                saved_data.current_route = new RouteData(v_rating,type, name, -1);
                 saved_data.saved = false;
 
-                Intent intent = new Intent(view.getContext(), SetRouteActivity.class);
+                Intent intent = new Intent(view.getContext(), RouteViewThreeDee.class);
                 Log.e("CollectRouteInfo","Entering SetRouteActivity...");
                 view.getContext().startActivity(intent);
             }
