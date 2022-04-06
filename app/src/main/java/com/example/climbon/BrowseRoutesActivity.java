@@ -23,11 +23,12 @@ public class BrowseRoutesActivity extends AppCompatActivity {
 
     Boolean search_open = false;
 
-    ArrayList<Button> route_buttons = new ArrayList<>();
-
     EditText rating;
     EditText name;
     Spinner type;
+
+    LinearLayout.LayoutParams button_params;
+    LinearLayout scroll;
 
     UniversalData saved_data;
 
@@ -37,13 +38,13 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_routes);
 
-        LinearLayout scroll = findViewById(R.id.ScrollLL);
-        LinearLayout.LayoutParams button_params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         saved_data = app.data;
 
-        createButtons(button_params, scroll, null, null,null);
+        scroll = findViewById(R.id.ScrollLL);
+        button_params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        createButtons(null, null,null);
         setupSearchButtons();
 
         int index = 0;
@@ -69,7 +70,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         hide_search_options();
     }
 
-    private void createButtons(LinearLayout.LayoutParams button_params, LinearLayout scroll, String type, String rating, String name) {
+    private void createButtons(String type, String rating, String name) {
         // Create button for each route
         Log.e("BrowseRoutesActivity","Creating buttons...");
         WallInfoDbHelper dbHelper = new WallInfoDbHelper(this);
@@ -146,7 +147,6 @@ public class BrowseRoutesActivity extends AppCompatActivity {
 
             Log.e("BrowseRoutesActivity","Adding button to linear layout...");
             scroll.addView(current_button, button_params);
-            route_buttons.add(current_button);
         }
     }
 
@@ -179,7 +179,11 @@ public class BrowseRoutesActivity extends AppCompatActivity {
                 if (!String.valueOf(rating.getText()).isEmpty())
                     search_rating = String.valueOf(rating.getText());
 
-                createButtons(button_params, scroll, search_route_type, search_rating, search_name);
+                createButtons(search_route_type, search_rating, search_name);
+            }
+
+            private void deleteButtons() {
+                scroll.removeAllViews();
             }
         });
     }
