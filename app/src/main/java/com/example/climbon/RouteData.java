@@ -2,34 +2,42 @@ package com.example.climbon;
 import java.util.ArrayList;
 
 class RouteData {
-    Integer v_rating;
-    ArrayList<Boolean> holds;
-    String type;
-    String name;
-    public RouteData(int v_rating, ArrayList<Boolean> holds, String type, String name) {
-        this.holds = holds;
+    private Integer v_rating;
+    private Integer type;
+    private String name;
+    private Integer id;
+    public RouteData(int v_rating, Integer type, String name, Integer id) {
+        this.id = id;
         this.v_rating = v_rating;
         this.type = type;
         this.name = name;
     }
 
     public RouteData(RouteData oldRoute) {
-        this.holds = new ArrayList<>(oldRoute.holds);
+        this.id = oldRoute.id;
         this.v_rating = oldRoute.v_rating;
         this.type = oldRoute.type;
         this.name = oldRoute.name;
     }
 
-    public String toStringInfo() {
-        return name + "," + v_rating.toString() + "," + type;
+    public int getID() {
+        return id;
     }
 
-    public String toString() {
-        String outstring = "";
-        for (Boolean hold : holds) {
-            outstring += hold.toString() + ",";
-        }
-        return outstring;
+    public String getName() {
+        return name;
+    }
+
+    public int getVRating() {
+        return v_rating;
+    }
+
+    public String getType() {
+
+    }
+
+    public String toStringInfo() {
+        return name + "," + v_rating + "," + type;
     }
 }
 
