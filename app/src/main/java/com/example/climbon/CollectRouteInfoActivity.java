@@ -9,11 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-
-import java.util.ArrayList;
 
 public class CollectRouteInfoActivity extends AppCompatActivity {
 
@@ -28,7 +24,7 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
 
 
         Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
-        mySpinner.setAdapter(new ArrayAdapter<RouteTypesEnum>(this, android.R.layout.simple_spinner_item, RouteTypesEnum.values()));
+        mySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, RouteTypesEnum.values()));
 
 
         Button button = findViewById(R.id.create_route);

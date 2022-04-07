@@ -8,16 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class ThreeDeeWall extends AppCompatActivity {
 
-    private MyGLSurfaceView gLView;
-
-    public HashMap<Integer, float[]> selected_holds = new HashMap<>();
-    public HashMap<Integer, float[]> deleted_holds = new HashMap<>();
-    public ArrayList<Integer> previous_holds = new ArrayList<>();
     public String route_name = "Generic Route";
     public int rating = 3;
 
@@ -30,9 +22,10 @@ public class ThreeDeeWall extends AppCompatActivity {
         rating = app.data.current_route.getVRating();
         route_name = app.data.current_route.getName();
 
-        gLView = new MyGLSurfaceView(this);
+        MyGLSurfaceView gLView = new MyGLSurfaceView(this);
         TextView text = new TextView(this);
-        text.setText(route_name + ", V" + rating);
+        String route_description = route_name + ", V" + rating;
+        text.setText(route_description);
 
         ConstraintLayout layout = new ConstraintLayout(this);
         {

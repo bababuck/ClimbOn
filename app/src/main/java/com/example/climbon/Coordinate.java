@@ -11,8 +11,7 @@ public class Coordinate {
     }
 
     public String toString() {
-        /* Make to string for writing to file. */
-        return Float.toString(x) + "," + Float.toString(y);
+        return x + "," + y;
     }
 
 }

@@ -10,8 +10,6 @@ public class UniversalData {
 
     Also need to store the wall so don't regenerate every time.
     */
-    Wall wall = new Wall();
-    int current_shape; // Store which panel we are currently looking at for PanelViewer
     String current_wall = "";
     RouteData current_route;
     Boolean saved;

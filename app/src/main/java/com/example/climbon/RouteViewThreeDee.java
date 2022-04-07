@@ -5,12 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +48,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
             Log.e("ThreeDeeWall","Click");
             float clickY = e.getY();
             float clickX = e.getX();
-            float invertProjection[] = new float[16];
+            float invertProjection[];
             renderer.getInverseView(invertView);
             invertProjection = renderer.invertProjection;
             float click_loc[] = {(2.0f * clickX) / renderer.width - 1.0f, 1.0f - (2.0f * clickY) / renderer.height, -1.0f, 1.0f};
@@ -100,9 +98,9 @@ public class RouteViewThreeDee extends AppCompatActivity {
         route_ID = (int) db.insert(WallInformationContract.RouteEntry.TABLE_NAME, null, values);
         values.clear();
 
-        Iterator it = selected_holds.entrySet().iterator();
+        Iterator<Map.Entry<Integer, float[]>> it = selected_holds.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry<Integer, float[]> pair = (Map.Entry<Integer, float[]>)it.next();
             values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_HOLD_ID, (Integer) pair.getKey());
             values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_ROUTE_ID, route_ID);
             values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_COLOR, WallInfoDbHelper.coordinatesToSQLString((float[]) pair.getValue()));
@@ -112,7 +110,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
 
         it = deleted_holds.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry<Integer, float[]> pair = (Map.Entry<Integer, float[]>)it.next();
             String selection = WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_HOLD_ID + " = ? AND " + WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_ROUTE_ID + " = ?";
             String[] selectionArgs = { Integer.toString((Integer) pair.getKey()), Integer.toString(route_ID) };
             db.delete(WallInformationContract.HoldRouteJoinTable.TABLE_NAME, selection, selectionArgs);

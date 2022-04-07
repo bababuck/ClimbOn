@@ -73,8 +73,8 @@ public class ThreeDeeShape {
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
     private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
     private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
-    private float normal[] = new float[3];
-    private float rotationMatrix[] = new float[9];
+    private final float normal[] = new float[3];
+    private final float rotationMatrix[] = new float[9];
     float intersection[] = new float[3];
 
 
@@ -83,6 +83,7 @@ public class ThreeDeeShape {
 
     boolean square;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public ThreeDeeShape(float coordinates[], float color[]) {
         mProgram = ProgramSingleton.getProgram();
 
@@ -161,9 +162,10 @@ public class ThreeDeeShape {
     }
 
     private void adjustColor() {
-        float angle = angle(3, 6, 0);
+        float angle = angle();
         if (square) {
-            float angle2 = angle(3, 9, 0);
+            setNormal(3, 9, 0);
+            float angle2 = angle();
             assert angle2-0.001 < angle && angle < angle2+0.001;
         }
         for (int i=0;i<3;i++) {
@@ -217,7 +219,7 @@ public class ThreeDeeShape {
         GLES20.glDrawElements(GLES20.GL_LINES, vertexCount*2, GLES20.GL_UNSIGNED_SHORT, lineListBuffer);
     }
 
-    public float angle(int start_loc_1, int start_loc_2, int start_loc_3) {
+    public float angle() {
         float x = normal[0];
         float y = normal[1];
         float z = normal[2];
@@ -242,7 +244,7 @@ public class ThreeDeeShape {
 
     public float[] clicked(float[] click_vector, float[] eye_loc) {
         float denominator = click_vector[0] * normal[0] + click_vector[1] * normal[1] + click_vector[2] * normal[2];
-        if (denominator <= 0.0f) return false;
+        if (denominator <= 0.0f) return null;
 
         float d = ((coordinates[0]-eye_loc[0]) * normal[0] + (coordinates[1]-eye_loc[1]) * normal[1] + (coordinates[2]-eye_loc[2]) * normal[2])/denominator;
 
@@ -307,25 +309,6 @@ public class ThreeDeeShape {
             return (u >= 0f) && (v >= 0f) && (u <= 1f) && (v <= 1f) && ((v + u) <= 1f);
         }
         return false;
-//        x = v2 . v0;
-//        y= v1 . v0;
-//        z = v0 . v0;
-//
-//        x * a = u * z * a + v * y * a;
-//        w = u * y + v * a;
-//
-//        (x * a - w * y) / (z * a - y * y) = u;
-//
-//        (w - u * y)/a = v;
-//
-//                v2 . v1 = u * (v0 . v1) + v * (v1 . v1)
-//
-//        w = v2 . v1;
-//        a = v1 . v1;
-//
-//        x - v * y = z * u;
-//
-//        (z * w - (x * y))/(z * a + y * y)  = v;
     }
 
     public void setColor() {

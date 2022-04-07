@@ -1,13 +1,6 @@
 package com.example.climbon;
 
-import android.graphics.Canvas;
-import android.util.DisplayMetrics;
-import android.widget.Button;
-
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Shape {
     /* Contains the shape of a panel.
@@ -20,12 +13,9 @@ public class Shape {
 
     Picture a shape as being inscribed in a rectangle,
     bottom let is (0,0)
-
-    TODO: constructor/builder
-    TODO: will generate once on app startup, and then store
     */
 
-    class Edge {
+    static class Edge {
         // ax + by+ c = 0
         // Max and min are x unless b = 0, then y
         float max;
@@ -53,31 +43,18 @@ public class Shape {
         }
     }
 
-    static float DISTANCE_BETWEEN_HOLDS = 3; // inches
-//    float distance_to_edge; // inches, will use 0 for now
     ArrayList<Coordinate> corners;
     ArrayList<Edge> edges;
-    ArrayList<Coordinate> hold_set;
-    public ArrayList<Integer> hold_types = new ArrayList<>();
 
-    public Shape(ArrayList<Float> _corners, Coordinate start_point) throws Exception {
+    public Shape(ArrayList<Float> _corners) throws Exception {
         /* Initializes a shape with holds from list of x,y pairs */
         corners = new ArrayList<>();
         edges = new ArrayList<>();
-//        if (_corners.size() % 2 == 1){
-//            throw new Exception("Can't give half coordinate.");
-//        }
         for (int i=0;i<_corners.size() / 2;++i) {
             corners.add(new Coordinate(_corners.get(2*i),_corners.get(2*i+1)));
         }
         shiftCorners();
         cornersToEdges();
-        genHolds(start_point);
-        hold_types = new ArrayList<Integer>(Collections.nCopies(this.getNumHolds(), HoldType.NO_HOLD.ordinal()));
-    }
-
-    public void setHoldTypes(ArrayList<Integer> hold_types) {
-        this.hold_types= hold_types;
     }
 
     private void cornersToEdges() throws Exception {
@@ -90,55 +67,9 @@ public class Shape {
             throw new Exception("Shape must have at least 3 sides.");
         }
         for (int i=0;i<corners.size()-1;++i) {
-            edges.add(new Edge(corners.get(i), corners.get(i+1)));
+            edges.add(new Edge(corners.get(i), corners.get(i + 1)));
         }
-        edges.add(new Edge(corners.get(corners.size()-1), corners.get(0)));
-    }
-
-    public int getNumHolds(){
-        /* Calculates how many holds a shape will contain. */
-        return hold_set.size();
-    }
-
-    public float get_height() {
-        /* Calculate the height of the shape.
-
-        Assume everything is non-negative.
-        */
-        float min = Float.POSITIVE_INFINITY;
-        float max = 0;
-        for (int i=0;i<corners.size();++i) {
-            if (corners.get(i).y < min) {
-                min = corners.get(i).y;
-            }
-            if (corners.get(i).y > max) {
-                max = corners.get(i).y;
-            }
-        }
-        return max - min;
-    }
-
-    public float get_width() {
-        /* Calculate the height of the shape.
-
-        Assume everything is non-negative.
-        */
-        float min = Float.POSITIVE_INFINITY;
-        float max = 0;
-        for (int i=0;i<corners.size();++i) {
-            if (corners.get(i).x < min) {
-                min = corners.get(i).x;
-            }
-            if (corners.get(i).x > max) {
-                max = corners.get(i).x;
-            }
-        }
-        return max - min;
-    }
-
-    public void updateHolds(Coordinate new_point) throws Exception {
-        /* Reinitialize the holds with a new starting point. */
-        genHolds(new_point);
+        edges.add(new Edge(corners.get(corners.size() - 1), corners.get(0)));
     }
 
     private void shiftCorners() {
@@ -160,48 +91,6 @@ public class Shape {
         for (int i=0;i<corners.size();++i) {
             corners.get(i).x -= min_x;
             corners.get(i).y -= min_y;
-        }
-    }
-
-    public void genHolds(Coordinate start_point) throws Exception {
-        /* Generates the coordinates of holds.
-
-        Stores them with the object.
-        To support convex and irregular shapes, we check every hold location in boundary.
-        Since shape is shifted, min_x and min_y are 0, and max_x and max_y are width and height.
-        start_point does not have to be inside the shape.
-
-                First hold is (1) highest, (2) leftmost hold.
-        Assumes we are given a random, VALID hold.
-        Also assumes convex shape.
-
-        |---|   |---|
-        |11 |---| 12|
-        | 6 7 8 9 10|
-        | 1 2 3 4 5 |
-        |-----------|
-        */
-        float max_y = get_height();
-        float max_x = get_width();
-        hold_set = new ArrayList<>();
-
-        // Calculate the first valid hold above 0, 0
-        float start_x = start_point.x % DISTANCE_BETWEEN_HOLDS;
-        float start_y = start_point.y % DISTANCE_BETWEEN_HOLDS;
-        if (start_x < 0) start_x *= -1;
-        if (start_y < 0) start_y *= -1;
-
-        float current_y = start_y;
-        while (current_y < max_y) {
-            float current_x = start_x;
-            while (current_x < max_x) {
-                Coordinate current_point = new Coordinate(current_x, current_y);
-                if (isInside(current_point)) {
-                    hold_set.add(current_point);
-                }
-                current_x += DISTANCE_BETWEEN_HOLDS;
-            }
-            current_y += DISTANCE_BETWEEN_HOLDS;
         }
     }
 
@@ -253,24 +142,5 @@ public class Shape {
             intersection.x = -ray.c/ray.a;
             return intersection;
         }
-    }
-
-    public String toString() {
-        String outstring = "";
-        for (Coordinate corner : corners) {
-            outstring += corner.toString();
-            outstring += ",";
-        }
-        outstring += hold_set.get(0).toString();
-        return outstring;
-    }
-
-    public String holdTypesToString() {
-        String outstring = "";
-        for (Integer hold : hold_types) {
-            outstring += hold.toString();
-            outstring += ",";
-        }
-        return outstring;
     }
 }

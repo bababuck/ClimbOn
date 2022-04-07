@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ThreeDeeHold extends ThreeDeeShape{
     public float left_bound, right_bound, top_bound, bottom_bound;
@@ -38,7 +37,7 @@ public class ThreeDeeHold extends ThreeDeeShape{
             rot.add(rotated_coordinates[2*i+1]);
         }
         try {
-            Shape shape = new Shape(rot, new Coordinate(0f, 0f));
+            Shape shape = new Shape(rot);
             return shape.isInside(new Coordinate(click_x-left_bound, click_y-bottom_bound));
         } catch (Exception E) {
             Log.e("ThreeDeeHold", E.toString());
@@ -46,7 +45,7 @@ public class ThreeDeeHold extends ThreeDeeShape{
         return false;
     }
 
-    public void setColor(float new_color[]) {
+    public void setColor(float[] new_color) {
         color = new_color;
     }
 }

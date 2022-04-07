@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.BaseColumns;
-
-import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -157,7 +154,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
         values.put(WallInformationContract.WallPanels.COLUMN_NAME_WALL_NAME, wall_name);
         values.put(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES, coordinatesToSQLString(panels));
         values.put(WallInformationContract.WallPanels.COLUMN_NAME_COLOR, coordinatesToSQLString(color));
-        rowID = (int) sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
+        sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
         values.clear();
 
         panels = new float[]{
@@ -171,7 +168,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
         values.put(WallInformationContract.WallPanels.COLUMN_NAME_WALL_NAME, wall_name);
         values.put(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES, coordinatesToSQLString(panels));
         values.put(WallInformationContract.WallPanels.COLUMN_NAME_COLOR, coordinatesToSQLString(color));
-        rowID = (int) sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
+        sqLiteDatabase.insert(WallInformationContract.WallPanels.TABLE_NAME, null, values);
     }
 
     private ArrayList<Integer> hold_ids = new ArrayList<>();
@@ -195,7 +192,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
     public static String coordinatesToSQLString(float coordinates[]) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i=0;i<coordinates.length;++i) {
-            stringBuilder.append(Float.toString(coordinates[i])).append(LIST_SEPARATOR);
+            stringBuilder.append(coordinates[i]).append(LIST_SEPARATOR);
         }
 
         stringBuilder.setLength(stringBuilder.length() - LIST_SEPARATOR.length());
@@ -231,6 +228,5 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        assert (1 == 1);
     }
 }

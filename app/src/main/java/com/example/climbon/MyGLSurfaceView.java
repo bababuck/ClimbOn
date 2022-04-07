@@ -2,7 +2,6 @@ package com.example.climbon;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -10,7 +9,7 @@ import android.view.ScaleGestureDetector;
 
 class MyGLSurfaceView extends GLSurfaceView {
 
-    private ScaleGestureDetector mScaleGestureDetector;
+    private final ScaleGestureDetector mScaleGestureDetector;
 
     public final MyGLRenderer renderer;
 
@@ -75,7 +74,6 @@ class MyGLSurfaceView extends GLSurfaceView {
     }
 
     protected void onClick(MotionEvent e) {
-        assert (1==1);
     }
 
     private class SpecialScaleGestureDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {

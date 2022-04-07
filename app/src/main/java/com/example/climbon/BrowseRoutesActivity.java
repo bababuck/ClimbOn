@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BrowseRoutesActivity extends AppCompatActivity {
 
@@ -78,8 +77,8 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         ArrayList<String> projection_list = new ArrayList<>();
-        String query_params[] = {type, rating, name};
-        String selection = "";
+        String[] query_params = {type, rating, name};
+        StringBuilder selection = new StringBuilder();
         boolean previous = false;
         for (int i=0;i<query_params.length;++i){
             if (query_params[i] != null) {
@@ -87,16 +86,16 @@ public class BrowseRoutesActivity extends AppCompatActivity {
                 if (!previous){
                     previous = true;
                 } else {
-                    selection += " AND ";
+                    selection.append(" AND ");
                 }
                 if (i == 0){
-                    selection += WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE + " = ? ";
+                    selection.append(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE + " = ? ");
                 }
                 if (i ==1){
-                    selection += WallInformationContract.RouteEntry.COLUMN_NAME_RATING + " = ? ";
+                    selection.append(WallInformationContract.RouteEntry.COLUMN_NAME_RATING + " = ? ");
                 }
                 if (i ==2){
-                    selection += WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME + " LIKE ? ";
+                    selection.append(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME + " LIKE ? ");
                 }
             }
         }
@@ -113,7 +112,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         Cursor cursor = db.query(
                 WallInformationContract.RouteEntry.TABLE_NAME,   // The table to query
                 projection,             // The array of columns to return (pass null to get all)
-                selection,              // The columns for the WHERE clause
+                selection.toString(),              // The columns for the WHERE clause
                 selectionArgs,          // The values for the WHERE clause
                 null,                   // don't group the rows
                 null,                   // don't filter by row groups
@@ -124,7 +123,6 @@ public class BrowseRoutesActivity extends AppCompatActivity {
         int route_rating_index = cursor.getColumnIndex(WallInformationContract.RouteEntry.COLUMN_NAME_RATING);
         int route_name_index = cursor.getColumnIndex(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME);
         int route_id_index = cursor.getColumnIndex(WallInformationContract.RouteEntry._ID);
-        ThreeDeeShape shape;
         int i=0;
         while (cursor.moveToNext() && i < 15) {
             ++i;
@@ -139,7 +137,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     saved_data.current_route = new RouteData(route_rating, route_type, route_name, route_id);
                     Log.e("BrowseRoutesActivity","Route selected: " + route_name);
-                    Intent intent = new Intent(view.getContext(), RouteViewInert.class);
+                    Intent intent = new Intent(view.getContext(), ThreeDeeWall.class);
 
                     view.getContext().startActivity(intent);
                 }
@@ -149,6 +147,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
             Log.e("BrowseRoutesActivity","Adding button to linear layout...");
             scroll.addView(current_button, button_params);
         }
+        cursor.close();
     }
 
 
@@ -171,7 +170,7 @@ public class BrowseRoutesActivity extends AppCompatActivity {
 
             private void filter_routes() {
                 String search_route_type = null;
-                if (type.getSelectedItem().toString() != "Route Type")
+                if (type.getSelectedItem().toString().equals("Route Type"))
                     search_route_type = ((Integer) RouteTypesEnum.valueOf(type.getSelectedItem().toString()).ordinal()).toString();
                 String search_name = null;
                 if (!String.valueOf(name.getText()).isEmpty())

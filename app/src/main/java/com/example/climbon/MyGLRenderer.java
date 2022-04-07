@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.view.MotionEvent;
-import android.widget.LinearLayout;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
@@ -15,28 +16,25 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
-    private Context context;
+    private final Context context;
     public MyGLRenderer(Context context) {
         super();
         this.context = context;
     }
 
-    private ThreeDeeShape mTriangle,mTriangle2, mSquare, ground;
-
-    private ArrayList<ThreeDeeShape> shapes = new ArrayList<>();
-
-    private float vertAngle, horiAngle;
+    private final ArrayList<ThreeDeeShape> shapes = new ArrayList<>();
 
     public float width, height;
 
     public volatile float[] eye_loc = {-4f, 0f, 0.0f, 0f};
-    private volatile float[] view_loc = {4.0f, 0f, 0.0f,0f};
+    private final float[] view_loc = {4.0f, 0f, 0.0f,0f};
 
     public final float[] vPMatrix = new float[16];
     public final float[] projectionMatrix = new float[16];
-    float invertProjection[] = new float[16];
+    float[] invertProjection = new float[16];
     public final float[] viewMatrix = new float[16];
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
         WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
@@ -73,7 +71,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             String[] selectionArgs = { Integer.toString(cursor.getInt(panel_number_index)) };
             Cursor inner_cursor = db.query(
                     WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
-                    projection,             // The array of columns to return (pass null to get all)
+                    inner_projection,             // The array of columns to return (pass null to get all)
                     selection,              // The columns for the WHERE clause
                     selectionArgs ,          // The values for the WHERE clause
                     null,                   // don't group the rows
@@ -91,7 +89,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         cursor.close();
     }
 
-    public void addShape(float coordinates[], float base_color[]){
+    public void addShape(float[] coordinates, float[] base_color){
         assert coordinates.length == 12 || coordinates.length == 9;
         assert base_color.length == 4;
         shapes.add(new ThreeDeeShape(coordinates, base_color));
@@ -111,7 +109,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    public void getInverseView(float return_matrix[]) {
+    public void getInverseView(float[] return_matrix) {
         Matrix.invertM(return_matrix,0, viewMatrix, 0);
     }
 
@@ -150,7 +148,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void rotate_view_loc(float horizontal, float vertical) {
-        float rotation_matrix[] = new float[16];
+        float[] rotation_matrix = new float[16];
         float x_ratio = view_loc[1]/(view_loc[0] +view_loc[1]);
         float y_ratio = view_loc[0]/(view_loc[0] +view_loc[1]);
         Matrix.setRotateEulerM(rotation_matrix, 0, vertical*x_ratio, vertical*y_ratio, horizontal);
@@ -163,7 +161,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         view_loc[2] *= ratio;
     }
 
-    public ThreeDeeShape findClickedShape(float click_vector[]) {
+    public ThreeDeeShape findClickedShape(float[] click_vector) {
         for (ThreeDeeShape shape : shapes) {
             if (shape.clicked(click_vector, eye_loc) != null)
                 return shape;
@@ -171,9 +169,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         return null;
     }
 
-    public ThreeDeeHold findClickedHold(float click_vector[]) {
+    public ThreeDeeHold findClickedHold(float[] click_vector) {
         for (ThreeDeeShape shape : shapes) {
-            float click_2D[] = shape.clicked(click_vector, eye_loc);
+            float[] click_2D = shape.clicked(click_vector, eye_loc);
             if (click_2D != null)
                 return shape.hold_hash.findClickedHold(click_2D[0], click_2D[1]);
         }

@@ -54,7 +54,7 @@ public class HoldHash {
         int size_change = 0;
         int loops = holds.size();
         for (int i=0; i<loops; ++i){
-            holds.add(2*i+1, new ArrayList<ArrayList<ThreeDeeHold>>());
+            holds.add(2*i+1, new ArrayList<>());
             for (int j = 0; j< holds.get(0).size(); ++j){
                 holds.get(2*i+1).add(new ArrayList<>());
                 float bin_size = height / (float) Math.pow(2, num_vertical_splits);
@@ -87,7 +87,7 @@ public class HoldHash {
         for (int i=0; i<holds.size(); ++i){
             for (int j=0; j<loops; ++j){
 //                Log.e("HoldHash", i + "  " + j);
-                holds.get(i).add(2*j+1, new ArrayList<ThreeDeeHold>());
+                holds.get(i).add(2*j+1, new ArrayList<>());
                 float bin_size = width / (float) Math.pow(2, num_horizontal_splits);
                 float bin_left = left_edge + j * bin_size;
                 float bin_mid = bin_left + bin_size;

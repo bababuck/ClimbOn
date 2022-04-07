@@ -1,5 +1,4 @@
 package com.example.climbon;
-import java.util.ArrayList;
 
 class RouteData {
     private Integer v_rating;
@@ -30,10 +29,6 @@ class RouteData {
 
     public int getVRating() {
         return v_rating;
-    }
-
-    public String getType() {
-
     }
 
     public String toStringInfo() {

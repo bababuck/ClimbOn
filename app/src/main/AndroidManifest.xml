@@ -14,16 +14,7 @@
             android:name=".ThreeDeeWall"
             android:exported="false" />
         <activity
-            android:name=".RouteViewInert"
-            android:exported="false" />
-        <activity
-            android:name=".SetHoldsOuter"
-            android:exported="false" />
-        <activity
             android:name=".CollectRouteInfoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SetRouteActivity"
             android:exported="false" />
         <activity
             android:name=".BrowseRoutesActivity"
@@ -46,12 +37,6 @@
             android:exported="false"
             android:label="@string/title_activity_set_holds"
             android:theme="@style/Theme.ClimbOn.NoActionBar" />
-        <activity
-            android:name=".RouteView"
-            android:exported="false" />
-        <activity
-            android:name=".PanelView"
-            android:exported="false" />
         <activity
             android:name=".MainMenu"
             android:exported="false" />
