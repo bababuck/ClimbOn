@@ -34,5 +34,9 @@ class RouteData {
     public String toStringInfo() {
         return name + "," + v_rating + "," + type;
     }
+
+    public int getType() {
+        return type;
+    }
 }
 
