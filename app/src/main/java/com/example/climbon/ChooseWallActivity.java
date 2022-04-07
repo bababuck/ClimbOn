@@ -44,7 +44,6 @@ public class ChooseWallActivity extends AppCompatActivity {
                     Log.e("ChooseWall","Wall by name of '" + wall_name + "' selected...");
                     saved_data.current_wall = wall_name;
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
-                    app.loadWall(wall_name);
                     Log.e("ChooseWall","Entering MainMenu activity...");
                     view.getContext().startActivity(intent);
                 }
@@ -67,10 +66,6 @@ public class ChooseWallActivity extends AppCompatActivity {
                 if (!wall_names.contains(new_name) && !new_name.isEmpty()) {
                     Log.e("ChooseWall", "New wall to be created by the name of '" + new_name + "'...");
                     saved_data.current_wall = new_name;
-                    Intent intent = new Intent(view.getContext(), CreateWallActivity.class);
-                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    Log.e("ChooseWall", "Entering CreateWallActivity activity...");
-                    view.getContext().startActivity(intent);
                 }
             }
         });

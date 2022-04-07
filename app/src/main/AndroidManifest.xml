@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ClimbOn">
         <activity
+            android:name=".RouteViewThreeDee"
+            android:exported="false" />
+        <activity
             android:name=".ThreeDeeWall"
             android:exported="false" />
         <activity
