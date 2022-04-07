@@ -41,7 +41,7 @@ public class WallInformationContract {
                 DROP_TABLE_TEXT + TABLE_NAME;
     }
 
-    public static class WallHolds implements BaseColumns {
+    public static class WallHolds {
         public static final String TABLE_NAME = "holds";
         public static final String COLUMN_NAME_PANEL_NUMBER = "panel_number";
         public static final String COLUMN_NAME_HOLD_NUMBER = "hold_number";

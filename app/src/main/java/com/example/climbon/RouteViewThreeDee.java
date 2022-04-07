@@ -17,11 +17,8 @@ import java.util.Map;
 
 public class RouteViewThreeDee extends AppCompatActivity {
 
-    private MyGLSurfaceView gLView;
+    private RouteSetGLSurfaceView gLView;
 
-    public HashMap<Integer, float[]> selected_holds = new HashMap<>();
-    public HashMap<Integer, float[]> deleted_holds = new HashMap<>();
-    public ArrayList<Integer> previous_holds = new ArrayList<>();
     public int current_route_id = 69;
     public String route_name = "Generic Route";
     public int rating = 3;
@@ -31,7 +28,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gLView = new MyGLSurfaceView(this);
+        gLView = new RouteSetGLSurfaceView(this);
         setContentView(gLView);
     }
 
@@ -45,7 +42,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
         }
 
         protected void onClick(MotionEvent e) {
-            Log.e("ThreeDeeWall","Click");
+            Log.e("RouteViewThreeDeeWall","Click");
             float clickY = e.getY();
             float clickX = e.getX();
             float invertProjection[];
@@ -59,10 +56,16 @@ public class RouteViewThreeDee extends AppCompatActivity {
             Matrix.multiplyMV(result, 0, invertView, 0, temp, 0);
 
             ThreeDeeHold hold = renderer.findClickedHold(result);
-            holdClicked(hold);
-            requestRender();
+            if (hold != null) {
+                holdClicked(hold);
+                requestRender();
+            }
         }
     }
+
+    public HashMap<Integer, float[]> selected_holds = new HashMap<>();
+    public HashMap<Integer, float[]> deleted_holds = new HashMap<>();
+    public ArrayList<Integer> previous_holds = new ArrayList<>();
 
     private void holdClicked(ThreeDeeHold hold) {
         if (previous_holds.contains(hold.SQL_id)){
@@ -73,14 +76,15 @@ public class RouteViewThreeDee extends AppCompatActivity {
                 deleted_holds.put(hold.SQL_id, hold.color);
                 hold.setColor(hold.base_color);
             }
-        }
-        if (selected_holds.containsKey(hold.SQL_id)) {
-            hold.setColor(hold.base_color);
-            selected_holds.remove(hold.SQL_id);
         } else {
-            float color[] = new float[]{0.0f, 0.0f, 1.0f, 1.0f};
-            hold.setColor(color);
-            selected_holds.put(hold.SQL_id, color);
+            if (selected_holds.containsKey(hold.SQL_id)) {
+                hold.setColor(hold.base_color);
+                selected_holds.remove(hold.SQL_id);
+            } else {
+                float color[] = new float[]{1.0f, 0.0f, 0.0f, 1.0f};
+                selected_holds.put(hold.SQL_id, hold.color);
+                hold.setColor(color);
+            }
         }
     }
 

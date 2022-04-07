@@ -7,6 +7,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -36,7 +37,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+        Log.e("MyGLRenderer", "Creating Surface");
 
+        Log.e("MyGLRenderer", "Accessing DB...");
         WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -64,13 +67,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     WallInfoDbHelper.convertStringToList(cursor.getString(color_index)));
             String[] inner_projection = {
                     WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES,
-                    WallInformationContract.WallHolds.COLUMN_NAME_COLOR
+                    WallInformationContract.WallHolds.COLUMN_NAME_HOLD_NUMBER
             };
             // Filter results WHERE "title" = 'My Title'
             String selection =  WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER + " = ?";
             String[] selectionArgs = { Integer.toString(cursor.getInt(panel_number_index)) };
             Cursor inner_cursor = db.query(
-                    WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
+                    WallInformationContract.WallHolds.TABLE_NAME,   // The table to query
                     inner_projection,             // The array of columns to return (pass null to get all)
                     selection,              // The columns for the WHERE clause
                     selectionArgs ,          // The values for the WHERE clause
@@ -78,15 +81,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     null,                   // don't filter by row groups
                     null               // The sort order
             );
-            int inner_coordinates_index = cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES);
-            int inner_id_index = cursor.getColumnIndex(WallInformationContract.WallHolds._ID);
+            int inner_coordinates_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES);
+            int inner_id_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_HOLD_NUMBER);
             while (inner_cursor.moveToNext()) {
-                shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)), Integer.parseInt(inner_cursor.getString(inner_id_index)));
+                shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)), inner_cursor.getInt(inner_id_index));
             }
             inner_cursor.close();
             shapes.add(shape);
         }
         cursor.close();
+        Log.e("MyGLRenderer", "Closing DB...");
     }
 
     public void addShape(float[] coordinates, float[] base_color){
@@ -103,7 +107,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
-        // Redraw background color
+        Log.e("MyGLRenderer", "Drawing Shapes...");
         for (ThreeDeeShape shape: shapes ){
             shape.draw(vPMatrix);
         }

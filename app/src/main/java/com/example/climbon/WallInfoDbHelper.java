@@ -111,12 +111,12 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
 
         hold_coordinates[0] = new float[]{
                 0.0f, -0.5f, 0.0f,
-                0.0f,  -0.75f, 0.0f,
-                0.0f, 0.0f, 0.25f
+                0.0f, 0.0f, 0.25f,
+                0.0f,  -0.75f, 0.0f
         };
         hold_coordinates[1] = new float[]{
-                0.0f, 0.0f, 0.0f,
                 0.0f,  -0.25f, 0.0f,
+                0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.25f
         };
         addFakeHolds(sqLiteDatabase, rowID, hold_coordinates);

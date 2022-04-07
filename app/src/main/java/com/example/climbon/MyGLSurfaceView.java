@@ -27,6 +27,7 @@ class MyGLSurfaceView extends GLSurfaceView {
     private float mDownX;
     private float mDownY;
     private final float SCROLL_THRESHOLD = 100;
+    private final int TIME_THRESHOLD = 200;
     private boolean isOnClick;
 
     private final float ROTATION_RATIO = 0.1f;
@@ -41,14 +42,14 @@ class MyGLSurfaceView extends GLSurfaceView {
         float y = e.getY();
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                if (!isOnClick || ((Math.abs(mDownX - e.getX()) > SCROLL_THRESHOLD || Math.abs(mDownY - e.getY()) > SCROLL_THRESHOLD) && ((e.getEventTime() - e.getDownTime()) > 1000))) {
+                if (!isOnClick || ((Math.abs(mDownX - e.getX()) > SCROLL_THRESHOLD || Math.abs(mDownY - e.getY()) > SCROLL_THRESHOLD) && ((e.getEventTime() - e.getDownTime()) > TIME_THRESHOLD))) {
 
                     float dx = x - previousX;
                     float dy = y - previousY;
 
                     renderer.rotate_view_loc(-dx* ROTATION_RATIO, dy* ROTATION_RATIO);
                     requestRender();
-                    Log.e("ThreeDeeWall","Rotate Wall");
+                    Log.e("MyGLSurfaceView","Rotate Wall");
                     isOnClick = false;
                 }
                 break;
@@ -60,6 +61,7 @@ class MyGLSurfaceView extends GLSurfaceView {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (isOnClick) {
+                    Log.e("MyGLSurfaceView","Click");
                     isOnClick = false;
                     onClick(e);
                 }

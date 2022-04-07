@@ -39,14 +39,14 @@ public class ThreeDeeShape {
         float right_bound = -Float.MAX_VALUE;
         float top_bound = -Float.MAX_VALUE;
         float bottom_bound = Float.MAX_VALUE;
-        Log.e("ThreeDeeShape", "shape: ");
+//        Log.e("ThreeDeeShape", "shape: ");
         for (int i=0;i<vertexCount;++i) {
             left_bound = Float.min(rotated_coordinates[2*i], left_bound);
             right_bound = Float.max(rotated_coordinates[2*i], right_bound);
             bottom_bound = Float.min(rotated_coordinates[2*i+1], bottom_bound);
             top_bound = Float.max(rotated_coordinates[2*i+1], top_bound);
 //            Log.e("ThreeDeeShape", "counts: "+vertexCount+" "+i);
-            Log.e("ThreeDeeShape", "x: "+rotated_coordinates[2*i]+" y: "+rotated_coordinates[2*i+1]);
+//            Log.e("ThreeDeeShape", "x: "+rotated_coordinates[2*i]+" y: "+rotated_coordinates[2*i+1]);
 //            Log.e("ThreeDeeShape", "top: "+top_bound+" right: "+right_bound);
         }
         hold_hash = new HoldHash(holds, left_bound, top_bound, right_bound, bottom_bound);
