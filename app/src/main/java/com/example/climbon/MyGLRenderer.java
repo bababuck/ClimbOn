@@ -35,6 +35,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     float[] invertProjection = new float[16];
     public final float[] viewMatrix = new float[16];
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         Log.e("MyGLRenderer", "Creating Surface");
@@ -181,6 +182,4 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
         return null;
     }
-
-
 }

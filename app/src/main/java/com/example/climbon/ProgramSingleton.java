@@ -1,20 +1,21 @@
 package com.example.climbon;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 public class ProgramSingleton {
 
     private static int mProgram;
     private static ProgramSingleton program_singleton = null;
 
-    private final String vertexShaderCode =
+    private static String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
                     "void main() {" +
                     "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
-    private final String fragmentShaderCode =
+    private static String fragmentShaderCode =
             "precision mediump float;" +
                     "uniform vec4 vColor;" +
                     "void main() {" +
@@ -37,6 +38,9 @@ public class ProgramSingleton {
         if (program_singleton == null) {
             program_singleton = new ProgramSingleton();
         }
+        program_singleton = new ProgramSingleton();
+        GLES20.glLinkProgram(mProgram);
+        Log.e("ProgramSingleton","Returning program...");
         return mProgram;
     }
 }

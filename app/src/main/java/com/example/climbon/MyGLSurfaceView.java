@@ -17,7 +17,7 @@ class MyGLSurfaceView extends GLSurfaceView {
         super(context);
         setEGLContextClientVersion(2);
 
-        renderer = new MyGLRenderer(context);
+        renderer = MyGLRendererSingleton.getProgram(context);
         mScaleGestureDetector = new ScaleGestureDetector(context, new SpecialScaleGestureDetector());
 
         setRenderer(renderer);

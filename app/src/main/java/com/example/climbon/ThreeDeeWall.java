@@ -53,5 +53,7 @@ public class ThreeDeeWall extends AppCompatActivity {
         }
         Log.e("ThreeDeeWall","Setting content view...");
         setContentView(layout);
+
+        gLView.requestRender();
     }
 }
