@@ -51,7 +51,7 @@ public class ThreeDeeWall extends AppCompatActivity {
             constraintSet.connect(gLView.getId(),ConstraintSet.TOP,text.getId(),ConstraintSet.BOTTOM,0);
             constraintSet.applyTo(layout);
         }
-        Log.e("ThreeDeeWall","Setting content view...");
+
         setContentView(layout);
 
         gLView.requestRender();

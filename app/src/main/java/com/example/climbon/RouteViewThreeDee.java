@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.opengl.Matrix;
 import android.os.Bundle;
@@ -47,6 +49,9 @@ public class RouteViewThreeDee extends AppCompatActivity {
         Button save_button = new Button(this);
         save_button.setText("Save");
 
+        Button edit_button = new Button(this);
+        edit_button.setText("Edit");
+
         ConstraintLayout layout = new ConstraintLayout(this);
         {
             int GLVIEW_ID = View.generateViewId();
@@ -63,6 +68,11 @@ public class RouteViewThreeDee extends AppCompatActivity {
             save_button.setId(SAVE_ID);
             layout.addView(save_button);
         }
+        {
+            int EDIT_ID = View.generateViewId();
+            edit_button.setId(EDIT_ID);
+            layout.addView(edit_button);
+        }
 
         {
             ConstraintSet constraintSet = new ConstraintSet();
@@ -71,6 +81,8 @@ public class RouteViewThreeDee extends AppCompatActivity {
             constraintSet.constrainWidth(gLView.getId(), constraintSet.MATCH_CONSTRAINT);
             constraintSet.constrainHeight(gLView.getId(), constraintSet.WRAP_CONTENT);
             constraintSet.constrainWidth(save_button.getId(), constraintSet.MATCH_CONSTRAINT);
+            constraintSet.constrainHeight(edit_button.getId(), constraintSet.WRAP_CONTENT);
+            constraintSet.constrainWidth(edit_button.getId(), constraintSet.MATCH_CONSTRAINT);
             constraintSet.constrainHeight(save_button.getId(), constraintSet.WRAP_CONTENT);
             constraintSet.connect(text.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
             constraintSet.connect(gLView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
@@ -79,10 +91,49 @@ public class RouteViewThreeDee extends AppCompatActivity {
             constraintSet.connect(gLView.getId(),ConstraintSet.TOP,save_button.getId(),ConstraintSet.BOTTOM,0);
             constraintSet.connect(save_button.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
             constraintSet.connect(save_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
+
+            constraintSet.connect(gLView.getId(),ConstraintSet.TOP,edit_button.getId(),ConstraintSet.BOTTOM,0);
+            constraintSet.connect(save_button.getId(),ConstraintSet.LEFT,edit_button.getId(),ConstraintSet.RIGHT,0);
+            constraintSet.connect(edit_button.getId(),ConstraintSet.LEFT,text.getId(),ConstraintSet.RIGHT,0);
+            constraintSet.connect(edit_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
             constraintSet.applyTo(layout);
         }
         Log.e("ThreeDeeWall","Setting content view...");
         setContentView(layout);
+
+        edit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("RouteViewThreeDee","Save button clicked.");
+
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to save?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        onSaveClicked();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        assert true;
+                    }
+                });
+
+        save_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("RouteViewThreeDee","Save button clicked.");
+
+                if (((ClimbOnApplication) getApplication()).data.saved) {
+                    builder.create().show();
+                } else {
+                    Log.e("RouteViewThreeDee","Already saved.");
+                }
+            }
+        });
     }
 
     class RouteSetGLSurfaceView extends MyGLSurfaceView {
@@ -142,6 +193,9 @@ public class RouteViewThreeDee extends AppCompatActivity {
     }
 
     private void onSaveClicked() {
+        ClimbOnApplication app = (ClimbOnApplication) getApplication();
+        app.data.saved = true;
+
         WallInfoDbHelper dbHelper = new WallInfoDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         int route_ID;
@@ -163,6 +217,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
             values.put(WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_COLOR, WallInfoDbHelper.coordinatesToSQLString((float[]) pair.getValue()));
             db.insert(WallInformationContract.HoldRouteJoinTable.TABLE_NAME, null, values);
             values.clear();
+            previous_holds.add(pair.getKey());
         }
 
         it = deleted_holds.entrySet().iterator();
@@ -171,6 +226,30 @@ public class RouteViewThreeDee extends AppCompatActivity {
             String selection = WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_HOLD_ID + " = ? AND " + WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_ROUTE_ID + " = ?";
             String[] selectionArgs = { Integer.toString((Integer) pair.getKey()), Integer.toString(route_ID) };
             db.delete(WallInformationContract.HoldRouteJoinTable.TABLE_NAME, selection, selectionArgs);
+            previous_holds.remove(pair.getKey());
+        }
+
+        deleted_holds.clear();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!((ClimbOnApplication) getApplication()).data.saved) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want exit? All unsaved changes will be lost")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            RouteViewThreeDee.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            assert true;
+                        }
+                    });
+            builder.create().show();
+        } else {
+            super.onBackPressed();
         }
     }
 }
