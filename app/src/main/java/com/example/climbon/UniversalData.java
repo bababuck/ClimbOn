@@ -13,4 +13,5 @@ public class UniversalData {
     String current_wall = "";
     RouteData current_route;
     Boolean saved;
+    int total_bits;
 }

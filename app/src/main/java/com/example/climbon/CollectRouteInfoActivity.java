@@ -13,6 +13,8 @@ import android.widget.Spinner;
 
 public class CollectRouteInfoActivity extends AppCompatActivity {
 
+    UniversalData saved_data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e("CollectRouteInfo","Entering CollectRouteInfoActivity");
@@ -20,7 +22,7 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collect_route_info);
 
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
-        UniversalData saved_data = app.data;
+        saved_data = app.data;
 
 
         Spinner mySpinner = (Spinner) findViewById(R.id.spinner);
@@ -32,20 +34,33 @@ public class CollectRouteInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.e("CollectRouteInfo","Create Route button clicked...");
-                EditText input = findViewById(R.id.v_rating);
-                int v_rating = Integer.parseInt(String.valueOf(input.getText()));
+                EditText rating_input = findViewById(R.id.v_rating);
+                EditText name_input = findViewById(R.id.routeName);
+                if (saveButtonClicked(name_input, rating_input, mySpinner)) {
+                    saved_data.saved = false;
 
-                input = findViewById(R.id.routeName);
-                String name = String.valueOf(input.getText());
-
-                int type = RouteTypesEnum.valueOf(mySpinner.getSelectedItem().toString()).ordinal();
-                saved_data.current_route = new RouteData(v_rating,type, name, -1);
-                saved_data.saved = false;
-
-                Intent intent = new Intent(view.getContext(), RouteViewThreeDee.class);
-                Log.e("CollectRouteInfo","Entering SetRouteActivity...");
-                view.getContext().startActivity(intent);
+                    Intent intent = new Intent(view.getContext(), RouteViewThreeDee.class);
+                    Log.e("CollectRouteInfo","Entering SetRouteActivity...");
+                    view.getContext().startActivity(intent);
+                }
             }
         });
+    }
+
+    protected boolean saveButtonClicked(EditText name, EditText v_rating, Spinner type) {
+        String name_value = String.valueOf(name.getText());
+        int type_value = RouteTypesEnum.valueOf(type.getSelectedItem().toString()).ordinal();
+        if (type_value != 0 && !String.valueOf(v_rating.getText()).equals("") && !name_value.equals("")) {
+            int v_rating_value = Integer.parseInt(String.valueOf(v_rating.getText()));
+            saved_data.current_route = new RouteData(v_rating_value,
+                    type_value,
+                    name_value,
+                    -1);
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 }

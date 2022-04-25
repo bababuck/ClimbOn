@@ -10,12 +10,14 @@ import java.util.ArrayList;
 public class ThreeDeeHold extends ThreeDeeShape{
     public float left_bound, right_bound, top_bound, bottom_bound;
     public int SQL_id;
+    public int LED_id;
     public float[] base_color;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public ThreeDeeHold(float[] coordinates, float[] color, int SQL_id) {
-        super(coordinates, color);
+    public ThreeDeeHold(float[] coordinates, float[] color, int SQL_id, int LED_id) {
+        super(coordinates, color, -1);
         this.SQL_id = SQL_id;
+        this.LED_id = LED_id;
         left_bound = Float.MAX_VALUE;
         right_bound = -Float.MAX_VALUE;
         top_bound = -Float.MAX_VALUE;
@@ -47,5 +49,6 @@ public class ThreeDeeHold extends ThreeDeeShape{
 
     public void setColor(float[] new_color) {
         color = new_color;
+        Log.e("ThreeDeeHold", "Set hold color");
     }
 }

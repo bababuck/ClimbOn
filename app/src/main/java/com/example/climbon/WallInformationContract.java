@@ -12,6 +12,7 @@ public class WallInformationContract {
         public static final String TABLE_NAME = "walls";
         public static final String COLUMN_NAME_WALL_NAME = "wall_name";
         public static final String COLUMN_NAME_USER = "user";
+        public static final String COLUMN_NAME_TOTAL_LEDS = "total_leds"; // Should technically make separate table for this.
 
         public static final String SQL_CREATE_TABLE =
                 CREATE_TABLE_TEXT + TABLE_NAME + " (" +
@@ -47,6 +48,7 @@ public class WallInformationContract {
         public static final String COLUMN_NAME_HOLD_NUMBER = "hold_number";
         public static final String COLUMN_NAME_COORDINATES = "coordinates";
         public static final String COLUMN_NAME_COLOR = "color";
+        public static final String COLUMN_NAME_LED_ID = "led_id";
 
         public static final String SQL_CREATE_TABLE =
                 CREATE_TABLE_TEXT + TABLE_NAME + " (" +

@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.opengl.Matrix;
 import android.os.Bundle;
@@ -91,7 +92,6 @@ public class RouteViewThreeDee extends AppCompatActivity {
             constraintSet.connect(gLView.getId(),ConstraintSet.TOP,save_button.getId(),ConstraintSet.BOTTOM,0);
             constraintSet.connect(save_button.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
             constraintSet.connect(save_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
-
             constraintSet.connect(gLView.getId(),ConstraintSet.TOP,edit_button.getId(),ConstraintSet.BOTTOM,0);
             constraintSet.connect(save_button.getId(),ConstraintSet.LEFT,edit_button.getId(),ConstraintSet.RIGHT,0);
             constraintSet.connect(edit_button.getId(),ConstraintSet.LEFT,text.getId(),ConstraintSet.RIGHT,0);
@@ -104,8 +104,11 @@ public class RouteViewThreeDee extends AppCompatActivity {
         edit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("RouteViewThreeDee","Save button clicked.");
-
+                Log.e("RouteViewThreeDee","Edit button clicked.");
+                if (!((ClimbOnApplication) getApplication()).data.saved){
+                    Intent intent = new Intent(view.getContext(), EditRouteInfoActivity.class);
+                    view.getContext().startActivity(intent);
+                }
             }
         });
 
@@ -127,7 +130,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
             public void onClick(View view) {
                 Log.e("RouteViewThreeDee","Save button clicked.");
 
-                if (((ClimbOnApplication) getApplication()).data.saved) {
+                if (!((ClimbOnApplication) getApplication()).data.saved) {
                     builder.create().show();
                 } else {
                     Log.e("RouteViewThreeDee","Already saved.");
@@ -162,6 +165,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
             ThreeDeeHold hold = renderer.findClickedHold(result);
             if (hold != null) {
                 holdClicked(hold);
+                ((ClimbOnApplication) getApplication()).bluetoothService.write(renderer.ledsOn.toByteArray());
                 requestRender();
             }
         }
@@ -185,7 +189,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
                 hold.setColor(hold.base_color);
                 selected_holds.remove(hold.SQL_id);
             } else {
-                float color[] = new float[]{1.0f, 0.0f, 0.0f, 1.0f};
+                float color[] = new float[]{1.0f, 1.0f, 0.0f, 1.0f};
                 selected_holds.put(hold.SQL_id, hold.color);
                 hold.setColor(color);
             }

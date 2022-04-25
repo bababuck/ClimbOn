@@ -43,6 +43,7 @@ public class ChooseWallActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Log.e("ChooseWall","Wall by name of '" + wall_name + "' selected...");
                     saved_data.current_wall = wall_name;
+                    saved_data.total_bits = getTotalLeds(app.db, wall_name);
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
                     Log.e("ChooseWall","Entering MainMenu activity...");
                     view.getContext().startActivity(intent);
@@ -75,7 +76,8 @@ public class ChooseWallActivity extends AppCompatActivity {
 
     private ArrayList<String> loadWallNames(SQLiteDatabase db) {
         String[] projection = {
-                WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME
+                WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME,
+                WallInformationContract.WallEntry.COLUMN_NAME_TOTAL_LEDS
         };
         Cursor cursor = db.query(
                 WallInformationContract.WallEntry.TABLE_NAME,   // The table to query
@@ -88,10 +90,34 @@ public class ChooseWallActivity extends AppCompatActivity {
         );
         ArrayList<String> return_list = new ArrayList<>();
         int wall_column_index = cursor.getColumnIndex(WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME);
+        int total_leds_index = cursor.getColumnIndex(WallInformationContract.WallEntry.COLUMN_NAME_TOTAL_LEDS);
         while (cursor.moveToNext()) {
             return_list.add(cursor.getString(wall_column_index));
         }
         cursor.close();
         return return_list;
+    }
+
+    private int getTotalLeds(SQLiteDatabase db, String wall_name) {
+        String[] projection = {
+                WallInformationContract.WallEntry.COLUMN_NAME_TOTAL_LEDS
+        };
+        String selection =  WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME + " = ?";
+        String[] selectionArgs = { wall_name };
+        Cursor cursor = db.query(
+                WallInformationContract.WallEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs ,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+        ArrayList<String> return_list = new ArrayList<>();
+        int total_leds_index = cursor.getColumnIndex(WallInformationContract.WallEntry.COLUMN_NAME_TOTAL_LEDS);
+        cursor.moveToNext();
+        int total_leds = Integer.parseInt(cursor.getString(total_leds_index));
+        cursor.close();
+        return total_leds;
     }
 }

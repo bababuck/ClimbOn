@@ -178,8 +178,8 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         for (int i=0;i<hold_coordinates.length;++i) {
             values.put(WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER, rowID);
-            values.put(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES, coordinatesToSQLString(hold_coordinates[i]));
-            values.put(WallInformationContract.WallPanels.COLUMN_NAME_COLOR, coordinatesToSQLString(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
+            values.put(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES, coordinatesToSQLString(hold_coordinates[i]));
+            values.put(WallInformationContract.WallHolds.COLUMN_NAME_COLOR, coordinatesToSQLString(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
             rowID_hold = (int) sqLiteDatabase.insert(WallInformationContract.WallHolds.TABLE_NAME, null, values);
             values.clear();
             hold_ids.add(rowID_hold);

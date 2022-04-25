@@ -21,71 +21,15 @@ public class ThreeDeeShape {
     protected int positionHandle;
     protected int colorHandle;
     public HoldHash hold_hash;
+    public int panel_id;
 
     public ArrayList<ThreeDeeHold> holds = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void addHold(float[] coordinates, int SQL_id){
-        float color[] = {0.0f, 0.0f,1.0f, 1.0f};
-        ThreeDeeHold hold = new ThreeDeeHold(coordinates, color, SQL_id);
-        rotate(coordinates, 0, hold.rotated_coordinates, 0);
-        holds.add(hold);
-        hashHolds();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void hashHolds() {
-        float left_bound = Float.MAX_VALUE;
-        float right_bound = -Float.MAX_VALUE;
-        float top_bound = -Float.MAX_VALUE;
-        float bottom_bound = Float.MAX_VALUE;
-//        Log.e("ThreeDeeShape", "shape: ");
-        for (int i=0;i<vertexCount;++i) {
-            left_bound = Float.min(rotated_coordinates[2*i], left_bound);
-            right_bound = Float.max(rotated_coordinates[2*i], right_bound);
-            bottom_bound = Float.min(rotated_coordinates[2*i+1], bottom_bound);
-            top_bound = Float.max(rotated_coordinates[2*i+1], top_bound);
-//            Log.e("ThreeDeeShape", "counts: "+vertexCount+" "+i);
-//            Log.e("ThreeDeeShape", "x: "+rotated_coordinates[2*i]+" y: "+rotated_coordinates[2*i+1]);
-//            Log.e("ThreeDeeShape", "top: "+top_bound+" right: "+right_bound);
-        }
-        hold_hash = new HoldHash(holds, left_bound, top_bound, right_bound, bottom_bound);
-    }
-
-    private int vPMatrixHandle;
-
-    protected final int vertexCount;
-    private final int vertexStride = COORDS_PER_VERTEX * 4;
-
-    static final int COORDS_PER_VERTEX = 3;
-    float coordinates[];
-    float rotated_coordinates[];
-
-    float baryocentric[] = new float[9];
-    float v1dotv0;
-    float v0dotv0;
-    float v1dotv1;
-    float v3dotv3;
-    float v1dotv3;
-
-    float color[];
-
-    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
-    private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
-    private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
-    private final float normal[] = new float[3];
-    private final float rotationMatrix[] = new float[9];
-    float intersection[] = new float[3];
-
-
-
-    float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
-
-    boolean square;
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public ThreeDeeShape(float coordinates[], float color[]) {
+    public ThreeDeeShape(float coordinates[], float color[], int panel_id) {
         mProgram = ProgramSingleton.getProgram();
+
+        this.panel_id = panel_id;
 
         this.coordinates = coordinates;
         this.color = color;
@@ -126,6 +70,65 @@ public class ThreeDeeShape {
         rotate(coordinates, 0, rotated_coordinates, 0);
         hashHolds();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void addHold(float[] coordinates, int SQL_id, int LED_id){
+        float color[] = {0.0f, 0.0f,1.0f, 1.0f};
+        ThreeDeeHold hold = new ThreeDeeHold(coordinates, color, SQL_id, LED_id);
+        rotate(coordinates, 0, hold.rotated_coordinates, 0);
+        holds.add(hold);
+        hashHolds();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void hashHolds() {
+        float left_bound = Float.MAX_VALUE;
+        float right_bound = -Float.MAX_VALUE;
+        float top_bound = -Float.MAX_VALUE;
+        float bottom_bound = Float.MAX_VALUE;
+//        Log.e("ThreeDeeShape", "shape: ");
+        for (int i=0;i<vertexCount;++i) {
+            left_bound = Float.min(rotated_coordinates[2*i], left_bound);
+            right_bound = Float.max(rotated_coordinates[2*i], right_bound);
+            bottom_bound = Float.min(rotated_coordinates[2*i+1], bottom_bound);
+            top_bound = Float.max(rotated_coordinates[2*i+1], top_bound);
+//            Log.e("ThreeDeeShape", "counts: "+vertexCount+" "+i);
+//            Log.e("ThreeDeeShape", "x: "+rotated_coordinates[2*i]+" y: "+rotated_coordinates[2*i+1]);
+//            Log.e("ThreeDeeShape", "top: "+top_bound+" right: "+right_bound);
+        }
+        hold_hash = new HoldHash(holds, left_bound, top_bound, right_bound, bottom_bound);
+    }
+
+    private int vPMatrixHandle;
+
+    protected final int vertexCount;
+    private final int vertexStride = COORDS_PER_VERTEX * 4;
+
+    static final int COORDS_PER_VERTEX = 3;
+    float coordinates[];
+    float rotated_coordinates[];
+
+    float baryocentric[] = new float[9];
+    float v1dotv0;
+    float v0dotv0;
+    float v1dotv1;
+    float v3dotv3;
+    float v1dotv3;
+
+    protected float color[];
+
+    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
+    private short square_line_order[] = {0, 1, 1, 2, 2, 3, 3, 1};
+    private short triangle_line_order[] = {0, 1, 1, 2, 2, 1};
+    private final float normal[] = new float[3];
+    private final float rotationMatrix[] = new float[9];
+    float intersection[] = new float[3];
+
+
+
+    float line_color[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+    boolean square;
 
     private void getRotationMatrix() {
         // https://math.stackexchange.com/questions/1167717/transform-a-plane-to-the-xy-plane
@@ -319,12 +322,12 @@ public class ThreeDeeShape {
 
     public void setColor(String new_color) {
         if (color[2] == 1.0f){
-            color[0] = 1.0f;
+            color[0] = 0.0f;
             color[1] = 0.0f;
             color[2] = 0.0f;
         } else {
-            color[0] = 0.0f;
-            color[1] = 0.0f;
+            color[0] = 1.0f;
+            color[1] = 1.0f;
             color[2] = 1.0f;
         }
 
