@@ -165,7 +165,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
             ThreeDeeHold hold = renderer.findClickedHold(result);
             if (hold != null) {
                 holdClicked(hold);
-                ((ClimbOnApplication) getApplication()).bluetoothService.write(renderer.ledsOn.toByteArray());
+                ((ClimbOnApplication) getApplication()).bluetoothService.write(renderer.getLedBits());
                 requestRender();
             }
         }

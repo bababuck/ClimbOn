@@ -19,17 +19,17 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
-    private final Context context;
-    public BitSet ledsOn;
-    public MyGLRenderer(Context context) {
-        super();
-        Log.e("MyGLRenderer", "Creating renderer");
-        this.context = context;
-        ledsOn = new BitSet(((ClimbOnApplication) ((Activity) context).getApplication()).data.total_bits);
-    }
+    /* Handles renderer things.
+
+    TODO: width, height seem misplaced in this class
+    TODO: Provide option to set the eye_loc and view_loc
+    */
+    private final ClimbOnApplication application;
+    private BetterBitSet ledsOn;
+
+    private final String LOG_TAG = "GLRenderer";
 
     private final ArrayList<ThreeDeeShape> shapes = new ArrayList<>();
-
     public float width, height;
 
     public volatile float[] eye_loc = {-4f, 0f, 0.0f, 0f};
@@ -40,19 +40,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     float[] invertProjection = new float[16];
     public final float[] viewMatrix = new float[16];
 
+    public MyGLRenderer(Context context) {
+        super();
+        Log.e(LOG_TAG, "Creating renderer");
+        application = ((ClimbOnApplication) ((Activity) context).getApplication());
+        ledsOn = new BetterBitSet(application.data.total_bits);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-        Log.e("MyGLRenderer", "Creating Surface");
-
+        Log.e(LOG_TAG, "Creating Surface");
         loadWall();
-
         loadHoldSettings();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void loadWall() {
-        Log.e("MyGLRenderer", "Accessing DB...");
-        WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Log.e(LOG_TAG, "Accessing DB...");
+        SQLiteDatabase db = application.db;
 
         String[] projection = {
                 WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES,
@@ -60,7 +65,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER
         };
         String selection =  WallInformationContract.WallPanels.COLUMN_NAME_WALL_NAME + " = ?";
-        String[] selectionArgs = { ((ClimbOnApplication) ((Activity) context).getApplication()).data.current_wall };
+        String[] selectionArgs = { application.data.current_wall };
         Cursor cursor = db.query(
                 WallInformationContract.WallPanels.TABLE_NAME,   // The table to query
                 projection,             // The array of columns to return (pass null to get all)
@@ -71,60 +76,55 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 null               // The sort order
         );
 
+        while (cursor.moveToNext()) {
+            getHolds(cursor);
+        }
+        cursor.close();
+        Log.e(LOG_TAG, "Closing DB...");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void getHolds(Cursor cursor) {
         int panel_number_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_PANEL_NUMBER);
         int color_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COLOR);
         int coordinates_index = cursor.getColumnIndex(WallInformationContract.WallPanels.COLUMN_NAME_COORDINATES);
-        ThreeDeeShape shape;
-        while (cursor.moveToNext()) {
-            Log.e("MyGLRenderer", "Shape id:" + cursor.getInt(panel_number_index));
-            shape = new ThreeDeeShape(WallInfoDbHelper.convertStringToList(cursor.getString(coordinates_index)),
-                    WallInfoDbHelper.convertStringToList(cursor.getString(color_index)),
-                    cursor.getInt(panel_number_index));
-            String[] inner_projection = {
-                    WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES,
-                    WallInformationContract.WallHolds.COLUMN_NAME_HOLD_NUMBER,
-                    WallInformationContract.WallHolds.COLUMN_NAME_LED_ID
-            };
-            // Filter results WHERE "title" = 'My Title'
-            String inner_selection =  WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER + " = ?";
-            String[] inner_selectionArgs = { Integer.toString(cursor.getInt(panel_number_index)) };
-            Cursor inner_cursor = db.query(
-                    WallInformationContract.WallHolds.TABLE_NAME,   // The table to query
-                    inner_projection,             // The array of columns to return (pass null to get all)
-                    inner_selection,              // The columns for the WHERE clause
-                    inner_selectionArgs ,          // The values for the WHERE clause
-                    null,                   // don't group the rows
-                    null,                   // don't filter by row groups
-                    null               // The sort order
-            );
-            int inner_coordinates_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES);
-            int inner_id_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_HOLD_NUMBER);
-            int inner_led_id_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_LED_ID);
-            while (inner_cursor.moveToNext()) {
-                shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)), inner_cursor.getInt(inner_id_index), inner_cursor.getInt(inner_led_id_index));
-            }
-            inner_cursor.close();
-            shapes.add(shape);
-        }
-        cursor.close();
-        Log.e("MyGLRenderer", "Closing DB...");
-    }
+        Log.e(LOG_TAG, "Shape id:" + cursor.getInt(panel_number_index));
 
-    public void addShape(float[] coordinates, float[] base_color, int panel_id){
-        assert coordinates.length == 12 || coordinates.length == 9;
-        assert base_color.length == 4;
-        shapes.add(new ThreeDeeShape(coordinates, base_color, panel_id));
+        ThreeDeeShape shape = new ThreeDeeShape(WallInfoDbHelper.convertStringToList(cursor.getString(coordinates_index)),
+                WallInfoDbHelper.convertStringToList(cursor.getString(color_index)),
+                cursor.getInt(panel_number_index));
+        String[] inner_projection = {
+                WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES,
+                WallInformationContract.WallHolds.COLUMN_NAME_HOLD_NUMBER,
+                WallInformationContract.WallHolds.COLUMN_NAME_LED_ID
+        };
+        String inner_selection =  WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER + " = ?";
+        String[] inner_selectionArgs = { Integer.toString(cursor.getInt(panel_number_index)) };
+        Cursor inner_cursor = application.db.query(
+                WallInformationContract.WallHolds.TABLE_NAME,   // The table to query
+                inner_projection,             // The array of columns to return (pass null to get all)
+                inner_selection,              // The columns for the WHERE clause
+                inner_selectionArgs ,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+        int inner_coordinates_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES);
+        int inner_id_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_HOLD_NUMBER);
+        int inner_led_id_index = inner_cursor.getColumnIndex(WallInformationContract.WallHolds.COLUMN_NAME_LED_ID);
+        while (inner_cursor.moveToNext()) {
+            shape.addHold(WallInfoDbHelper.convertStringToList(inner_cursor.getString(inner_coordinates_index)), inner_cursor.getInt(inner_id_index), inner_cursor.getInt(inner_led_id_index));
+        }
+        inner_cursor.close();
+        shapes.add(shape);
     }
 
     public void onDrawFrame(GL10 unused) {
         unused.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-        // Set the camera position (View matrix)
         Matrix.setLookAtM(viewMatrix, 0, eye_loc[0], eye_loc[1], eye_loc[2], eye_loc[0]+view_loc[0], eye_loc[1]+view_loc[1], eye_loc[2]+view_loc[2], 0f, 0f, 1.0f);
-
-        // Calculate the projection and view transformation
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
-        Log.e("MyGLRenderer", "Drawing Shapes...");
+        Log.e(LOG_TAG, "Drawing Shapes...");
         for (ThreeDeeShape shape: shapes ){
             shape.draw(vPMatrix);
         }
@@ -143,19 +143,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         float ratio = (float) width / height;
 
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1, 1, 1, 10);
         Matrix.invertM(invertProjection,0, projectionMatrix, 0);
     }
 
     public static int loadShader(int type, String shaderCode){
 
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
 
-        // add the source code to the shader and compile it
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
 
@@ -195,10 +190,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             float[] click_2D = shape.clicked(click_vector, eye_loc);
             if (click_2D != null) {
                 ThreeDeeHold clicked_hold = shape.hold_hash.findClickedHold(click_2D[0], click_2D[1]);
-                ledsOn.set(clicked_hold.LED_id);
-                BitSet copy = new BitSet(ledsOn.length()));
-                copy.set(clicked_hold.LED_id);
-                ledsOn.xor(copy);
+                ledsOn.xor(clicked_hold.LED_id);
                 return clicked_hold;
             }
         }
@@ -208,15 +200,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private void loadHoldSettings() {
         Log.e("ThreeDeeWall", "Accessing DB...");
-        WallInfoDbHelper dbHelper = new WallInfoDbHelper(context);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = application.db;
 
         String[] projection = {
                 WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_COLOR,
                 WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_HOLD_ID
         };
         String selection =  WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_ROUTE_ID + " = ?";
-        String[] selectionArgs = { Integer.toString(((ClimbOnApplication) ((Activity) context).getApplication()).data.current_route.getID()) };
+        String[] selectionArgs = { Integer.toString(application.data.current_route.getID()) };
         Cursor cursor = db.query(
                 WallInformationContract.HoldRouteJoinTable.TABLE_NAME,   // The table to query
                 projection,             // The array of columns to return (pass null to get all)
@@ -282,5 +273,20 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             }
         }
         assert (false);
+    }
+
+    public byte[] getLedBits() {
+        return ledsOn.toByteArray();
+    }
+
+    private class BetterBitSet extends BitSet {
+        public BetterBitSet(int nbits){
+            super(nbits);
+        }
+
+        public void xor(int bitIndex) {
+            if (ledsOn.get(bitIndex)) ledsOn.set(bitIndex, false);
+            else ledsOn.set(bitIndex, true);
+        }
     }
 }
