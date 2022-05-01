@@ -9,6 +9,7 @@ import java.io.OutputStream;
 public class BluetoothService {
     private final BluetoothSocket mmSocket;
     private final OutputStream mmOutStream;
+    private final static String logTag = "BluetoothService";
 
     public BluetoothService(BluetoothSocket socket) {
         mmSocket = socket;
@@ -16,7 +17,7 @@ public class BluetoothService {
         try {
             tmpOut = socket.getOutputStream();
         } catch (IOException e) {
-            Log.e("BluetoothService", "Error occurred when creating output stream", e);
+            Log.e(logTag, "Error occurred when creating output stream", e);
         }
 
         mmOutStream = tmpOut;
@@ -26,7 +27,7 @@ public class BluetoothService {
         try {
             mmOutStream.write(bytes);
         } catch (IOException e) {
-            Log.e("BluetoothService", "Error occurred when sending data", e);
+            Log.e(logTag, "Error occurred when sending data", e);
         }
     }
 
@@ -34,7 +35,7 @@ public class BluetoothService {
         try {
             mmSocket.close();
         } catch (IOException e) {
-            Log.e("BluetoothService", "Could not close the connect socket", e);
+            Log.e(logTag, "Could not close the connect socket", e);
         }
     }
 }
