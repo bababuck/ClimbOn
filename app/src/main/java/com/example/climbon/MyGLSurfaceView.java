@@ -11,13 +11,13 @@ class MyGLSurfaceView extends GLSurfaceView {
 
     private final ScaleGestureDetector mScaleGestureDetector;
 
-    public final MyGLRenderer renderer;
+    public final GLRenderer renderer;
 
     public MyGLSurfaceView(Context context){
         super(context);
         setEGLContextClientVersion(2);
 
-        renderer = new MyGLRenderer(context);
+        renderer = new GLRenderer(context);
         mScaleGestureDetector = new ScaleGestureDetector(context, new SpecialScaleGestureDetector());
 
         setRenderer(renderer);

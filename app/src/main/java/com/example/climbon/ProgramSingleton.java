@@ -23,9 +23,9 @@ public class ProgramSingleton {
                     "}";
 
     private ProgramSingleton() {
-        int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
+        int vertexShader = GLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
-        int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
+        int fragmentShader = GLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
                 fragmentShaderCode);
 
         mProgram = GLES20.glCreateProgram();

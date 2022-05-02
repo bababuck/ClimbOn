@@ -5,14 +5,14 @@ import android.util.Log;
 
 public class MyGLRendererSingleton {
 
-    private static MyGLRenderer renderer;
+    private static GLRenderer renderer;
     private static MyGLRendererSingleton singleton;
 
     private MyGLRendererSingleton(Context context) {
-        renderer = new MyGLRenderer(context);
+        renderer = new GLRenderer(context);
     }
 
-    public static MyGLRenderer getProgram(Context context) {
+    public static GLRenderer getProgram(Context context) {
         if (renderer == null) {
             Log.e("RendererSingleton","Making new Renderer");
             singleton = new com.example.climbon.MyGLRendererSingleton(context);
