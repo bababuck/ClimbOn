@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class RouteViewThreeDee extends AppCompatActivity {
 
-    private RouteSetGLSurfaceView gLView;
+    private RouteSetGLSurfaceView gl_view;
 
     public int current_route_id = 69;
     public String route_name;
@@ -36,7 +36,14 @@ public class RouteViewThreeDee extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gLView = new RouteSetGLSurfaceView(this);
+        setupLayout();
+
+
+    }
+
+    private void setupLayout() {
+
+        gl_view = new RouteSetGLSurfaceView(this);
 
         ClimbOnApplication app = (ClimbOnApplication) getApplication();
         rating = app.data.current_route.getVRating();
@@ -56,8 +63,8 @@ public class RouteViewThreeDee extends AppCompatActivity {
         ConstraintLayout layout = new ConstraintLayout(this);
         {
             int GLVIEW_ID = View.generateViewId();
-            gLView.setId(GLVIEW_ID);
-            layout.addView(gLView);
+            gl_view.setId(GLVIEW_ID);
+            layout.addView(gl_view);
         }
         {
             int TEXT_ID = View.generateViewId();
@@ -74,44 +81,14 @@ public class RouteViewThreeDee extends AppCompatActivity {
             edit_button.setId(EDIT_ID);
             layout.addView(edit_button);
         }
-
-        {
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.constrainWidth(text.getId(), constraintSet.MATCH_CONSTRAINT);
-            constraintSet.constrainHeight(text.getId(), constraintSet.WRAP_CONTENT);
-            constraintSet.constrainWidth(gLView.getId(), constraintSet.MATCH_CONSTRAINT);
-            constraintSet.constrainHeight(gLView.getId(), constraintSet.WRAP_CONTENT);
-            constraintSet.constrainWidth(save_button.getId(), constraintSet.MATCH_CONSTRAINT);
-            constraintSet.constrainHeight(edit_button.getId(), constraintSet.WRAP_CONTENT);
-            constraintSet.constrainWidth(edit_button.getId(), constraintSet.MATCH_CONSTRAINT);
-            constraintSet.constrainHeight(save_button.getId(), constraintSet.WRAP_CONTENT);
-            constraintSet.connect(text.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
-            constraintSet.connect(gLView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
-            constraintSet.connect(text.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
-            constraintSet.connect(gLView.getId(),ConstraintSet.TOP,text.getId(),ConstraintSet.BOTTOM,0);
-            constraintSet.connect(gLView.getId(),ConstraintSet.TOP,save_button.getId(),ConstraintSet.BOTTOM,0);
-            constraintSet.connect(save_button.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
-            constraintSet.connect(save_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
-            constraintSet.connect(gLView.getId(),ConstraintSet.TOP,edit_button.getId(),ConstraintSet.BOTTOM,0);
-            constraintSet.connect(save_button.getId(),ConstraintSet.LEFT,edit_button.getId(),ConstraintSet.RIGHT,0);
-            constraintSet.connect(edit_button.getId(),ConstraintSet.LEFT,text.getId(),ConstraintSet.RIGHT,0);
-            constraintSet.connect(edit_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
-            constraintSet.applyTo(layout);
-        }
-        Log.e("ThreeDeeWall","Setting content view...");
+        addConstraints(edit_button, text, gl_view, save_button);
         setContentView(layout);
 
-        edit_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("RouteViewThreeDee","Edit button clicked.");
-                if (!((ClimbOnApplication) getApplication()).data.saved){
-                    Intent intent = new Intent(view.getContext(), EditRouteInfoActivity.class);
-                    view.getContext().startActivity(intent);
-                }
-            }
-        });
+        routeEditButton(edit_button);
+        routeSaveButton(save_button);
+    }
 
+    private void routeSaveButton(Button save_button) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to save?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -139,20 +116,56 @@ public class RouteViewThreeDee extends AppCompatActivity {
         });
     }
 
-    class RouteSetGLSurfaceView extends MyGLSurfaceView {
-        float temp[] = new float[4];
-        float result[] = new float[4];
-        float invertView[] = new float[16];
+    private void routeEditButton(Button edit_button) {
+        edit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("RouteViewThreeDee","Edit button clicked.");
+                if (!((ClimbOnApplication) getApplication()).data.saved){
+                    Intent intent = new Intent(view.getContext(), EditRouteInfoActivity.class);
+                    view.getContext().startActivity(intent);
+                }
+            }
+        });
+    }
 
+    private void addConstraints(Button edit_button, TextView text, RouteSetGLSurfaceView gLView, Button save_button) {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.constrainWidth(text.getId(), constraintSet.MATCH_CONSTRAINT);
+        constraintSet.constrainHeight(text.getId(), constraintSet.WRAP_CONTENT);
+        constraintSet.constrainWidth(gLView.getId(), constraintSet.MATCH_CONSTRAINT);
+        constraintSet.constrainHeight(gLView.getId(), constraintSet.WRAP_CONTENT);
+        constraintSet.constrainWidth(save_button.getId(), constraintSet.MATCH_CONSTRAINT);
+        constraintSet.constrainHeight(edit_button.getId(), constraintSet.WRAP_CONTENT);
+        constraintSet.constrainWidth(edit_button.getId(), constraintSet.MATCH_CONSTRAINT);
+        constraintSet.constrainHeight(save_button.getId(), constraintSet.WRAP_CONTENT);
+        constraintSet.connect(text.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
+        constraintSet.connect(gLView.getId(),ConstraintSet.LEFT,ConstraintSet.PARENT_ID,ConstraintSet.LEFT,0);
+        constraintSet.connect(text.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
+        constraintSet.connect(gLView.getId(),ConstraintSet.TOP,text.getId(),ConstraintSet.BOTTOM,0);
+        constraintSet.connect(gLView.getId(),ConstraintSet.TOP,save_button.getId(),ConstraintSet.BOTTOM,0);
+        constraintSet.connect(save_button.getId(),ConstraintSet.RIGHT,ConstraintSet.PARENT_ID,ConstraintSet.RIGHT,0);
+        constraintSet.connect(save_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
+        constraintSet.connect(gLView.getId(),ConstraintSet.TOP,edit_button.getId(),ConstraintSet.BOTTOM,0);
+        constraintSet.connect(save_button.getId(),ConstraintSet.LEFT,edit_button.getId(),ConstraintSet.RIGHT,0);
+        constraintSet.connect(edit_button.getId(),ConstraintSet.LEFT,text.getId(),ConstraintSet.RIGHT,0);
+        constraintSet.connect(edit_button.getId(),ConstraintSet.TOP,ConstraintSet.PARENT_ID,ConstraintSet.TOP,0);
+        constraintSet.applyTo(layout);
+    }
+
+    class RouteSetGLSurfaceView extends MyGLSurfaceView {
         public RouteSetGLSurfaceView(Context context) {
             super(context);
         }
 
         protected void onClick(MotionEvent e) {
+            float temp[] = new float[4];
+            float result[] = new float[4];
+            float invertView[] = new float[16];
+            float invertProjection[];
             Log.e("RouteViewThreeDeeWall","Click");
             float clickY = e.getY();
             float clickX = e.getX();
-            float invertProjection[];
             renderer.getInverseView(invertView);
             invertProjection = renderer.invertProjection;
             float click_loc[] = {(2.0f * clickX) / renderer.width - 1.0f, 1.0f - (2.0f * clickY) / renderer.height, -1.0f, 1.0f};
@@ -205,8 +218,8 @@ public class RouteViewThreeDee extends AppCompatActivity {
         int route_ID;
 
         ContentValues values = new ContentValues();
-        values.put(WallInformationContract.RouteEntry.COLUMN_NAME_WALL_NAME, "Big Wall");
-        values.put(WallInformationContract.RouteEntry.COLUMN_NAME_USER, "bababuck");
+        values.put(WallInformationContract.RouteEntry.COLUMN_NAME_WALL_NAME, app.data.current_wall);
+        values.put(WallInformationContract.RouteEntry.COLUMN_NAME_USER, app.data.current_user);
         values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_NAME, route_name);
         values.put(WallInformationContract.RouteEntry.COLUMN_NAME_RATING, rating);
         values.put(WallInformationContract.RouteEntry.COLUMN_NAME_ROUTE_TYPE, route_type);
@@ -226,7 +239,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
 
         it = deleted_holds.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Integer, float[]> pair = (Map.Entry<Integer, float[]>)it.next();
+            Map.Entry<Integer, float[]> pair = it.next();
             String selection = WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_HOLD_ID + " = ? AND " + WallInformationContract.HoldRouteJoinTable.COLUMN_NAME_ROUTE_ID + " = ?";
             String[] selectionArgs = { Integer.toString((Integer) pair.getKey()), Integer.toString(route_ID) };
             db.delete(WallInformationContract.HoldRouteJoinTable.TABLE_NAME, selection, selectionArgs);

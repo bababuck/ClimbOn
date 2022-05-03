@@ -11,6 +11,7 @@ public class UniversalData {
     Also need to store the wall so don't regenerate every time.
     */
     String current_wall = "";
+    String current_user;
     RouteData current_route;
     Boolean saved;
     int total_bits;
