@@ -95,7 +95,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
                 0.0f,  0.25f, 0.0f,
                 0.0f, 0.0f, 0.25f
         };
-        addFakeHolds(sqLiteDatabase, rowID, hold_coordinates);
+        addFakeHolds(sqLiteDatabase, rowID, hold_coordinates, new int[]{0, 1});
 
         panels = new float[]{
                 0.0f, 0.0f, 1.0f,
@@ -119,7 +119,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.25f
         };
-        addFakeHolds(sqLiteDatabase, rowID, hold_coordinates);
+        addFakeHolds(sqLiteDatabase, rowID, hold_coordinates,new int[]{2, 3});
 
         panels = new float[]{
                 0.0f, 1.0f, 0.0f,
@@ -141,7 +141,7 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, -0.5f
         };
-        addFakeHolds(sqLiteDatabase, rowID, hold_coordinates);
+        addFakeHolds(sqLiteDatabase, rowID, hold_coordinates,new int[]{4});
 
         panels = new float[] {
                 10.0f, 10.0f, -10.0f,
@@ -173,11 +173,12 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
 
     private ArrayList<Integer> hold_ids = new ArrayList<>();
 
-    private void addFakeHolds(SQLiteDatabase sqLiteDatabase, int rowID, float[][] hold_coordinates) {
+    private void addFakeHolds(SQLiteDatabase sqLiteDatabase, int row_id, float[][] hold_coordinates, int[] led_ids) {
         int rowID_hold;
         ContentValues values = new ContentValues();
         for (int i=0;i<hold_coordinates.length;++i) {
-            values.put(WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER, rowID);
+            values.put(WallInformationContract.WallHolds.COLUMN_NAME_PANEL_NUMBER, row_id);
+            values.put(WallInformationContract.WallHolds.COLUMN_NAME_LED_ID, led_ids[i]);
             values.put(WallInformationContract.WallHolds.COLUMN_NAME_COORDINATES, coordinatesToSQLString(hold_coordinates[i]));
             values.put(WallInformationContract.WallHolds.COLUMN_NAME_COLOR, coordinatesToSQLString(new float[]{1.0f, 1.0f, 1.0f, 1.0f}));
             rowID_hold = (int) sqLiteDatabase.insert(WallInformationContract.WallHolds.TABLE_NAME, null, values);
@@ -212,9 +213,11 @@ public class WallInfoDbHelper extends SQLiteOpenHelper {
     private void addFakeWallNames(SQLiteDatabase sqLiteDatabase) {
         String wall_name = "Big Wall";
         String user = "bababuck";
+        int total_leds = 5;
         ContentValues values = new ContentValues();
         values.put(WallInformationContract.WallEntry.COLUMN_NAME_WALL_NAME, wall_name);
         values.put(WallInformationContract.WallEntry.COLUMN_NAME_USER, user);
+        values.put(WallInformationContract.WallEntry.COLUMN_NAME_TOTAL_LEDS, total_leds);
         sqLiteDatabase.insert(WallInformationContract.WallEntry.TABLE_NAME, null, values);
 
         values.clear();
