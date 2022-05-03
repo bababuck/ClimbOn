@@ -81,7 +81,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
             edit_button.setId(EDIT_ID);
             layout.addView(edit_button);
         }
-        addConstraints(edit_button, text, gl_view, save_button);
+        addConstraints(edit_button, text, gl_view, save_button, layout);
         setContentView(layout);
 
         routeEditButton(edit_button);
@@ -129,7 +129,7 @@ public class RouteViewThreeDee extends AppCompatActivity {
         });
     }
 
-    private void addConstraints(Button edit_button, TextView text, RouteSetGLSurfaceView gLView, Button save_button) {
+    private void addConstraints(Button edit_button, TextView text, RouteSetGLSurfaceView gLView, Button save_button, ConstraintLayout layout) {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.constrainWidth(text.getId(), constraintSet.MATCH_CONSTRAINT);
         constraintSet.constrainHeight(text.getId(), constraintSet.WRAP_CONTENT);
