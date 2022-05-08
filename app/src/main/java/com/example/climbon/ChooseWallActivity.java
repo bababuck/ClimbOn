@@ -52,6 +52,8 @@ public class ChooseWallActivity extends AppCompatActivity {
                     saved_data.current_wall = wall_name;
                     saved_data.current_user = user_name;
                     saved_data.total_bits = total_leds;
+                    byte[] total_bit_write = {(byte) total_leds};
+                    app.bluetoothService.write(total_bit_write);
                     Intent intent = new Intent(view.getContext(), MainMenu.class);
                     Log.e("ChooseWall","Entering MainMenu activity...");
                     view.getContext().startActivity(intent);

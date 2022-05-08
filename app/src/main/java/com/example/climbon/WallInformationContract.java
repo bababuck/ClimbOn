@@ -18,7 +18,8 @@ public class WallInformationContract {
                 CREATE_TABLE_TEXT + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY," +
                         COLUMN_NAME_WALL_NAME + " TEXT," +
-                        COLUMN_NAME_USER + " TEXT)";
+                        COLUMN_NAME_USER + " TEXT," +
+                        COLUMN_NAME_TOTAL_LEDS + " INTEGER)";
 
         public static final String SQL_DELETE_TABLE =
                 DROP_TABLE_TEXT + TABLE_NAME;
@@ -55,7 +56,8 @@ public class WallInformationContract {
                         COLUMN_NAME_HOLD_NUMBER + " INTEGER PRIMARY KEY," +
                         COLUMN_NAME_PANEL_NUMBER + " INTEGER," +
                         COLUMN_NAME_COORDINATES + " TEXT," +
-                        COLUMN_NAME_COLOR + " TEXT)";
+                        COLUMN_NAME_COLOR + " TEXT," +
+                        COLUMN_NAME_LED_ID + " INTEGER)";
 
         public static final String SQL_DELETE_TABLE =
                 DROP_TABLE_TEXT + TABLE_NAME;

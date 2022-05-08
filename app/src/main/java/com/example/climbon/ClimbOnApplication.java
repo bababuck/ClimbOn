@@ -30,23 +30,33 @@ public class ClimbOnApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setupSQL();
+        setupBluetooth();
+    }
+
+    private void setupSQL() {
         WallInfoDbHelper dbHelper = new WallInfoDbHelper(this);
         db = dbHelper.getReadableDatabase();
-
-        BluetoothAdapter bluetoothAdapter = ((BluetoothManager) this.getSystemService(this.BLUETOOTH_SERVICE)).getAdapter();
-        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-        BluetoothDevice device = pairedDevices.iterator().next();
-        String deviceHardwareAddress = device.getAddress();
-
-        if(device.getBondState()==device.BOND_BONDED) {
-            Log.d("ClimbOnApplication", device.getName());
-            BluetoothSocket mSocket = null;
-            try {
-                mSocket = device.createInsecureRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
-                bluetoothService = new BluetoothService(mSocket);
-            } catch (IOException e1) {
-                Log.d("ClimbOnApplication", "socket not created");
-            }
-        }
     }
+    private void setupBluetooth() {
+        bluetoothService = new BluetoothService();
+    }
+
+//    private void setupBluetooth() {
+//        BluetoothAdapter bluetoothAdapter = ((BluetoothManager) this.getSystemService(this.BLUETOOTH_SERVICE)).getAdapter();
+//        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+//        BluetoothDevice device = pairedDevices.iterator().next();
+//        String deviceHardwareAddress = device.getAddress();
+//
+//        if(device.getBondState()==device.BOND_BONDED) {
+//            Log.d("ClimbOnApplication", device.getName());
+//            BluetoothSocket mSocket = null;
+//            try {
+//                mSocket = device.createInsecureRfcommSocketToServiceRecord(device.getUuids()[0].getUuid());
+//                bluetoothService = new BluetoothService(mSocket);
+//            } catch (IOException e1) {
+//                Log.d("ClimbOnApplication", "socket not created");
+//            }
+//        }
+//    }
 }
